@@ -32,4 +32,13 @@ public class Line implements Drawable {
     public Type getType() {
         return Type.UNKNOWN;
     }
+
+    public float getLat(){
+        return 0;
+    }
+
+    public float getLon(){
+        return 0;
+    }
+
 }

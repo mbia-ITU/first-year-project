@@ -6,4 +6,8 @@ public interface Drawable {
     void draw(GraphicsContext gc);
 
     Type getType();
+
+    public float getLat();
+
+    public float getLon();
 }

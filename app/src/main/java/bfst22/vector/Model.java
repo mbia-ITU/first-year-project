@@ -22,6 +22,7 @@ import static java.util.stream.Collectors.toList;
 public class Model implements Iterable<Drawable> {
     float minlat, minlon, maxlat, maxlon;
     List<Drawable> lines = new ArrayList<>();
+    List<Drawable> line = new ArrayList<>();
     List<Runnable> observers = new ArrayList<>();
 
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError {
@@ -92,7 +93,7 @@ public class Model implements Iterable<Drawable> {
                         case "way":
                             // if (!nodes.isEmpty()) {
                                 var way = new OSMWay(nodes, type);
-                                lines.add(way);
+                                line.add(way);
                                 nodes.clear();
                                 type = Type.UNKNOWN;
                             // }
@@ -101,6 +102,9 @@ public class Model implements Iterable<Drawable> {
                     break;
             }
         }
+        kdTree(0, line);
+
+        
     }
 
     public void addObserver(Runnable observer) {
@@ -122,4 +126,95 @@ public class Model implements Iterable<Drawable> {
         lines.add(line);
         notifyObservers();
     }
+    
+    public List<Drawable> kdTree(int depth, List<Drawable> points){
+        
+        if(points.size() <= 1000){
+            for (Drawable drawable : points) {
+                lines.add(drawable);
+            }
+        }
+        else {
+            List<Drawable> sortedList;
+            List<Drawable> leftTree = new ArrayList<>();
+            List<Drawable> rightTree = new ArrayList<>();
+            
+           // if(depth % 2 == 0){    
+                
+                sortedList = shittySort(depth, points);
+
+                for (int i = 0; i < points.size(); i++) {
+                    if(i < Math.round(points.size() / 2)){
+                        leftTree.add(points.get(i));
+                    }
+                    else{
+                        rightTree.add(points.get(i));
+                    }
+                }
+            
+                kdTree(depth + 1, leftTree);
+                //}    
+           
+           
+           
+           
+            kdTree(depth + 1, leftTree);
+                
+            
+        }
+        return null;
+        
+    }
+    
+    //THIS NEED TO BE FIXED ASAP - Tim (The guy who wrote this shit shitty sort)
+    private List<Drawable> shittySort(int depth, List<Drawable> unsortedList){
+        int currentLowest = 0;
+        float current = 0;
+        List<Drawable> sortedList = new ArrayList<>();
+
+        if(depth % 2 == 0){
+            
+
+            for (int i = 0; i < unsortedList.size(); i++) {
+                current = unsortedList.get(0).getLat();
+                currentLowest = 0;
+                for (int j = 0; j < unsortedList.size(); j++) {
+                    if(current > unsortedList.get(j).getLat()){
+                        current = unsortedList.get(j).getLat();
+                        currentLowest = j; 
+                    }
+                }
+                sortedList.add(unsortedList.get(currentLowest));
+                unsortedList.remove(currentLowest);
+            }
+            return sortedList;
+        }
+        else{
+            
+
+            for (int i = 0; i < unsortedList.size(); i++) {
+                current = unsortedList.get(0).getLon();
+                currentLowest = 0;
+                for (int j = 0; j < unsortedList.size(); j++) {
+                    if(current > unsortedList.get(j).getLon()){
+                        current = unsortedList.get(j).getLon();
+                        currentLowest = j; 
+                    }
+                }
+                sortedList.add(unsortedList.get(currentLowest));
+                unsortedList.remove(currentLowest);
+                
+            }
+            
+            return sortedList;
+        }
+        
+
+
+
+        
+    }
+
+
+
 }

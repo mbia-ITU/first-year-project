@@ -29,4 +29,12 @@ public class OSMWay implements Drawable {
     public Type getType(){
         return type;
     }
+
+    public float getLat(){
+        return nodes.get(0).getLat();
+    }
+
+    public float getLon(){
+        return nodes.get(0).getLon();
+    }
 }
