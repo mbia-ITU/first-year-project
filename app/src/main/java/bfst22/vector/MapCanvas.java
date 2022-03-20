@@ -32,6 +32,14 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.LAKE)) {
             line.fill(gc);
         }
+        gc.setFill(Color.LIGHTGREEN);
+        for (var line : model.iterable(WayType.GRASS)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.GRAY);
+        for (var line : model.iterable(WayType.BUILDING)) {
+            line.fill(gc);
+        }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
@@ -49,7 +57,7 @@ public class MapCanvas extends Canvas {
         trans.prependTranslation(x, y);
         currentZoomLevel = trans.getMxx();
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
-        System.out.println(zoomPercentage);
+        //System.out.println(zoomPercentage);
         repaint();
     }
 
