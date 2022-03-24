@@ -13,4 +13,12 @@ public class OSMNode implements Serializable {
         this.lon = lon;
     }
 
+    public float getLon(){
+        return lon;
+    }
+
+    public float getLat(){
+        return lat;
+    }
+
 }
