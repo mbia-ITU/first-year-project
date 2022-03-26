@@ -44,7 +44,7 @@ public class Controller {
     private void onPress(ActionEvent e)throws Exception {
         System.out.println("DANMARK");
         var model = new Model("data/small.osm");
-        new MapView(model, "View.fxml");
+        new MapView(model, "UI.fxml");
     }
 
 
