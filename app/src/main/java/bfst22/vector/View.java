@@ -46,5 +46,7 @@ class MapView {
         controller.init(model);
         stage2.setTitle("Map");
         stage2.show();
+
+
     }
 }

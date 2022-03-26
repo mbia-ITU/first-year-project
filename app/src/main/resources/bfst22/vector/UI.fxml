@@ -14,7 +14,8 @@
 
 <?import bfst22.vector.MapCanvas?>
 <?import javafx.scene.Scene?>
-<Scene fx:controller="bfst22.vector.Controller" fx:id="scene" xmlns="http://javafx.com/javafx/17"  xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.canvas.Canvas?>
+<Scene fx:controller="bfst22.vector.Controller" fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
 <VBox prefHeight="400.0" prefWidth="640.0"  >
     <children>
@@ -57,23 +58,20 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+        <AnchorPane maxHeight="-50.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="375.0" prefWidth="640.0">
-                    <padding>
-                        <Insets bottom="30.0" />
-                    </padding>
                     <center>
                             <MapCanvas fx:id="canvas"
                                        width="${scene.width}"
-                                       height="${scene.height}"
+                                       height="450"
                                        onScroll="#onScroll"
                                        onMousePressed="#onMousePressed"
                                        onMouseDragged="#onMouseDragged"
                             />
                     </center>
                     <bottom>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="43.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="CENTER">
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="BOTTOM_LEFT">
                             <children>
                                 <TextField />
                                 <Button mnemonicParsing="false" text="Search" />
