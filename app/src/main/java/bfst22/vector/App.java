@@ -7,6 +7,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         var model = new Model("data/small.osm");
-        new View(model, primaryStage);
+        new View(model, "Menu.fxml");
     }
 }
