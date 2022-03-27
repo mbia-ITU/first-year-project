@@ -47,6 +47,5 @@ class MapView {
         stage2.setTitle("Map");
         stage2.show();
 
-
     }
 }

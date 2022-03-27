@@ -64,14 +64,14 @@
                     <center>
                             <MapCanvas fx:id="canvas"
                                        width="${scene.width}"
-                                       height="450"
+                                       height="${scene.height}"
                                        onScroll="#onScroll"
                                        onMousePressed="#onMousePressed"
                                        onMouseDragged="#onMouseDragged"
                             />
                     </center>
-                    <bottom>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="BOTTOM_LEFT">
+                    <left>
+                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="TOP_CENTER">
                             <children>
                                 <TextField />
                                 <Button mnemonicParsing="false" text="Search" />
@@ -84,8 +84,8 @@
                             <opaqueInsets>
                                 <Insets bottom="6.0" />
                             </opaqueInsets>
-                        </HBox>
-                    </bottom>
+                        </VBox>
+                    </left>
                 </BorderPane>
             </children>
         </AnchorPane>

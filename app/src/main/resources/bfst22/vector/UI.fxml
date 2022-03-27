@@ -9,12 +9,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 <?import bfst22.vector.MapCanvas?>
 <?import javafx.scene.Scene?>
-<?import javafx.scene.canvas.Canvas?>
+
 <Scene fx:controller="bfst22.vector.Controller" fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
 <VBox prefHeight="400.0" prefWidth="640.0"  >
@@ -64,14 +62,14 @@
                     <center>
                             <MapCanvas fx:id="canvas"
                                        width="${scene.width}"
-                                       height="450"
+                                       height="${scene.height}"
                                        onScroll="#onScroll"
                                        onMousePressed="#onMousePressed"
                                        onMouseDragged="#onMouseDragged"
                             />
                     </center>
-                    <bottom>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="BOTTOM_LEFT">
+                    <left>
+                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="TOP_CENTER">
                             <children>
                                 <TextField />
                                 <Button mnemonicParsing="false" text="Search" />
@@ -84,8 +82,8 @@
                             <opaqueInsets>
                                 <Insets bottom="6.0" />
                             </opaqueInsets>
-                        </HBox>
-                    </bottom>
+                        </VBox>
+                    </left>
                 </BorderPane>
             </children>
         </AnchorPane>
