@@ -17,5 +17,6 @@ public class BoundingBox {
     public float getCenterY(){
         return (minY + maxY)/2;
     }
+
     
 }
