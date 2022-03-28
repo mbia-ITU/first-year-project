@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.stage.Stage;
 
 public class Controller {
     private Point2D lastMouse;
@@ -44,7 +45,8 @@ public class Controller {
     @FXML
     private void onPress(ActionEvent e)throws Exception {
         var model = new Model("data/Bornholm.zip");
-        new MapView(model, "UI.fxml");
+        Stage mapStage = new Stage();
+        new MapView(model, mapStage,"UI.fxml");
         View.exitMenu();
     }
 }

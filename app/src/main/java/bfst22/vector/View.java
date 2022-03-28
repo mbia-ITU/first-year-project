@@ -33,18 +33,13 @@ public class View {
 }
 
 class MapView {
-    Stage stage2;
-    Model model;
-    public MapView(Model model, String name)throws IOException{
-        this.stage2=new Stage();
-        this.model=model;
+    public MapView(Model model, Stage mapStage, String name)throws IOException{
+        mapStage.show();
         var loader = new FXMLLoader(getClass().getResource(name));
-        stage2.setScene(loader.load());
+        mapStage.setScene(loader.load());
         Controller controller = loader.getController();
         controller.init(model);
-        stage2.setTitle("Map");
-        stage2.show();
-
+        mapStage.setTitle("Map");
     }
 }
 
