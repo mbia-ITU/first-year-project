@@ -9,6 +9,9 @@ import javafx.scene.transform.NonInvertibleTransformException;
 public class MapCanvas extends Canvas {
     Model model;
     Affine trans = new Affine();
+    double initialZoomLevel;
+    double currentZoomLevel;
+    double zoomPercentage;
 
     void init(Model model) {
         this.model = model;
@@ -16,6 +19,7 @@ public class MapCanvas extends Canvas {
         zoom(640 / (model.maxlon - model.minlon), 0, 0);
         model.addObserver(this::repaint);
         repaint();
+        initialZoomLevel = trans.getMxx();
     }
 
     void repaint() {
@@ -26,6 +30,14 @@ public class MapCanvas extends Canvas {
         gc.setTransform(trans);
         gc.setFill(Color.LIGHTBLUE);
         for (var line : model.iterable(WayType.LAKE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTGREEN);
+        for (var line : model.iterable(WayType.GRASS)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.GRAY);
+        for (var line : model.iterable(WayType.BUILDING)) {
             line.fill(gc);
         }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
@@ -43,6 +55,9 @@ public class MapCanvas extends Canvas {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
         trans.prependTranslation(x, y);
+        currentZoomLevel = trans.getMxx();
+        zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
+        //System.out.println(zoomPercentage);
         repaint();
     }
 

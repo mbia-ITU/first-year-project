@@ -107,6 +107,8 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
+                            if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
+                            if (k.equals("building") && v.equals("yes")) type = WayType.BUILDING;
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -134,8 +136,15 @@ public class Model {
                             if (type == WayType.LAKE && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+                            if (type == WayType.GRASS && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.BUILDING && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
                             rel.clear();
                             break;
+                            
                     }
                     break;
             }
