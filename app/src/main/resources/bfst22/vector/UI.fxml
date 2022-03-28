@@ -72,14 +72,14 @@
                             />
                     </center>
                     <left>
-                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" >
-                            <children>
+                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
+                            <children >
                                 <TextField />
-                                <Button mnemonicParsing="false" text="Search" minWidth="130" />
-                                <Button mnemonicParsing="false" text="Draw" minWidth="130"/>
-                                <Button mnemonicParsing="false" text="View" minWidth="130"/>
+                                <Button mnemonicParsing="false" text="Search" minWidth="130"/>
+                                <Button mnemonicParsing="false" text="Draw" minWidth="130" />
+                                <Button mnemonicParsing="false" text="View" minWidth="130" />
                                 <Button mnemonicParsing="false" text="DeBug Mode" minWidth="130"/>
-                                <Label  fx:id="percentText" text="Zoom: 100.0%"/>
+                                <Label  fx:id="percentText" text="Zoom: 100.0%"  style="-fx-text-fill:#ECECEC"/>
                             </children>
                             <padding>
                                 <Insets bottom="2.2" left="2.0" />

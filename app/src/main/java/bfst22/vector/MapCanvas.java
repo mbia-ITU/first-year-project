@@ -12,6 +12,7 @@ public class MapCanvas extends Canvas {
     double initialZoomLevel;
     double currentZoomLevel;
     double zoomPercentage;
+    double zp;
 
     void init(Model model) {
         this.model = model;
@@ -70,12 +71,13 @@ public class MapCanvas extends Canvas {
     }
 
     public double getZoomPercentage(){
-        if(zoomPercentage<=100){
-            zoomPercentage = -1 * (100 / (currentZoomLevel/initialZoomLevel));
+        if(zoomPercentage<99){
+            zp = -1 * (100 / (currentZoomLevel/initialZoomLevel));
+        }else{
+            zp = zoomPercentage;
         }
-        double percent1 = zoomPercentage * 1000;
+        double percent1 = zp * 100;
         int percent2 = (int) percent1;
-        double percent3 = percent2/1000;
-        return percent3;
+        return (double) percent2/100;
     }
 }

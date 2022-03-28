@@ -9,15 +9,13 @@ import javafx.stage.Stage;
 
 public class View {
     private Model model;
-    private Stage stage1;
-    private Stage stage2;
+    private static Stage stage1;
 
-    public View(String name) throws IOException {
+    public View() throws IOException {
         this.stage1=new Stage();
         CreateMenu();
         stage1.show();
     }
-
 
     public Stage CreateMenu() throws IOException{
         var loader1 = new FXMLLoader(getClass().getResource("Menu.fxml"));
@@ -29,8 +27,8 @@ public class View {
         return stage1;
     }
 
-    public Stage getMap(){
-        return stage2;
+    public static void exitMenu(){
+        stage1.close();
     }
 }
 

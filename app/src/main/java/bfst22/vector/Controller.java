@@ -1,5 +1,6 @@
 package bfst22.vector;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -22,7 +23,7 @@ public class Controller {
     @FXML
     private void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
-        canvas.zoom(Math.pow(1.05, factor), e.getX(), e.getY());
+        canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
         percentText.setText(String.valueOf("Zoom: "+canvas.getZoomPercentage() + "%"));
     }
 
@@ -44,6 +45,6 @@ public class Controller {
     private void onPress(ActionEvent e)throws Exception {
         var model = new Model("data/Bornholm.zip");
         new MapView(model, "UI.fxml");
-
+        View.exitMenu();
     }
 }
