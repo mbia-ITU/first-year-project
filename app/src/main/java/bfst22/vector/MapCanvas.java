@@ -69,7 +69,13 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public int getZoomPercentage(){
-        return (int) zoomPercentage;
+    public double getZoomPercentage(){
+        if(zoomPercentage<=100){
+            zoomPercentage = -1 * (100 / (currentZoomLevel/initialZoomLevel));
+        }
+        double percent1 = zoomPercentage * 1000;
+        int percent2 = (int) percent1;
+        double percent3 = percent2/1000;
+        return percent3;
     }
 }
