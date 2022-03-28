@@ -41,6 +41,10 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.BUILDING)) {
             line.fill(gc);
         }
+        gc.setFill(Color.DARKGREEN);
+        for (var line : model.iterable(WayType.FOREST)) {
+            line.fill(gc);
+        }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);

@@ -109,6 +109,7 @@ public class Model {
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
                             if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
                             if (k.equals("building") && v.equals("yes")) type = WayType.BUILDING;
+                            if (k.equals("landuse") && v.equals("forest")) type = WayType.FOREST;
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -133,7 +134,7 @@ public class Model {
                             nodes.clear();
                             break;
                         case "relation":
-                            if (type == WayType.LAKE && !rel.isEmpty()) {
+                            /*if (type == WayType.LAKE && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
                             if (type == WayType.GRASS && !rel.isEmpty()) {
@@ -142,6 +143,9 @@ public class Model {
                             if (type == WayType.BUILDING && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+                            if (type == WayType.FOREST && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }*/
                             rel.clear();
                             break;
                             
