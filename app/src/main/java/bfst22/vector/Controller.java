@@ -39,7 +39,7 @@ public class Controller {
     @FXML
     private void onPress(ActionEvent e)throws Exception {
 
-        var model = new Model("data/Bornholm.zip");
+        var model = new Model("data/small.osm");
         new MapView(model, "UI.fxml");
     }
 }
