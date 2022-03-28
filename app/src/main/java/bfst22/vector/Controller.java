@@ -1,5 +1,6 @@
 package bfst22.vector;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -32,5 +33,13 @@ public class Controller {
     @FXML
     private void onMousePressed(MouseEvent e) {
         lastMouse = new Point2D(e.getX(), e.getY());
+    }
+
+    //loads DK map
+    @FXML
+    private void onPress(ActionEvent e)throws Exception {
+
+        var model = new Model("data/Bornholm.zip");
+        new MapView(model, "UI.fxml");
     }
 }
