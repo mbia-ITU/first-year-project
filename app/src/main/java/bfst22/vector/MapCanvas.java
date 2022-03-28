@@ -68,4 +68,8 @@ public class MapCanvas extends Canvas {
             throw new RuntimeException(e);
         }
     }
+
+    public int getZoomPercentage(){
+        return (int) zoomPercentage;
+    }
 }
