@@ -114,7 +114,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.SOCCER)) {
             line.fill(gc);
         }
-        gc.setFill(Color.GHOSTWHITE);
+        gc.setFill(Color.LAVENDER);
         for (var line : model.iterable(WayType.PARKING)) {
             line.fill(gc);
         }
@@ -134,6 +134,12 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.CEMETERY)) {
             line.fill(gc);
         }
+        /*
+        gc.setFill(Color.ORANGE);
+        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+            line.fill(gc);
+        }
+        */
         gc.setFill(Color.LIGHTSTEELBLUE);
         for (var line : model.iterable(WayType.RACE)) {
             line.fill(gc);
