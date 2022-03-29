@@ -142,6 +142,7 @@ public class Model {
                             if (k.equals("landuse") && v.equals("quarry")) type = WayType.INDUSTRIAL;
                             if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
                             if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
+                            //if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
                             if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
                             if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
