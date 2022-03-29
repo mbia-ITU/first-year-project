@@ -44,10 +44,63 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.FOREST)) {
             line.fill(gc);
         }
+        gc.setFill(Color.KHAKI);
+        for (var line : model.iterable(WayType.FARMLAND)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKTURQUOISE);
+        for (var line : model.iterable(WayType.PITCH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKTURQUOISE);
+        for (var line : model.iterable(WayType.SOCCER)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.GHOSTWHITE);
+        for (var line : model.iterable(WayType.PARKING)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTGREY);
+        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PLUM);
+        for (var line : model.iterable(WayType.INDUSTRIAL)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PEACHPUFF);
+        for (var line : model.iterable(WayType.FARMYARD)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.HONEYDEW);
+        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.GOLDENROD);
+        for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.TAN);
+        for (var line : model.iterable(WayType.HEATH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.MOCCASIN);
+        for (var line : model.iterable(WayType.BEACH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.SEASHELL);
+        for (var line : model.iterable(WayType.RESERVE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.SEASHELL);
+        for (var line : model.iterable(WayType.RESORT)) {
+            line.fill(gc);
+        }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
         }
+        
     }
 
     void pan(double dx, double dy) {
@@ -76,4 +129,5 @@ public class MapCanvas extends Canvas {
     public int getZoomPercentage(){
         return (int) zoomPercentage;
     }
+
 }
