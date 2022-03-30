@@ -30,4 +30,5 @@ public class NodeMap extends ArrayList<OSMNode> {
         var node = get(lo);
         return node.id == ref ? node : null;
     }
+
 }
