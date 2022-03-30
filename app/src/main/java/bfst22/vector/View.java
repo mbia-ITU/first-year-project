@@ -9,15 +9,14 @@ import javafx.stage.Stage;
 
 public class View {
     private Model model;
-    private Stage stage1;
-    private Stage stage2;
+    private static Stage stage1;
 
-    public View(String name) throws IOException {
+    public View() throws IOException {
         this.stage1=new Stage();
         CreateMenu();
+        stage1.setResizable(false);
         stage1.show();
     }
-
 
     public Stage CreateMenu() throws IOException{
         var loader1 = new FXMLLoader(getClass().getResource("Menu.fxml"));
@@ -29,24 +28,22 @@ public class View {
         return stage1;
     }
 
-    public Stage getMap(){
-        return stage2;
+    public static void exitMenu(){
+        stage1.close();
     }
 }
 
 class MapView {
-    Stage stage2;
-    Model model;
-    public MapView(Model model, String name)throws IOException{
-        this.stage2=new Stage();
-        this.model=model;
+    public MapView(Model model, Stage mapStage, String name)throws IOException{
+        mapStage.setWidth(800);
+        mapStage.setHeight(400);
+
+        mapStage.show();
         var loader = new FXMLLoader(getClass().getResource(name));
-        stage2.setScene(loader.load());
+        mapStage.setScene(loader.load());
         Controller controller = loader.getController();
         controller.init(model);
-        stage2.setTitle("Map");
-        stage2.show();
-
+        mapStage.setTitle("Map");
     }
 }
 
