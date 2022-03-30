@@ -144,6 +144,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.RACE)) {
             line.fill(gc);
         }
+        //Tjek raceway
         gc.setFill(Color.RED);
         for (var line : model.iterable(WayType.RACEWAY)) {
             line.fill(gc);
