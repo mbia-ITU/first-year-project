@@ -184,11 +184,7 @@ public class MapCanvas extends Canvas {
     }
 
     public double getZoomPercentage(){
-        if(zoomPercentage<99){
-            zp = -1 * (100 / (currentZoomLevel/initialZoomLevel));
-        }else{
-            zp = zoomPercentage;
-        }
+        zp = zoomPercentage;
         double percent1 = zp * 100;
         int percent2 = (int) percent1;
         return (double) percent2/100;
