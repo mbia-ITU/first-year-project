@@ -107,8 +107,50 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
+                            //if (k.equals("waterway") && v.equals("river")) type = WayType.RIVER;
+                            if (k.equals("type") && v.equals("waterway")) type = WayType.RIVER;
+                            if (k.equals("natural") && v.equals("heath")) type = WayType.HEATH;
+                            if (k.equals("natural") && v.equals("beach")) type = WayType.BEACH;
+                            if (k.equals("natural") && v.equals("wetland")) type = WayType.WETLAND;
+                            if (k.equals("natural") && v.equals("sand")) type = WayType.SAND;
+                            if (k.equals("natural") && v.equals("scrub")) type = WayType.SCRUB;
+                            if (k.equals("natural") && v.equals("grassland")) type = WayType.GRASS;
+                            //if (k.equals("natural") && v.equals("coastline")) type = WayType.COASTLINE;
+                            if (k.equals("natural") && v.equals("wood")) type = WayType.FOREST;
                             if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
+                            if (k.equals("leisure") && v.equals("pitch")) type = WayType.PITCH;
+                            if (k.equals("leisure") && v.equals("golf_course")) type = WayType.GOLFCOURSE;
+                            if (k.equals("leisure") && v.equals("nature_reserve")) type = WayType.RESERVE;
+                            if (k.equals("leisure") && v.equals("sports_centre")) type = WayType.RACE;
                             if (k.equals("building") && v.equals("yes")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("retail")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("industrial")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("public")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("school")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("office")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("detached")) type = WayType.BUILDING;
+                            if (k.equals("building") && v.equals("bungalow")) type = WayType.BUILDING;
+                            if (k.equals("landuse") && v.equals("forest")) type = WayType.FOREST;
+                            if (k.equals("landuse") && v.equals("farmyard")) type = WayType.FARMYARD;
+                            if (k.equals("landuse") && v.equals("farmland")) type = WayType.FARMLAND;
+                            if (k.equals("landuse") && v.equals("residential")) type = WayType.RESIDENTIAL;
+                            if (k.equals("landuse") && v.equals("industrial")) type = WayType.INDUSTRIAL;
+                            if (k.equals("landuse") && v.equals("grass")) type = WayType.GRASS;
+                            if (k.equals("landuse") && v.equals("meadow")) type = WayType.MEADOW;
+                            if (k.equals("landuse") && v.equals("scrub")) type = WayType.SCRUB;
+                            if (k.equals("landuse") && v.equals("cemetery")) type = WayType.CEMETERY;
+                            if (k.equals("landuse") && v.equals("quarry")) type = WayType.INDUSTRIAL;
+                            if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
+                            if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
+                            //if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
+                            if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
+                            if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
+                            if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
+                            if (k.equals("aeroway") && v.equals("helipad")) type = WayType.HELIPAD;
+                            if (k.equals("area") && v.equals("yes")) type = WayType.GRASS;
+                            if (k.equals("boundary") && v.equals("protected_area")) type = WayType.PROTECTEDAREA;
+                            if (k.equals("tourism") && v.equals("resort")) type = WayType.RESORT;
+                            if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -133,15 +175,43 @@ public class Model {
                             nodes.clear();
                             break;
                         case "relation":
+                            if (type == WayType.GOLFCOURSE && !rel.isEmpty()) {
+                            lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.FARMLAND && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.FARMYARD && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            
                             if (type == WayType.LAKE && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+                            if (type == WayType.MEADOW && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            /*
                             if (type == WayType.GRASS && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
                             if (type == WayType.BUILDING && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+                            if (type == WayType.BEACH && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            */
+                            if (type == WayType.SAND && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.WETLAND && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.FOREST && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            
                             rel.clear();
                             break;
                             
@@ -165,4 +235,5 @@ public class Model {
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
     }
+
 }

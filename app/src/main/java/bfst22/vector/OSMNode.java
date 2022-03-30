@@ -21,4 +21,5 @@ public class OSMNode implements Serializable {
         return lat;
     }
 
+
 }

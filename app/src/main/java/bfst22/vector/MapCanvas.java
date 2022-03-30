@@ -12,6 +12,7 @@ public class MapCanvas extends Canvas {
     double initialZoomLevel;
     double currentZoomLevel;
     double zoomPercentage;
+    double zp;
 
     void init(Model model) {
         this.model = model;
@@ -28,12 +29,124 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
-        gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
+        gc.setFill(Color.PINK);
+        for (var line : model.iterable(WayType.COASTLINE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKGREEN);
+        for (var line : model.iterable(WayType.FOREST)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.KHAKI);
+        for (var line : model.iterable(WayType.FARMLAND)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTGREY);
+        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.TAN);
+        for (var line : model.iterable(WayType.HEATH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.MOCCASIN);
+        for (var line : model.iterable(WayType.BEACH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.OLDLACE);
+        for (var line : model.iterable(WayType.SAND)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.TEAL);
+        for (var line : model.iterable(WayType.WETLAND)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKSEAGREEN);
+        for (var line : model.iterable(WayType.SCRUB)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PALEGREEN);
+        for (var line : model.iterable(WayType.MEADOW)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PEACHPUFF);
+        for (var line : model.iterable(WayType.FARMYARD)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PLUM);
+        for (var line : model.iterable(WayType.INDUSTRIAL)) {
             line.fill(gc);
         }
         gc.setFill(Color.LIGHTGREEN);
         for (var line : model.iterable(WayType.GRASS)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.SEASHELL);
+        for (var line : model.iterable(WayType.RESORT)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTYELLOW);
+        for (var line : model.iterable(WayType.HOSPITAL)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.MEDIUMPURPLE);
+        for (var line : model.iterable(WayType.HELIPAD)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTBLUE);
+        for (var line : model.iterable(WayType.LAKE)) {
+            line.fill(gc);
+        }
+        /*
+        gc.setStroke(Color.LIGHTBLUE);
+        for (var line : model.iterable(WayType.RIVER)) {
+            line.draw(gc);
+        }
+        gc.setStroke(Color.LIGHTBLUE);
+        for (var line : model.iterable(WayType.TERTIARY)) {
+            line.draw(gc);
+        }
+        */
+        gc.setFill(Color.DARKTURQUOISE);
+        for (var line : model.iterable(WayType.PITCH)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKTURQUOISE);
+        for (var line : model.iterable(WayType.SOCCER)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LAVENDER);
+        for (var line : model.iterable(WayType.PARKING)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.HONEYDEW);
+        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.GOLDENROD);
+        for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.SEASHELL);
+        for (var line : model.iterable(WayType.RESERVE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.MEDIUMAQUAMARINE);
+        for (var line : model.iterable(WayType.CEMETERY)) {
+            line.fill(gc);
+        }
+        /*
+        gc.setFill(Color.ORANGE);
+        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+            line.fill(gc);
+        }
+        */
+        gc.setFill(Color.LIGHTSTEELBLUE);
+        for (var line : model.iterable(WayType.RACE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.RED);
+        for (var line : model.iterable(WayType.RACEWAY)) {
             line.fill(gc);
         }
         gc.setFill(Color.GRAY);
@@ -44,6 +157,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
         }
+        
     }
 
     void pan(double dx, double dy) {
@@ -69,7 +183,11 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public int getZoomPercentage(){
-        return (int) zoomPercentage;
+    public double getZoomPercentage(){
+        zp = zoomPercentage;
+        double percent1 = zp * 100;
+        int percent2 = (int) percent1;
+        return (double) percent2/100;
     }
+
 }
