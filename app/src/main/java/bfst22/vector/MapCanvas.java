@@ -61,14 +61,6 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.fill(gc);
         }
-        gc.setFill(Color.DARKSEAGREEN);
-        for (var line : model.iterable(WayType.SCRUB)) {
-            line.fill(gc);
-        }
-        gc.setFill(Color.PALEGREEN);
-        for (var line : model.iterable(WayType.MEADOW)) {
-            line.fill(gc);
-        }
         gc.setFill(Color.PEACHPUFF);
         for (var line : model.iterable(WayType.FARMYARD)) {
             line.fill(gc);
@@ -77,24 +69,44 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.INDUSTRIAL)) {
             line.fill(gc);
         }
+        gc.setFill(Color.HONEYDEW);
+        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.ALICEBLUE);
+        for (var line : model.iterable(WayType.AIRPORT)) {
+            line.fill(gc);
+        }
         gc.setFill(Color.LIGHTGREEN);
         for (var line : model.iterable(WayType.GRASS)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.DARKSEAGREEN);
+        for (var line : model.iterable(WayType.SCRUB)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.PALEGREEN);
+        for (var line : model.iterable(WayType.MEADOW)) {
             line.fill(gc);
         }
         gc.setFill(Color.SEASHELL);
         for (var line : model.iterable(WayType.RESORT)) {
             line.fill(gc);
         }
+        gc.setFill(Color.CHARTREUSE);
+        for (var line : model.iterable(WayType.VINEYARD)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.LIGHTBLUE);
+        for (var line : model.iterable(WayType.LAKE)) {
+            line.fill(gc);
+        }        
         gc.setFill(Color.LIGHTYELLOW);
         for (var line : model.iterable(WayType.HOSPITAL)) {
             line.fill(gc);
         }
         gc.setFill(Color.MEDIUMPURPLE);
         for (var line : model.iterable(WayType.HELIPAD)) {
-            line.fill(gc);
-        }
-        gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
             line.fill(gc);
         }
         /*
@@ -119,10 +131,6 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.PARKING)) {
             line.fill(gc);
         }
-        gc.setFill(Color.HONEYDEW);
-        for (var line : model.iterable(WayType.GOLFCOURSE)) {
-            line.fill(gc);
-        }
         gc.setFill(Color.GOLDENROD);
         for (var line : model.iterable(WayType.PROTECTEDAREA)) {
             line.fill(gc);
@@ -141,6 +149,10 @@ public class MapCanvas extends Canvas {
             line.fill(gc);
         }
         */
+        gc.setFill(Color.LIGHTCYAN);
+        for (var line : model.iterable(WayType.APRON)) {
+            line.fill(gc);
+        }
         gc.setFill(Color.LIGHTSTEELBLUE);
         for (var line : model.iterable(WayType.RACE)) {
             line.fill(gc);
@@ -148,7 +160,7 @@ public class MapCanvas extends Canvas {
         //Tjek raceway
         gc.setFill(Color.RED);
         for (var line : model.iterable(WayType.RACEWAY)) {
-            line.fill(gc);
+            line.draw(gc);
         }
         gc.setFill(Color.GRAY);
         for (var line : model.iterable(WayType.BUILDING)) {
