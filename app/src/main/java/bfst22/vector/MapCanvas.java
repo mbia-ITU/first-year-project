@@ -12,6 +12,7 @@ public class MapCanvas extends Canvas {
     double initialZoomLevel;
     double currentZoomLevel;
     double zoomPercentage;
+    int drawLevel = 0;
     double zp;
 
     void init(Model model) {
@@ -41,9 +42,10 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.FARMLAND)) {
             line.fill(gc);
         }
+        if (drawLevel >= 1) {
         gc.setFill(Color.LIGHTGREY);
         for (var line : model.iterable(WayType.RESIDENTIAL)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
         gc.setFill(Color.TAN);
         for (var line : model.iterable(WayType.HEATH)) {
@@ -81,17 +83,20 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.GRASS)) {
             line.fill(gc);
         }
+        if (drawLevel == 2){
         gc.setFill(Color.SEASHELL);
         for (var line : model.iterable(WayType.RESORT)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2){
         gc.setFill(Color.LIGHTYELLOW);
         for (var line : model.iterable(WayType.HOSPITAL)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2){
         gc.setFill(Color.MEDIUMPURPLE);
         for (var line : model.iterable(WayType.HELIPAD)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
         gc.setFill(Color.LIGHTBLUE);
         for (var line : model.iterable(WayType.LAKE)) {
@@ -107,33 +112,40 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
         }
         */
+        if (drawLevel == 2) {
         gc.setFill(Color.DARKTURQUOISE);
         for (var line : model.iterable(WayType.PITCH)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.DARKTURQUOISE);
         for (var line : model.iterable(WayType.SOCCER)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.LAVENDER);
         for (var line : model.iterable(WayType.PARKING)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.HONEYDEW);
         for (var line : model.iterable(WayType.GOLFCOURSE)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel >= 1) {
         gc.setFill(Color.GOLDENROD);
         for (var line : model.iterable(WayType.PROTECTEDAREA)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel >= 1) {
         gc.setFill(Color.SEASHELL);
         for (var line : model.iterable(WayType.RESERVE)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.MEDIUMAQUAMARINE);
         for (var line : model.iterable(WayType.CEMETERY)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
         /*
         gc.setFill(Color.ORANGE);
@@ -141,22 +153,25 @@ public class MapCanvas extends Canvas {
             line.fill(gc);
         }
         */
+        if (drawLevel == 2) {
         gc.setFill(Color.LIGHTSTEELBLUE);
         for (var line : model.iterable(WayType.RACE)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.RED);
         for (var line : model.iterable(WayType.RACEWAY)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
+        if (drawLevel == 2) {
         gc.setFill(Color.GRAY);
         for (var line : model.iterable(WayType.BUILDING)) {
-            line.fill(gc);
+            line.fill(gc); }
         }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }
+            line.draw(gc); 
+        } 
         
     }
 
@@ -171,6 +186,9 @@ public class MapCanvas extends Canvas {
         trans.prependTranslation(x, y);
         currentZoomLevel = trans.getMxx();
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
+        if (zoomPercentage < 200) drawLevel = 0;
+        if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
+        if (zoomPercentage > 500) drawLevel = 2;
         //System.out.println(zoomPercentage);
         repaint();
     }
