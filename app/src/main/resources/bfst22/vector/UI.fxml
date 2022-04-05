@@ -16,6 +16,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
 <Scene fx:controller="bfst22.vector.Controller" fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
 <VBox prefHeight="400.0" prefWidth="640.0"  >
@@ -72,14 +73,16 @@
                             />
                     </center>
                     <left>
-                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="131.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
+                        <VBox alignment="TOP_LEFT" prefHeight="25.0" prefWidth="160.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
                             <children >
-                                <TextField />
-                                <Button mnemonicParsing="false" text="Search" minWidth="130"/>
+                                <ComboBox fx:id="searching"/>
                                 <Button mnemonicParsing="false" text="Draw" minWidth="130" />
                                 <Button mnemonicParsing="false" text="View" minWidth="130" />
                                 <Button mnemonicParsing="false" text="DeBug Mode" minWidth="130"/>
                                 <Label  fx:id="percentText" text="Zoom: 100.0%"  style="-fx-text-fill:#ECECEC"/>
+                                <Label  fx:id="sear"  text="PP" style="-fx-text-fill:#ECECEC"/>
+                                <Label  fx:id="sear1"  text="P1" style="-fx-text-fill:#ECECEC"/>
+                                <Label  fx:id="sear2"  text="P2" style="-fx-text-fill:#ECECEC"/>
                             </children>
                             <padding>
                                 <Insets bottom="2.2" left="2.0" />

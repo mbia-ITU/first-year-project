@@ -33,6 +33,14 @@ public class Model {
     }
     List<Runnable> observers = new ArrayList<>();
 
+    ArrayList<String> addresses = new ArrayList<>();
+    String housenumber = "";
+    String street = "";
+    String postcode = "";
+    String city = "";
+    String floor = "";
+    String side = "";
+
     @SuppressWarnings("unchecked")
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
@@ -151,6 +159,20 @@ public class Model {
                             if (k.equals("boundary") && v.equals("protected_area")) type = WayType.PROTECTEDAREA;
                             if (k.equals("tourism") && v.equals("resort")) type = WayType.RESORT;
                             if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
+
+                            if (k.equals("addr:housenumber")){housenumber = v;}
+                            if (k.equals("addr:city")){city=v;}
+                            if (k.equals("addr:postcode")){postcode=v;}
+                            if (k.equals("addr:street")){street=v;
+
+                            addresses.add(street + " " +housenumber + " " +postcode + " " + city);
+                            street="";
+                            city="";
+                            postcode="";
+                            housenumber="";
+                            }
+
+
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -234,6 +256,10 @@ public class Model {
 
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
+    }
+
+    public ArrayList<String> getAddresses(){
+        return addresses;
     }
 
 }
