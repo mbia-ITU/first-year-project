@@ -14,7 +14,7 @@ public class kdNode {
         box = box.combineMany(list);
     }
 
-    public List<List<OSMWay>> splitOnX(List<OSMWay> list){
+    public List<List<OSMWay>> splitOnX(List<OSMWay> list) {
         List<OSMWay> leftList;
         List<OSMWay> rightList;
 
@@ -31,12 +31,12 @@ public class kdNode {
             listOfOSMWays.add(leftList);
             listOfOSMWays.add(rightList);
 
-            return listOfOSMWays; 
+            return listOfOSMWays;
         }
-    
+
     }
 
-    public List<List<OSMWay>> splitOnY(List<OSMWay> list){
+    public List<List<OSMWay>> splitOnY(List<OSMWay> list) {
         List<OSMWay> leftList;
         List<OSMWay> rightList;
 
@@ -53,8 +53,8 @@ public class kdNode {
             listOfOSMWays.add(leftList);
             listOfOSMWays.add(rightList);
 
-            return listOfOSMWays; 
+            return listOfOSMWays;
         }
-    
+
     }
 }

@@ -14,7 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-
 public class Controller {
     private Point2D lastMouse;
 
@@ -33,7 +32,7 @@ public class Controller {
     private void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
-        percentText.setText(String.valueOf("Zoom: "+canvas.getZoomPercentage() + "%"));
+        percentText.setText(String.valueOf("Zoom: " + canvas.getZoomPercentage() + "%"));
     }
 
     @FXML
@@ -49,23 +48,24 @@ public class Controller {
         lastMouse = new Point2D(e.getX(), e.getY());
     }
 
-    //loads DK map
+    // loads DK map
     @FXML
-    private void onPress(ActionEvent e)throws Exception {
+    private void onPress(ActionEvent e) throws Exception {
         var model = new Model("data/Bornholm.zip");
         Stage mapStage = new Stage();
-        new MapView(model, mapStage,"UI.fxml");
+        new MapView(model, mapStage, "UI.fxml");
         View.exitMenu();
     }
-    //loads custom map from .zip or .osm
+
+    // loads custom map from .zip or .osm
     @FXML
     private void onCustomPress(ActionEvent e) throws Exception {
-        String dir= "";
+        String dir = "";
         JFrame JF = new JFrame();
         FileDialog fd = new FileDialog(JF);
         fd.setVisible(true);
         File[] f = fd.getFiles();
-        if(f.length > 0){
+        if (f.length > 0) {
             dir = fd.getFiles()[0].getAbsolutePath();
         }
         JF.dispose();
@@ -74,9 +74,9 @@ public class Controller {
             Stage mapStage = new Stage();
             new MapView(model, mapStage, "UI.fxml");
             View.exitMenu();
-        }catch (Exception ex){
-        desc.setText("The chosen file was not supported (try .osm)");
-        desc.setFill(Color.RED);
+        } catch (Exception ex) {
+            desc.setText("The chosen file was not supported (try .osm)");
+            desc.setFill(Color.RED);
         }
     }
 }

@@ -43,9 +43,10 @@ public class MapCanvas extends Canvas {
             line.fill(gc);
         }
         if (drawLevel >= 1) {
-        gc.setFill(Color.LIGHTGREY);
-        for (var line : model.iterable(WayType.RESIDENTIAL)) {
-            line.fill(gc); }
+            gc.setFill(Color.LIGHTGREY);
+            for (var line : model.iterable(WayType.RESIDENTIAL)) {
+                line.fill(gc);
+            }
         }
         gc.setFill(Color.TAN);
         for (var line : model.iterable(WayType.HEATH)) {
@@ -83,92 +84,105 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.GRASS)) {
             line.fill(gc);
         }
-        if (drawLevel == 2){
-        gc.setFill(Color.SEASHELL);
-        for (var line : model.iterable(WayType.RESORT)) {
-            line.fill(gc); }
+        if (drawLevel == 2) {
+            gc.setFill(Color.SEASHELL);
+            for (var line : model.iterable(WayType.RESORT)) {
+                line.fill(gc);
+            }
         }
-        if (drawLevel == 2){
-        gc.setFill(Color.LIGHTYELLOW);
-        for (var line : model.iterable(WayType.HOSPITAL)) {
-            line.fill(gc); }
+        if (drawLevel == 2) {
+            gc.setFill(Color.LIGHTYELLOW);
+            for (var line : model.iterable(WayType.HOSPITAL)) {
+                line.fill(gc);
+            }
         }
-        if (drawLevel == 2){
-        gc.setFill(Color.MEDIUMPURPLE);
-        for (var line : model.iterable(WayType.HELIPAD)) {
-            line.fill(gc); }
+        if (drawLevel == 2) {
+            gc.setFill(Color.MEDIUMPURPLE);
+            for (var line : model.iterable(WayType.HELIPAD)) {
+                line.fill(gc);
+            }
         }
         /*
-        gc.setStroke(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.RIVER)) {
-            line.draw(gc);
-        }
-        gc.setStroke(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.TERTIARY)) {
-            line.draw(gc);
-        }
-        */
+         * gc.setStroke(Color.LIGHTBLUE);
+         * for (var line : model.iterable(WayType.RIVER)) {
+         * line.draw(gc);
+         * }
+         * gc.setStroke(Color.LIGHTBLUE);
+         * for (var line : model.iterable(WayType.TERTIARY)) {
+         * line.draw(gc);
+         * }
+         */
         if (drawLevel == 2) {
-        gc.setFill(Color.DARKTURQUOISE);
-        for (var line : model.iterable(WayType.PITCH)) {
-            line.fill(gc); }
-        }
-        if (drawLevel == 2) {
-        gc.setFill(Color.DARKTURQUOISE);
-        for (var line : model.iterable(WayType.SOCCER)) {
-            line.fill(gc); }
+            gc.setFill(Color.DARKTURQUOISE);
+            for (var line : model.iterable(WayType.PITCH)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
-        gc.setFill(Color.LAVENDER);
-        for (var line : model.iterable(WayType.PARKING)) {
-            line.fill(gc); }
+            gc.setFill(Color.DARKTURQUOISE);
+            for (var line : model.iterable(WayType.SOCCER)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
-        gc.setFill(Color.HONEYDEW);
-        for (var line : model.iterable(WayType.GOLFCOURSE)) {
-            line.fill(gc); }
+            gc.setFill(Color.LAVENDER);
+            for (var line : model.iterable(WayType.PARKING)) {
+                line.fill(gc);
+            }
+        }
+        if (drawLevel == 2) {
+            gc.setFill(Color.HONEYDEW);
+            for (var line : model.iterable(WayType.GOLFCOURSE)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel >= 1) {
-        gc.setFill(Color.GOLDENROD);
-        for (var line : model.iterable(WayType.PROTECTEDAREA)) {
-            line.fill(gc); }
+            gc.setFill(Color.GOLDENROD);
+            for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel >= 1) {
-        gc.setFill(Color.SEASHELL);
-        for (var line : model.iterable(WayType.RESERVE)) {
-            line.fill(gc); }
+            gc.setFill(Color.SEASHELL);
+            for (var line : model.iterable(WayType.RESERVE)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
-        gc.setFill(Color.MEDIUMAQUAMARINE);
-        for (var line : model.iterable(WayType.CEMETERY)) {
-            line.fill(gc); }
+            gc.setFill(Color.MEDIUMAQUAMARINE);
+            for (var line : model.iterable(WayType.CEMETERY)) {
+                line.fill(gc);
+            }
         }
         /*
-        gc.setFill(Color.ORANGE);
-        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
-            line.fill(gc);
-        }
-        */
+         * gc.setFill(Color.ORANGE);
+         * for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+         * line.fill(gc);
+         * }
+         */
         if (drawLevel == 2) {
-        gc.setFill(Color.LIGHTSTEELBLUE);
-        for (var line : model.iterable(WayType.RACE)) {
-            line.fill(gc); }
-        }
-        if (drawLevel == 2) {
-        gc.setFill(Color.RED);
-        for (var line : model.iterable(WayType.RACEWAY)) {
-            line.fill(gc); }
+            gc.setFill(Color.LIGHTSTEELBLUE);
+            for (var line : model.iterable(WayType.RACE)) {
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
-        gc.setFill(Color.GRAY);
-        for (var line : model.iterable(WayType.BUILDING)) {
-            line.fill(gc); }
+            gc.setFill(Color.RED);
+            for (var line : model.iterable(WayType.RACEWAY)) {
+                line.fill(gc);
+            }
         }
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        if (drawLevel == 2) {
+            gc.setFill(Color.GRAY);
+            for (var line : model.iterable(WayType.BUILDING)) {
+                line.fill(gc);
+            }
+        }
+        gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc); 
-        } 
-        
+            line.draw(gc);
+        }
+
     }
 
     void pan(double dx, double dy) {
@@ -182,10 +196,13 @@ public class MapCanvas extends Canvas {
         trans.prependTranslation(x, y);
         currentZoomLevel = trans.getMxx();
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
-        if (zoomPercentage < 200) drawLevel = 0;
-        if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
-        if (zoomPercentage > 500) drawLevel = 2;
-        //System.out.println(zoomPercentage);
+        if (zoomPercentage < 200)
+            drawLevel = 0;
+        if (zoomPercentage > 200 && zoomPercentage < 500)
+            drawLevel = 1;
+        if (zoomPercentage > 500)
+            drawLevel = 2;
+        // System.out.println(zoomPercentage);
         repaint();
     }
 
@@ -197,11 +214,11 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public double getZoomPercentage(){
+    public double getZoomPercentage() {
         zp = zoomPercentage;
         double percent1 = zp * 100;
         int percent2 = (int) percent1;
-        return (double) percent2/100;
+        return (double) percent2 / 100;
     }
 
 }
