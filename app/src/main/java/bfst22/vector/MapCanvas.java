@@ -208,6 +208,8 @@ public class MapCanvas extends Canvas {
         return (double) percent2/100;
     }
 
-    
+    private void colorMap(){
+
+    }
 
 }
