@@ -3,6 +3,7 @@ package bfst22.vector;
 import java.util.*;
 
 public class kdTree {
+    /*
     float leftNode, rightNode, root;
     int currentDepth;
     int maxDepth;
@@ -35,5 +36,6 @@ public class kdTree {
         return null;
         
     }
+    */
 
 }
