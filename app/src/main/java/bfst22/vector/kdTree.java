@@ -3,53 +3,39 @@ package bfst22.vector;
 import java.util.*;
 
 public class kdTree {
+    /*
     float leftNode, rightNode, root;
     int currentDepth;
     int maxDepth;
 
-    List<OSMWay> list;
-    List<BoundingBox> listOfBoundingBoxes;
+    List<OSMWay> ways;
 
-    public kdTree() {
-        maxDepth = list.size();
-
+    public kdTree(List<OSMWay> ways, int maxDepth) {
+        root = buildKdTree(ways);
+        this.maxDepth = maxDepth;
+        currentDepth = 0;
     }
 
-    public void buildKdTree() {
-        for (currentDepth = 0; currentDepth < maxDepth; currentDepth++) {
-            if (currentDepth % 2 == 0) {
-                /*
-                 * split on x
-                 */
+    public kdNode buildKdTree(List<OSMWay> ways) {
+        
+        kdNode node = new kdNode(ways);
 
-            } else if (currentDepth % 2 == 1) {
-                /*
-                 * split on y
-                 */
-            } else if (currentDepth == maxDepth) {
-                /*
-                 * return listOfBoundingBoxes;
-                 */
+        for (int i = 0; i < maxDepth; i++) {
+            if (ways.size() < 1000) {
+                node.left = buildKdTree(leftNode, OSMWay.splitOnX(ways, maxDepth));
+                node.right = buildKdTree(rightNode, OSMWay.splitOnY(ways, maxDepth));
+                return node;
+                
             }
-            /*
-             * BoundingBox.combineMany(list);
-             * root = BoundingBox.getCenterX();
-             * 
-             * /*
-             * kdNode(List<OSMWay> boolean splitonx){
-             * BoundingBox.combineMany(list)
-             * if (list.size < 1000){
-             * elem = list;
-             * }
-             * 
-             * else{
-             * 
-             * }
-             * 
-             * 
-             * }
-             */
+            else if (currentDepth % 2 == 0) {
+                currentDepth++;
+            } else if (currentDepth % 2 == 1) {
+                currentDepth++;
+            }
         }
-
+        return null;
+        
     }
+    */
+
 }

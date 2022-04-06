@@ -6,13 +6,11 @@ public class kdNode {
     float split;
     kdNode left, right;
     BoundingBox box;
-    List<OSMWay> listOfOSMWays;
-    Comparator<OSMWay> OSMWayComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
-    Comparator<OSMWay> OSMWayComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
-
+    
     public kdNode(List<OSMWay> list) {
         box = box.combineMany(list);
     }
+<<<<<<< HEAD
 
     public List<List<OSMWay>> splitOnX(List<OSMWay> list) {
         List<OSMWay> leftList;
@@ -57,4 +55,7 @@ public class kdNode {
         }
 
     }
+=======
+>>>>>>> 8955565162f8c30bba6af4a06a1f775a91f5365e
 }
+ 
