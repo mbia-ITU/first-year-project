@@ -208,4 +208,6 @@ public class MapCanvas extends Canvas {
         return (double) percent2/100;
     }
 
+    
+
 }
