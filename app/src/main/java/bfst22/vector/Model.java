@@ -28,6 +28,14 @@ import static java.util.stream.Collectors.toList;
 
 public class Model {
     float minlat, minlon, maxlat, maxlon;
+    ArrayList<String> addresses = new ArrayList<>();
+    String housenumber = "";
+    String street = "";
+    String postcode = "";
+    String city = "";
+    String floor = "";
+    String side = "";
+
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
@@ -160,6 +168,18 @@ public class Model {
                             if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
                             if (k.equals("caravans") && v.equals("yes")) type = WayType.GOLFCOURSE;
                             if (k.equals("man_made") && v.equals("wastewater_plant")) type = WayType.INDUSTRIAL;
+
+                            if (k.equals("addr:housenumber")){housenumber = v;}
+                            if (k.equals("addr:city")){city=v;}
+                            if (k.equals("addr:postcode")){postcode=v;}
+                            if (k.equals("addr:street")){street=v;
+
+                                addresses.add(street + " " +housenumber + " " +postcode + " " + city);
+                                street="";
+                                city="";
+                                postcode="";
+                                housenumber="";
+                            }
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -243,6 +263,10 @@ public class Model {
 
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
+    }
+
+    public ArrayList<String> getAddresses(){
+        return addresses;
     }
 
 }
