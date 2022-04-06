@@ -63,20 +63,20 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.fill(gc);
         }
-        gc.setFill(Color.DARKSEAGREEN);
-        for (var line : model.iterable(WayType.SCRUB)) {
-            line.fill(gc);
-        }
-        gc.setFill(Color.PALEGREEN);
-        for (var line : model.iterable(WayType.MEADOW)) {
-            line.fill(gc);
-        }
         gc.setFill(Color.PEACHPUFF);
         for (var line : model.iterable(WayType.FARMYARD)) {
             line.fill(gc);
         }
         gc.setFill(Color.PLUM);
         for (var line : model.iterable(WayType.INDUSTRIAL)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.HONEYDEW);
+        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            line.fill(gc);
+        }
+        gc.setFill(Color.ALICEBLUE);
+        for (var line : model.iterable(WayType.AIRPORT)) {
             line.fill(gc);
         }
         gc.setFill(Color.LIGHTGREEN);
@@ -97,10 +97,6 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.MEDIUMPURPLE);
         for (var line : model.iterable(WayType.HELIPAD)) {
             line.fill(gc); }
-        }
-        gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
-            line.fill(gc);
         }
         /*
         gc.setStroke(Color.LIGHTBLUE);

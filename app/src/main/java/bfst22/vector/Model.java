@@ -120,8 +120,10 @@ public class Model {
                             if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
                             if (k.equals("leisure") && v.equals("pitch")) type = WayType.PITCH;
                             if (k.equals("leisure") && v.equals("golf_course")) type = WayType.GOLFCOURSE;
+                            if (k.equals("leisure") && v.equals("miniature_golf")) type = WayType.GOLFCOURSE;
                             if (k.equals("leisure") && v.equals("nature_reserve")) type = WayType.RESERVE;
                             if (k.equals("leisure") && v.equals("sports_centre")) type = WayType.RACE;
+                            if (k.equals("leisure") && v.equals("playground")) type = WayType.RACE;
                             if (k.equals("building") && v.equals("yes")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("retail")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("industrial")) type = WayType.BUILDING;
@@ -140,17 +142,24 @@ public class Model {
                             if (k.equals("landuse") && v.equals("scrub")) type = WayType.SCRUB;
                             if (k.equals("landuse") && v.equals("cemetery")) type = WayType.CEMETERY;
                             if (k.equals("landuse") && v.equals("quarry")) type = WayType.INDUSTRIAL;
+                            if (k.equals("landuse") && v.equals("vineyard")) type = WayType.VINEYARD;
                             if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
                             if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
                             //if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
                             if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
                             if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
+                            if (k.equals("amenity") && v.equals("kindergarten")) type = WayType.HOSPITAL;
+                            if (k.equals("amenity") && v.equals("grave_yard")) type = WayType.CEMETERY;
                             if (k.equals("aeroway") && v.equals("helipad")) type = WayType.HELIPAD;
+                            if (k.equals("aeroway") && v.equals("apron")) type = WayType.APRON;
+                            if (k.equals("aerodrome") && v.equals("public")) type = WayType.AIRPORT;
                             if (k.equals("area") && v.equals("yes")) type = WayType.GRASS;
                             if (k.equals("boundary") && v.equals("protected_area")) type = WayType.PROTECTEDAREA;
                             if (k.equals("tourism") && v.equals("resort")) type = WayType.RESORT;
                             if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
+                            if (k.equals("caravans") && v.equals("yes")) type = WayType.GOLFCOURSE;
+                            if (k.equals("man_made") && v.equals("wastewater_plant")) type = WayType.INDUSTRIAL;
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
