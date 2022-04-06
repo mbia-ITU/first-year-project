@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,8 +63,11 @@ public class Controller {
             String input = newValue;
             ArrayList<String> results = getMatches(input,model);
             if(newValue.isEmpty()){
-                results.clear();
 
+                results.clear();
+                sear.setText("");
+                sear1.setText("");
+                sear2.setText("");
             }else if (!newValue.equals(oldValue)){
                     //var builder = new AdressParse.Builder();
                    // var matcher = PATTERN.matcher(newValue);
@@ -94,8 +98,7 @@ public class Controller {
         ArrayList<String> list = model.getAddresses();
         var matcher = PATTERN.matcher(st);
         for(String string: list){
-                if(matcher.find()){
-
+                if(string.toLowerCase().contains(st.toLowerCase())){
                     match.add(string);
                 }
                 if(match.size()>3){
