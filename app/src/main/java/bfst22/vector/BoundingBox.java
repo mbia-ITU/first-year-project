@@ -32,9 +32,9 @@ public class BoundingBox {
 
     public BoundingBox combineWith(BoundingBox box){
             float minX = this.minX > box.minX ? box.minX : this.minX;
-            float maxX = this.maxX > box.maxX ? box.maxX : this.maxX;
+            float maxX = this.maxX > box.maxX ? this.maxX : box.maxX;
             float minY = this.minY > box.minY ? box.minY : this.minY;
-            float maxY = this.maxY > box.maxY ? box.maxY : this.maxY;
+            float maxY = this.maxY > box.maxY ? this.maxY : box.maxY;
 
             return new BoundingBox(minX, maxX, minY, maxY);
     }
@@ -46,27 +46,11 @@ public class BoundingBox {
         float maxY = this.maxY;
         for(OSMWay node : list){
             minX = minX > node.minX ? node.minX : minX;
-            maxX = maxX > node.maxX ? node.maxX : maxX;
+            maxX = maxX > node.maxX ? maxX : node.maxX;
             minY = minY > node.minY ? node.minY : minY;
-            maxY = maxY > node.maxY ? node.maxY : maxY;
+            maxY = maxY > node.maxY ? maxY : node.maxY;
 
         }
         return new BoundingBox(minX, maxX, minY, maxY);
     }
-
-    /*
-    public BoundingBox(List<OSMWay> list){
-        var first >= list.get(0); //Only handles nonempty lists
-        minX = first.minX;
-        maxX = first.maxX;
-        minY = first.minY;
-        maxY = first.maxY;
-        for(OSMWay node : list){
-            minX = this.minX > node.minX ? node.minX : this.minX;
-            maxX = this.maxX > node.maxX ? node.maxX : this.maxX;
-            minY = this.minY > node.minY ? node.minY : this.minY;
-            maxY = this.maxY > node.maxY ? node.maxY : this.maxY;
-        }
-    }
-    */
 }

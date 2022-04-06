@@ -7,18 +7,54 @@ public class kdNode {
     kdNode left, right;
     BoundingBox box;
     List<OSMWay> listOfOSMWays;
+    Comparator<OSMWay> OSMWayComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
+    Comparator<OSMWay> OSMWayComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
 
-    public kdNode(List<BoundingBox> listOfOSMWays){
-        
-
+    public kdNode(List<OSMWay> list) {
+        box = box.combineMany(list);
     }
-/*
-    public boolean splitOnX(){
-        if(%2==0){
-            return true;
+
+    public List<List<OSMWay>> splitOnX(List<OSMWay> list){
+        List<OSMWay> leftList;
+        List<OSMWay> rightList;
+
+        if (list.size() < 500) {
+            this.listOfOSMWays = list;
+            List<List<OSMWay>> listOfOSMWays = new ArrayList<List<OSMWay>>();
+            listOfOSMWays.add(this.listOfOSMWays);
+            return listOfOSMWays;
+        } else {
+            Collections.sort(list, OSMWayComparatorX);
+            leftList = list.subList(0, list.size() / 2);
+            rightList = list.subList(list.size() / 2, list.size());
+            List<List<OSMWay>> listOfOSMWays = new ArrayList<List<OSMWay>>();
+            listOfOSMWays.add(leftList);
+            listOfOSMWays.add(rightList);
+
+            return listOfOSMWays; 
         }
-        else
-        return false;
+    
     }
-*/
+
+    public List<List<OSMWay>> splitOnY(List<OSMWay> list){
+        List<OSMWay> leftList;
+        List<OSMWay> rightList;
+
+        if (list.size() < 500) {
+            this.listOfOSMWays = list;
+            List<List<OSMWay>> listOfOSMWays = new ArrayList<List<OSMWay>>();
+            listOfOSMWays.add(this.listOfOSMWays);
+            return listOfOSMWays;
+        } else {
+            Collections.sort(list, OSMWayComparatorY);
+            leftList = list.subList(0, list.size() / 2);
+            rightList = list.subList(list.size() / 2, list.size());
+            List<List<OSMWay>> listOfOSMWays = new ArrayList<List<OSMWay>>();
+            listOfOSMWays.add(leftList);
+            listOfOSMWays.add(rightList);
+
+            return listOfOSMWays; 
+        }
+    
+    }
 }

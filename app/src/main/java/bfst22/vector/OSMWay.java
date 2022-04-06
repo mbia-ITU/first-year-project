@@ -21,7 +21,7 @@ public class OSMWay implements Serializable {
         return nodes.size();
     }
 
-    private BoundingBox getPlotBounds() {
+    public BoundingBox getPlotBounds() {
         if(nodes.size() == 0){
         throw new RuntimeException("OSMWay does not have any nodes");
         }
