@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
-import javafx.scene.canvas.GraphicsContext;
-
 public class OSMWay implements Serializable {
     public static final long serialVersionUID = 42;
     List<OSMNode> nodes;

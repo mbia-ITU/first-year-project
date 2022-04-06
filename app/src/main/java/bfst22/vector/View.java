@@ -8,11 +8,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class View {
-    private Model model;
     private static Stage stage1;
 
     public View() throws IOException {
-        this.stage1 = new Stage();
+        View.stage1 = new Stage(); //maybe change back to this.stage1
         CreateMenu();
         stage1.setResizable(false);
         stage1.show();
