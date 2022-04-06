@@ -2,6 +2,7 @@ package bfst22.vector;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -14,6 +15,7 @@ public class MapCanvas extends Canvas {
     double zoomPercentage;
     int drawLevel = 0;
     double zp;
+    GraphicsContext gc = getGraphicsContext2D();
 
     void init(Model model) {
         this.model = model;
@@ -25,11 +27,52 @@ public class MapCanvas extends Canvas {
     }
 
     void repaint() {
-        var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
+        colorMap();
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        for (var line : model.iterable(WayType.UNKNOWN)) {
+            line.draw(gc); 
+        } 
+        
+    }
+
+    void pan(double dx, double dy) {
+        trans.prependTranslation(dx, dy);
+        repaint();
+    }
+
+    void zoom(double factor, double x, double y) {
+        trans.prependTranslation(-x, -y);
+        trans.prependScale(factor, factor);
+        trans.prependTranslation(x, y);
+        currentZoomLevel = trans.getMxx();
+        zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
+        if (zoomPercentage < 200) drawLevel = 0;
+        if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
+        if (zoomPercentage > 500) drawLevel = 2;
+        //System.out.println(zoomPercentage);
+        repaint();
+    }
+
+    public Point2D mouseToModel(Point2D point) {
+        try {
+            return trans.inverseTransform(point);
+        } catch (NonInvertibleTransformException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public double getZoomPercentage(){
+        zp = zoomPercentage;
+        double percent1 = zp * 100;
+        int percent2 = (int) percent1;
+        return (double) percent2/100;
+    }
+
+    private void colorMap(){
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);
@@ -168,48 +211,6 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.BUILDING)) {
             line.fill(gc); }
         }
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc); 
-        } 
-        
-    }
-
-    void pan(double dx, double dy) {
-        trans.prependTranslation(dx, dy);
-        repaint();
-    }
-
-    void zoom(double factor, double x, double y) {
-        trans.prependTranslation(-x, -y);
-        trans.prependScale(factor, factor);
-        trans.prependTranslation(x, y);
-        currentZoomLevel = trans.getMxx();
-        zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
-        if (zoomPercentage < 200) drawLevel = 0;
-        if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
-        if (zoomPercentage > 500) drawLevel = 2;
-        //System.out.println(zoomPercentage);
-        repaint();
-    }
-
-    public Point2D mouseToModel(Point2D point) {
-        try {
-            return trans.inverseTransform(point);
-        } catch (NonInvertibleTransformException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public double getZoomPercentage(){
-        zp = zoomPercentage;
-        double percent1 = zp * 100;
-        int percent2 = (int) percent1;
-        return (double) percent2/100;
-    }
-
-    private void colorMap(){
-
     }
 
 }
