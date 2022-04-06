@@ -20,6 +20,7 @@ public class BoundingBox {
     public float getCenterY(){
         return (minY + maxY)/2;
     }
+
     
     public boolean intersect(BoundingBox box){
         if(this.maxX >= box.minX && this.maxY >= box.minY && box.maxX >= this.minX && box.maxY >= this.minY){
