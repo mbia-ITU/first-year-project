@@ -3,12 +3,12 @@ package bfst22.vector;
 import java.util.*;
 
 public class kdNode {
-    float split;
+    List<OSMWay> wayList;
     kdNode left, right;
     BoundingBox box;
     
     public kdNode(List<OSMWay> list) {
-        box = box.combineMany(list);
+        box = list.get(0).getPlotBounds().combineMany(list);
     }
 }
  
