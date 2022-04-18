@@ -52,15 +52,14 @@
                         <MenuItem mnemonicParsing="false" text="Paste" />
                         <MenuItem mnemonicParsing="false" text="Delete" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Select All" />
-                        <MenuItem mnemonicParsing="false" text="Unselect All" />
                     </items>
 
                 </Menu>
 
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="View">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                        <MenuItem mnemonicParsing="false" text="x Mode" />
+                        <MenuItem mnemonicParsing="false" text="y Mode" />
                     </items>
                 </Menu>
             </menus>
@@ -78,16 +77,14 @@
                             />
                     </center>
                     <left>
-                        <VBox fx:id="Searchresults" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="261.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
+                        <VBox fx:id="Searchresults" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="240.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
                             <children >
-                                <TextField fx:id="searching" minWidth="260">
-                                    <contextMenu>
-                                        <ContextMenu fx:id="result">
-                                        </ContextMenu>
-                                    </contextMenu>
-                                </TextField>
+                                <TextField fx:id="searching" promptText="From" minWidth="260"/>
+                                <Button fx:id="result1" onAction="#onAddressPress" prefWidth="240.0"/>
+                                <TextField fx:id="searching1" promptText="To" minWidth="260"/>
+                                <Button fx:id="result2" onAction="#onAddressPress" prefWidth="240.0"/>
                                 <Label  fx:id="percentText" text="Zoom: 100.0%"  style="-fx-text-fill:#ECECEC"/>
-                                <Label  fx:id="sear"  text="PP" style="-fx-text-fill:#ECECEC"/>
+
 
                             </children>
                             <padding>

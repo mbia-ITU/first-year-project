@@ -3,8 +3,8 @@ package bfst22.vector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.geometry.Side;
-import javafx.scene.control.ComboBox;
+
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,7 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Builder;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +28,8 @@ public class Controller {
     private Point2D lastMouse;
     private ArrayList<Address> match = new ArrayList<>();
     MenuItem item1 = new MenuItem();
+    private Model model;
+    //private Button btn;
 
     @FXML
     private MapCanvas canvas;
@@ -36,10 +38,15 @@ public class Controller {
     @FXML
     private Text desc;
 
+
     @FXML
-    private VBox Searchresults;
+    private Button result1;
+    @FXML
+    private Button result2;
     @FXML
     private TextField searching;
+    @FXML
+    private TextField searching1;
     @FXML
     private Label sear;
     @FXML
@@ -53,24 +60,46 @@ public class Controller {
     private final static Pattern PATTERN = Pattern.compile(REGEX);
 
     public void init(Model model) {
+        this.model=model;
         canvas.init(model);
         searching.setEditable(true);
-    //Searchbar listener
+        result1.setVisible(false);
+        searching1.setEditable(true);
+        result2.setVisible(false);
+    //Searchbar for from listener
         searching.textProperty().addListener((observable, oldValue, newValue) -> {
             String input = newValue;
             ArrayList<Address> result = getMatches(input,model);
             if(newValue.isEmpty()){
                 result.clear();
                 sear.setText("");
+                result1.setVisible(false);
             }else if (!newValue.equals(oldValue)){
-                //var builder = new AdressParse.Builder();
-                // var matcher = PATTERN.matcher(newValue);
                 result = getMatches(input,model);
-
-                    Button btn = new Button(result.get(0).getAdress());
-                    btn.setPrefWidth(240);
-                    Searchresults.getChildren().add(btn);
-
+                    result1.setText(result.get(0).getAdress());
+                    if(result.get(0)==null){
+                        result1.setVisible(false);
+                    }else {
+                        result1.setVisible(true);
+                    }
+                sear.setText(result.get(0).getAdress());
+            }
+        });
+        searching1.textProperty().addListener((observable, oldValue, newValue) -> {
+            String input1 = newValue;
+            ArrayList<Address> result = getMatches(input1,model);
+            if(newValue.isEmpty()){
+                result.clear();
+                sear.setText("");
+                result2.setVisible(false);
+            }else if (!newValue.equals(oldValue)){
+                result = getMatches(input1,model);
+                result2.setText(result.get(0).getAdress());
+                if(result.get(0)==null){
+                    result2.setVisible(false);
+                }else {
+                    result2.setVisible(true);
+                }
                 sear.setText(result.get(0).getAdress());
             }
         });
@@ -86,7 +115,7 @@ public class Controller {
             public int compare(Address a1, Address a2) {
                 //Todo: implement floors + sides
 
-                System.out.println("post: x" + a2.getCity() + "x");
+                //System.out.println("post: x" + a2.getCity() + "x");
                 if (a2.getHousenumber().equals("") && a2.getPostcode() == null) {
                     //searches streets
                     return a1.getStreet().toLowerCase().compareTo(a2.getStreet().toLowerCase());
@@ -162,5 +191,11 @@ public class Controller {
         desc.setText("The chosen file was not supported (try .osm)");
         desc.setFill(Color.RED);
         }
+    }
+
+    @FXML
+    private void onAddressPress(ActionEvent e){
+        System.out.println(match.get(0).getNode().toString());
+
     }
 }

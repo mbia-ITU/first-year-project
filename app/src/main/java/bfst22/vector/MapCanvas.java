@@ -167,9 +167,10 @@ public class MapCanvas extends Canvas {
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc); 
-        } 
-        
+        }
+
     }
+
 
     void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);

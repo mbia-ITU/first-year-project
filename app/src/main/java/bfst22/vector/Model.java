@@ -30,6 +30,7 @@ public class Model {
     String city = "";
     String floor = "";
     String side = "";
+    ArrayList<OSMNode> points= new ArrayList<>();
 
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -252,11 +253,9 @@ public class Model {
         //to test same addresses for different post numbers
         addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
-        Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-        for(Address a : addresses){
-            System.out.println(a.getAdress());
-        }
 
+        //ENABLE THIS TO TEST SEARCHING
+        Collections.sort(addresses,Comparator.comparing(Address::getAdress));
 
     }
 

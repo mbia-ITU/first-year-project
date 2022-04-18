@@ -1,5 +1,9 @@
 package bfst22.vector;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
 import java.io.Serializable;
 
 public class OSMNode implements Serializable {
@@ -13,13 +17,12 @@ public class OSMNode implements Serializable {
         this.lon = lon;
     }
 
-    public float getLon(){
+    public float getLon() {
         return lon;
     }
 
-    public float getLat(){
+    public float getLat() {
         return lat;
     }
-
 
 }
