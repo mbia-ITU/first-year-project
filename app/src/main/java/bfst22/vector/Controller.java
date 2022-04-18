@@ -3,24 +3,31 @@ package bfst22.vector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.geometry.Side;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Builder;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
 public class Controller {
     private Point2D lastMouse;
-    private ArrayList<String> match = new ArrayList<>();
+    private ArrayList<Address> match = new ArrayList<>();
+    MenuItem item1 = new MenuItem();
 
     @FXML
     private MapCanvas canvas;
@@ -30,72 +37,87 @@ public class Controller {
     private Text desc;
 
     @FXML
-    private ComboBox searching;
+    private VBox Searchresults;
+    @FXML
+    private TextField searching;
     @FXML
     private Label sear;
     @FXML
     private Label sear1;
     @FXML
     private Label sear2;
+    @FXML
+    private ContextMenu result;
+
+    private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
+    private final static Pattern PATTERN = Pattern.compile(REGEX);
 
     public void init(Model model) {
         canvas.init(model);
         searching.setEditable(true);
-//Searchbar listener
-        searching.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+    //Searchbar listener
+        searching.textProperty().addListener((observable, oldValue, newValue) -> {
             String input = newValue;
-            ArrayList<String> results = getMatches(input,model);
+            ArrayList<Address> result = getMatches(input,model);
             if(newValue.isEmpty()){
-
-                results.clear();
+                result.clear();
                 sear.setText("");
-                sear1.setText("");
-                sear2.setText("");
             }else if (!newValue.equals(oldValue)){
                 //var builder = new AdressParse.Builder();
                 // var matcher = PATTERN.matcher(newValue);
-                results = getMatches(input,model);
+                result = getMatches(input,model);
 
-                sear.setText(results.get(0));
-                sear1.setText(results.get(1));
-                sear2.setText(results.get(2));
-                        /*if (matcher.matches()) {
-                            builder.street(matcher.group("street"));
-                            builder.house(matcher.group("house"));
-                            builder.postcode(matcher.group("postcode"));
-                            builder.city(matcher.group("city"));
-                            builder.floor(matcher.group("floor"));
-                            builder.side(matcher.group("side"));
+                    Button btn = new Button(result.get(0).getAdress());
+                    btn.setPrefWidth(240);
+                    Searchresults.getChildren().add(btn);
 
-                            sear.setText(builder.build().toString());
-                            sear1.setText(matcher.group());
-                        }*/
+                sear.setText(result.get(0).getAdress());
             }
         });
     }
 
-    private ArrayList<String> getMatches(String st, Model model) {
-        String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]*?) +(?<house>[0-9A-Z/-]+)[ ,]* ?((?<floor>[0-9])?[,.]* ?(?<side>[a-zæøå.]+)?,?)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*)?$";
-        Pattern PATTERN = Pattern.compile(REGEX);
+    //returns an arraylist so we may keep earlier searches another time
+    private ArrayList<Address> getMatches(String searchStr, Model model) {
+        int pos = 0;
         match.clear();
-        ArrayList<String> list = model.getAddresses();
-        var matcher = PATTERN.matcher(st);
-        for(String string: list){
-            if(string.toLowerCase().contains(st.toLowerCase())){
-                match.add(string);
+        var addr = Address.parse(searchStr);
+
+        Comparator<Address> c = new Comparator<Address>() {
+            public int compare(Address a1, Address a2) {
+                //Todo: implement floors + sides
+
+                System.out.println("post: x" + a2.getCity() + "x");
+                if (a2.getHousenumber().equals("") && a2.getPostcode() == null) {
+                    //searches streets
+                    return a1.getStreet().toLowerCase().compareTo(a2.getStreet().toLowerCase());
+                } else if(a2.getPostcode() == null && a2.getCity().length()>=1 ){
+                    //searches streets + housenumber + city
+                    return (a1.getStreet().toLowerCase() + a1.getHousenumber() + a1.getCity().toLowerCase()).compareTo(a2.getStreet().toLowerCase() + a2.getHousenumber() + a2.getCity().toLowerCase());
+                }else if (a2.getPostcode() == null){
+                    //searches streets + housenumber
+                    return (a1.getStreet().toLowerCase() + a1.getHousenumber()).compareTo(a2.getStreet().toLowerCase() + a2.getHousenumber());
+                }else if(a2.getCity().equals("")){
+                    //searches streets + housenumber + postcode
+                    return (a1.getStreet().toLowerCase() + a1.getHousenumber() + a1.getPostcode()).compareTo(a2.getStreet().toLowerCase() + a2.getHousenumber() + a2.getPostcode());
+                }
+                    //searches the entire address
+
+                return a1.getAdress().toLowerCase().compareTo(a2.getAdress().toLowerCase());
             }
-            if(match.size()>3){
-                break;
-            }
-        }
+        };
+        //binary search
+        pos = Collections.binarySearch(model.getAddresses(),new Address(addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity(), null), c);
+        match.add(model.getAddresses().get(pos));
+
         return match;
     }
+
 
     @FXML
     private void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
-        percentText.setText(String.valueOf("Zoom: "+canvas.getZoomPercentage() + "%"));
+        percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
     }
 
     @FXML

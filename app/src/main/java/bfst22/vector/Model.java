@@ -2,12 +2,7 @@ package bfst22.vector;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -28,7 +23,7 @@ import static java.util.stream.Collectors.toList;
 
 public class Model {
     float minlat, minlon, maxlat, maxlon;
-    ArrayList<String> addresses = new ArrayList<>();
+    ArrayList<Address> addresses = new ArrayList<>();
     String housenumber = "";
     String street = "";
     String postcode = "";
@@ -173,8 +168,14 @@ public class Model {
                             if (k.equals("addr:city")){city=v;}
                             if (k.equals("addr:postcode")){postcode=v;}
                             if (k.equals("addr:street")){street=v;
+                                Address addr = new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1));
+                                for(int i = 0; i < addresses.size(); i++){
+                                    if(addr.getAdress().compareTo(addresses.get(i).getAdress()) > 0){
 
-                                addresses.add(street + " " +housenumber + " " +postcode + " " + city);
+                                    }
+                                }
+
+                                addresses.add(new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1)));
                                 street="";
                                 city="";
                                 postcode="";
@@ -248,7 +249,15 @@ public class Model {
                     break;
             }
         }
-        System.out.println("Done");
+        //to test same addresses for different post numbers
+        addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
+        addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
+        Collections.sort(addresses,Comparator.comparing(Address::getAdress));
+        for(Address a : addresses){
+            System.out.println(a.getAdress());
+        }
+
+
     }
 
     public void addObserver(Runnable observer) {
@@ -265,7 +274,7 @@ public class Model {
         return lines.get(type);
     }
 
-    public ArrayList<String> getAddresses(){
+    public ArrayList<Address> getAddresses(){
         return addresses;
     }
 
