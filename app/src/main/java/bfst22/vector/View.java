@@ -8,17 +8,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class View {
-    private Model model;
     private static Stage stage1;
 
     public View() throws IOException {
-        this.stage1=new Stage();
+        View.stage1 = new Stage(); //maybe change back to this.stage1
         CreateMenu();
         stage1.setResizable(false);
         stage1.show();
     }
 
-    public Stage CreateMenu() throws IOException{
+    public Stage CreateMenu() throws IOException {
         var loader1 = new FXMLLoader(getClass().getResource("Menu.fxml"));
         AnchorPane root = (AnchorPane) loader1.load();
         Scene scene1 = new Scene(root);
@@ -28,13 +27,13 @@ public class View {
         return stage1;
     }
 
-    public static void exitMenu(){
+    public static void exitMenu() {
         stage1.close();
     }
 }
 
 class MapView {
-    public MapView(Model model, Stage mapStage, String name)throws IOException{
+    public MapView(Model model, Stage mapStage, String name) throws IOException {
         mapStage.setWidth(800);
         mapStage.setHeight(400);
 
@@ -46,4 +45,3 @@ class MapView {
         mapStage.setTitle("Map");
     }
 }
-

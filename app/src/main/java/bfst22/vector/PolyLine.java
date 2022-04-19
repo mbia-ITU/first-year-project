@@ -21,8 +21,8 @@ public class PolyLine implements Drawable, Serializable {
     @Override
     public void trace(GraphicsContext gc) {
         gc.moveTo(coords[0], coords[1]);
-        for (var i = 2 ; i < coords.length ; i += 2) {
-            gc.lineTo(coords[i], coords[i+1]);
+        for (var i = 2; i < coords.length; i += 2) {
+            gc.lineTo(coords[i], coords[i + 1]);
         }
     }
 }

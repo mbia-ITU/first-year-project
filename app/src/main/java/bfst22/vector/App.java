@@ -7,8 +7,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // var filename = getParameters().getRaw().get(0);
-        //var model = new Model("data/Bornholm.zip");
+        // var model = new Model("data/Bornholm.zip");
         new View();
-        //new View(model, primaryStage);
+        // new View(model, primaryStage);
     }
 }

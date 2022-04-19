@@ -8,10 +8,12 @@ public interface Drawable {
         trace(gc);
         gc.stroke();
     }
+
     default void fill(GraphicsContext gc) {
         gc.beginPath();
         trace(gc);
         gc.fill();
     }
+
     void trace(GraphicsContext gc);
 }
