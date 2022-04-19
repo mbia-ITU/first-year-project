@@ -16,6 +16,7 @@ public class MapCanvas extends Canvas {
     int drawLevel = 0;
     double zp;
     GraphicsContext gc = getGraphicsContext2D();
+    int drawType = 1;
 
     void init(Model model) {
         this.model = model;
@@ -31,7 +32,12 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
-        colorMap();
+        if (drawType == 0){
+            colorMap();
+        }
+        else if (drawType == 1) {
+            drawLineMap();
+        }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc); 
@@ -54,6 +60,7 @@ public class MapCanvas extends Canvas {
         if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
         if (zoomPercentage > 500) drawLevel = 2;
         //System.out.println(zoomPercentage);
+        //System.out.println(drawLevel);
         repaint();
     }
 
@@ -210,6 +217,100 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.GRAY);
         for (var line : model.iterable(WayType.BUILDING)) {
             line.fill(gc); }
+        }
+    }
+
+    private void drawLineMap(){
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        for (var line : model.iterable(WayType.BEACH)) {
+        line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.BUILDING)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.CEMETERY)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.COASTLINE)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.FARMLAND)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.FARMYARD)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.FOREST)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.GRASS)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.HEATH)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.HELIPAD)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.HOSPITAL)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.INDUSTRIAL)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.LAKE)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.MEADOW)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.PARKING)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.PITCH)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RACE)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RACEWAY)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RESERVE)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RESORT)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.RIVER)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.SAND)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.SCRUB)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.SOCCER)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.TERTIARY)) {
+            line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.WETLAND)) {
+            line.draw(gc);
         }
     }
 
