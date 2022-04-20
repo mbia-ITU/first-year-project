@@ -17,6 +17,7 @@ public class MapCanvas extends Canvas {
     double zp;
     GraphicsContext gc = getGraphicsContext2D();
     int drawType = 1;
+    Address destination;
 
     void init(Model model) {
         this.model = model;
@@ -312,11 +313,20 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.draw(gc);
         }
+
     }
 
     public void setDrawType(int l){
         drawType = l;
         repaint();
+    }
+
+    public void addAddress1(Address a){
+        destination = a;
+        //gc.setStroke(Color.ORANGE);
+        //gc.strokeOval(a.getLat(), a.getLon() , 4000,4000);
+        //gc.fillOval(node.getLat(), node.getLon() ,4000,4000);
+
     }
 
 }

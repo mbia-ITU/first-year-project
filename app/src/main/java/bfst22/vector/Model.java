@@ -53,6 +53,7 @@ public class Model {
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
+                addresses = (ArrayList<Address>) input.readObject();
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
@@ -71,6 +72,7 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
+            out.writeObject(addresses);
         }
     }
 
