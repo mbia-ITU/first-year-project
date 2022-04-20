@@ -16,7 +16,7 @@ public class MapCanvas extends Canvas {
     int drawLevel = 0;
     double zp;
     GraphicsContext gc = getGraphicsContext2D();
-    static int drawType = 1;
+    int drawType = 1;
 
     void init(Model model) {
         this.model = model;
@@ -314,8 +314,9 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public static void setDrawType(int l){
+    public void setDrawType(int l){
         drawType = l;
+        repaint();
     }
 
 }
