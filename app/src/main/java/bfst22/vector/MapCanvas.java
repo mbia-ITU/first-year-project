@@ -16,7 +16,7 @@ public class MapCanvas extends Canvas {
     int drawLevel = 0;
     double zp;
     GraphicsContext gc = getGraphicsContext2D();
-    int drawType = 1;
+    static int drawType = 1;
 
     void init(Model model) {
         this.model = model;
@@ -312,6 +312,10 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.draw(gc);
         }
+    }
+
+    public static void setDrawType(int l){
+        drawType = l;
     }
 
 }
