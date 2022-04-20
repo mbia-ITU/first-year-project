@@ -1,5 +1,9 @@
 package bfst22.vector;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
 import java.io.Serializable;
 
 public class OSMNode implements Serializable {
