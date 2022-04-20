@@ -205,11 +205,13 @@ public class Controller {
     }
     @FXML
     private void onLine(ActionEvent e){
-        System.out.println("lines");
+
+        canvas.setDrawType(0);
     }
     @FXML
     private void onColor(ActionEvent e){
-        System.out.println("Color");
+
+        canvas.setDrawType(0);
     }
 
 
