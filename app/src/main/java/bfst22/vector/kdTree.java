@@ -2,12 +2,14 @@ package bfst22.vector;
 
 import java.util.*;
 
-public class kdTree {
+public class KdTree {
     BoundingBox box;
     kdNode root;
+    List<OSMWay> totalWays;
 
-    public kdTree(List<OSMWay> ways) {
-        root = buildKdTree(ways, 0);
+    public KdTree(List<OSMWay> ways) {
+        this.totalWays = ways;
+        root = buildKdTree(totalWays, 0);
         box = root.box;
     }
 
@@ -47,7 +49,7 @@ public class kdTree {
             return results;
         }
         else
-        return new ArrayList<>(null);
+        return new ArrayList<>();
         
     }
 

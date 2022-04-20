@@ -12,6 +12,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import javax.xml.crypto.NodeSetData;
+
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -117,6 +119,8 @@ public class Controller {
         var model = new Model("data/Bornholm.zip");
         Stage mapStage = new Stage();
         new MapView(model, mapStage,"UI.fxml");
+        new KdTree(Model.getNodes());
+
         View.exitMenu();
     }
     //loads custom map from .zip or .osm

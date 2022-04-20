@@ -13,7 +13,7 @@ public class OSMWay implements Serializable {
     float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
     static Comparator<OSMWay> OSMWayComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
     static Comparator<OSMWay> OSMWayComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
-    //List<OSMWay> listOfOSMWays;
+    List<OSMWay> OSMWay;
     
     public OSMWay(List<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
@@ -66,6 +66,8 @@ public class OSMWay implements Serializable {
 
             return listOfOSMWays; 
         
-    
+    }
+    public List<OSMWay> getNodes(){
+        return OSMWay;
     }
 }
