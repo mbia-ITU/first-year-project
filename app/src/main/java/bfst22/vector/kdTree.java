@@ -3,13 +3,12 @@ package bfst22.vector;
 import java.util.*;
 
 public class kdTree {
-    int maxDepth;
     BoundingBox box;
+    kdNode root;
 
-    List<OSMWay> ways;
-
-    public kdTree(List<OSMWay> ways, int maxDepth) {
-        this.maxDepth = maxDepth;
+    public kdTree(List<OSMWay> ways) {
+        root = buildKdTree(ways, 0);
+        box = root.box;
     }
 
     public kdNode buildKdTree(List<OSMWay> ways, int currentDepth) {
@@ -36,18 +35,20 @@ public class kdTree {
 
     }
 
-    public kdNode searchTree(List<OSMWay> ways, BoundingBox box) {
-        kdNode leftNode = new kdNode(ways);
-        kdNode rightNode = new kdNode(ways);
+    public List<OSMWay> searchTree(BoundingBox box, kdNode node) {
 
-        if(leftNode.getPlotBounds().intersect(box)){
-            //search left
+        if(node.box.intersect(box)){
+            List<OSMWay> results = new ArrayList<>();
+            if(node.wayList == null){
+                results.addAll(searchTree(box, node.left));
+                results.addAll(searchTree(box, node.right));
+                    
+            }
+            return results;
         }
-        if(rightNode.getPlotBounds().intersect(box)){
-            //search right
-        }
-
-        return null;
+        else
+        return new ArrayList<>(null);
+        
     }
 
 }
