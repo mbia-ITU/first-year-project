@@ -1,10 +1,11 @@
 package bfst22.vector;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class KdTree {
+public class KdTree implements Serializable {
     BoundingBox box;
-    kdNode root;
+    KdNode root;
     List<OSMWay> totalWays;
 
     public KdTree(List<OSMWay> ways) {
@@ -13,9 +14,9 @@ public class KdTree {
         box = root.box;
     }
 
-    public kdNode buildKdTree(List<OSMWay> ways, int currentDepth) {
+    public KdNode buildKdTree(List<OSMWay> ways, int currentDepth) {
 
-        kdNode node = new kdNode(ways);
+        KdNode node = new KdNode(ways);
 
         if (ways.size() > 500) {
             List<List<OSMWay>> lists;
@@ -37,7 +38,7 @@ public class KdTree {
 
     }
 
-    public List<OSMWay> searchTree(BoundingBox box, kdNode node) {
+    public List<OSMWay> searchTree(BoundingBox box, KdNode node) {
 
         if(node.box.intersect(box)){
             List<OSMWay> results = new ArrayList<>();

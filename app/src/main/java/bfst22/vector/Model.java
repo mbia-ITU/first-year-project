@@ -35,7 +35,7 @@ public class Model {
     String city = "";
     String floor = "";
     String side = "";
-    static ArrayList<OSMWay> rel = new ArrayList<OSMWay>();
+    static ArrayList<OSMWay> totalOSMWays;
 
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -84,7 +84,7 @@ public class Model {
         var id2node = new NodeMap();
         var id2way = new HashMap<Long, OSMWay>();
         var nodes = new ArrayList<OSMNode>();
-
+        var rel = new ArrayList<OSMWay>();
         long relID = 0;
         var type = WayType.UNKNOWN;
         while (reader.hasNext()) {
@@ -103,6 +103,7 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
+                            totalOSMWays.add(new OSMWay(nodes));
                             break;
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -271,7 +272,7 @@ public class Model {
     }
 
     public static List<OSMWay> getNodes(){
-        return rel;
+        return totalOSMWays;
     }
 
 }
