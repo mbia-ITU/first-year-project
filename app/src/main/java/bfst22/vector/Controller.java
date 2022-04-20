@@ -170,11 +170,19 @@ public class Controller {
     //loads DK map
     @FXML
     private void onPress(ActionEvent e)throws Exception {
-        var model = new Model("data/Bornholm.zip");
-        Stage mapStage = new Stage();
-        new MapView(model, mapStage,"UI.fxml");
+        File firstBootup = new File("data/Bornholm.zip.obj");
+        if(firstBootup.exists()){
+            var model = new Model("data/Bornholm.zip.obj");
+            Stage mapStage = new Stage();
+            new MapView(model, mapStage,"UI.fxml");
+        }else{
+            var model = new Model("data/Bornholm.zip");
+            Stage mapStage = new Stage();
+            new MapView(model, mapStage,"UI.fxml");
+        }
         View.exitMenu();
     }
+
     //loads custom map from .zip or .osm
     @FXML
     private void onCustomPress(ActionEvent e) throws Exception {
@@ -201,7 +209,7 @@ public class Controller {
     @FXML
     private void onAddressPress(ActionEvent e){
         System.out.println(match.get(0).getNode().toString());
-
+        canvas.addAddress1(match.get(0));
     }
     @FXML
     private void onLine(ActionEvent e){
@@ -210,7 +218,6 @@ public class Controller {
     }
     @FXML
     private void onColor(ActionEvent e){
-
         canvas.setDrawType(0);
     }
 
