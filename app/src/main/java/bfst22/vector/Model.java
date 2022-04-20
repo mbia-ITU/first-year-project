@@ -2,11 +2,7 @@ package bfst22.vector;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -27,13 +23,14 @@ import static java.util.stream.Collectors.toList;
 
 public class Model {
     float minlat, minlon, maxlat, maxlon;
-    ArrayList<String> addresses = new ArrayList<>();
+    ArrayList<Address> addresses = new ArrayList<>();
     String housenumber = "";
     String street = "";
     String postcode = "";
     String city = "";
     String floor = "";
     String side = "";
+    ArrayList<OSMNode> points= new ArrayList<>();
 
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -41,8 +38,7 @@ public class Model {
     List<Runnable> observers = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
-    public Model(String filename)
-            throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
+    public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
         if (filename.endsWith(".zip")) {
             var zip = new ZipInputStream(new FileInputStream(filename));
@@ -56,17 +52,16 @@ public class Model {
                 minlon = input.readFloat();
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
-                lines = (Map<WayType, List<Drawable>>) input.readObject();
+                lines = (Map<WayType,List<Drawable>>) input.readObject();
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
-                    .map(Line::new)
-                    .collect(toList()));
+                .map(Line::new)
+                .collect(toList()));
         }
         time += System.nanoTime();
-        System.out.println("Load time: " + (long) (time / 1e6) + " ms");
-        if (!filename.endsWith(".obj"))
-            save(filename);
+        System.out.println("Load time: " + (long)(time / 1e6) + " ms");
+        if (!filename.endsWith(".obj")) save(filename);
     }
 
     public void save(String basename) throws FileNotFoundException, IOException {
@@ -174,8 +169,14 @@ public class Model {
                             if (k.equals("addr:city")){city=v;}
                             if (k.equals("addr:postcode")){postcode=v;}
                             if (k.equals("addr:street")){street=v;
+                                Address addr = new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1));
+                                for(int i = 0; i < addresses.size(); i++){
+                                    if(addr.getAdress().compareTo(addresses.get(i).getAdress()) > 0){
 
-                                addresses.add(street + " " +housenumber + " " +postcode + " " + city);
+                                    }
+                                }
+
+                                addresses.add(new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1)));
                                 street="";
                                 city="";
                                 postcode="";
@@ -185,8 +186,7 @@ public class Model {
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var elm = id2way.get(ref);
-                            if (elm != null)
-                                rel.add(elm);
+                            if (elm != null) rel.add(elm);
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
@@ -207,7 +207,7 @@ public class Model {
                             break;
                         case "relation":
                             if (type == WayType.GOLFCOURSE && !rel.isEmpty()) {
-                                lines.get(type).add(new MultiPolygon(rel));
+                            lines.get(type).add(new MultiPolygon(rel));
                             }
                             if (type == WayType.FARMLAND && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
@@ -215,7 +215,7 @@ public class Model {
                             if (type == WayType.FARMYARD && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
-
+                            
                             if (type == WayType.LAKE && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
@@ -223,16 +223,16 @@ public class Model {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
                             /*
-                             * if (type == WayType.GRASS && !rel.isEmpty()) {
-                             * lines.get(type).add(new MultiPolygon(rel));
-                             * }
-                             * if (type == WayType.BUILDING && !rel.isEmpty()) {
-                             * lines.get(type).add(new MultiPolygon(rel));
-                             * }
-                             * if (type == WayType.BEACH && !rel.isEmpty()) {
-                             * lines.get(type).add(new MultiPolygon(rel));
-                             * }
-                             */
+                            if (type == WayType.GRASS && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.BUILDING && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            if (type == WayType.BEACH && !rel.isEmpty()) {
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
+                            */
                             if (type == WayType.SAND && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
@@ -242,15 +242,21 @@ public class Model {
                             if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
-
+                            
                             rel.clear();
                             break;
-
+                            
                     }
                     break;
             }
         }
-        System.out.println("Done");
+        //to test same addresses for different post numbers
+        addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
+        addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
+
+        //ENABLE THIS TO TEST SEARCHING
+        Collections.sort(addresses,Comparator.comparing(Address::getAdress));
+
     }
 
     public void addObserver(Runnable observer) {
@@ -267,7 +273,7 @@ public class Model {
         return lines.get(type);
     }
 
-    public ArrayList<String> getAddresses(){
+    public ArrayList<Address> getAddresses(){
         return addresses;
     }
 
