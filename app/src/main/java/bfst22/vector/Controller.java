@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.MenuItem;
 
 
 import javax.swing.*;
@@ -31,6 +32,10 @@ public class Controller {
     private Model model;
     //private Button btn;
 
+    @FXML
+    private MenuItem color;
+    @FXML
+    private MenuItem line;
     @FXML
     private MapCanvas canvas;
     @FXML
@@ -198,4 +203,14 @@ public class Controller {
         System.out.println(match.get(0).getNode().toString());
 
     }
+    @FXML
+    private void onLine(ActionEvent e){
+        System.out.println("lines");
+    }
+    @FXML
+    private void onColor(ActionEvent e){
+        System.out.println("Color");
+    }
+
+
 }

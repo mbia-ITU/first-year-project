@@ -58,8 +58,9 @@
 
                 <Menu mnemonicParsing="false" text="View">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="x Mode" />
-                        <MenuItem mnemonicParsing="false" text="y Mode" />
+                        <MenuItem mnemonicParsing="false" onAction="#onColor" text="Color Mode" fx:id="color" />
+                        <MenuItem mnemonicParsing="false" onAction="#onLine" text="Line Mode" fx:id="line" />
+
                     </items>
                 </Menu>
             </menus>
