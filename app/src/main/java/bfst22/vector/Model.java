@@ -35,8 +35,8 @@ public class Model {
     String city = "";
     String floor = "";
     String side = "";
-    static ArrayList<OSMWay> totalOSMWays;
-
+    static ArrayList<OSMWay> totalOSMWays = new ArrayList<>();
+    KdTree tree;
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
@@ -103,7 +103,6 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
-                            totalOSMWays.add(new OSMWay(nodes));
                             break;
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -203,6 +202,7 @@ public class Model {
                             var way = new PolyLine(nodes);
                             id2way.put(relID, new OSMWay(nodes));
                             lines.get(type).add(way);
+                            totalOSMWays.add(id2way.get(relID));
                             nodes.clear();
                             break;
                         case "relation":
@@ -250,6 +250,7 @@ public class Model {
                     break;
             }
         }
+        tree = new KdTree(getWays());
         System.out.println("Done");
     }
 
@@ -271,8 +272,11 @@ public class Model {
         return addresses;
     }
 
-    public static List<OSMWay> getNodes(){
+    public static List<OSMWay> getWays(){
         return totalOSMWays;
     }
 
+    public KdTree getTree(){
+        return tree;
+    }
 }

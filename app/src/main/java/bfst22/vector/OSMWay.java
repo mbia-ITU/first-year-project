@@ -13,16 +13,12 @@ public class OSMWay implements Serializable {
     float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
     static Comparator<OSMWay> OSMWayComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
     static Comparator<OSMWay> OSMWayComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
-    List<OSMWay> OSMWay;
+    WayType type; //skal kende sin egen type
     
     public OSMWay(List<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
     }
     
-    public int size() {
-        return nodes.size();
-    }
-
     public BoundingBox getPlotBounds() {
         if(nodes.size() == 0){
         throw new RuntimeException("OSMWay does not have any nodes");
@@ -66,8 +62,5 @@ public class OSMWay implements Serializable {
 
             return listOfOSMWays; 
         
-    }
-    public List<OSMWay> getNodes(){
-        return OSMWay;
     }
 }

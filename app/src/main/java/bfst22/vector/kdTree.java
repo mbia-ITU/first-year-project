@@ -38,7 +38,11 @@ public class KdTree implements Serializable {
 
     }
 
-    public List<OSMWay> searchTree(BoundingBox box, KdNode node) {
+    public List<OSMWay> searchTree(BoundingBox box) {
+        return searchTree(box, root);
+    }
+
+    private List<OSMWay> searchTree(BoundingBox box, KdNode node) {
 
         if(node.box.intersect(box)){
             List<OSMWay> results = new ArrayList<>();

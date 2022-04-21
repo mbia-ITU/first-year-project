@@ -1,5 +1,7 @@
 package bfst22.vector;
 
+import java.util.*;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -14,6 +16,7 @@ public class MapCanvas extends Canvas {
     double zoomPercentage;
     int drawLevel = 0;
     double zp;
+    BoundingBox box;
 
     void init(Model model) {
         this.model = model;
@@ -25,11 +28,17 @@ public class MapCanvas extends Canvas {
     }
 
     void repaint() {
+        List<OSMWay> results = new ArrayList<>(KdTree.searchTree(frame));
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
+        for(ways : KdTree.searchTree(frame())){
+            //if(way.type() == LAKE){
+                //}
+            }
+
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);
@@ -204,4 +213,14 @@ public class MapCanvas extends Canvas {
         return (double) percent2/100;
     }
 
+    public BoundingBox frame(){
+        float minX = 0;
+        float minY = 0;
+        Double db_maxX = getWidth();
+        Double db_maxY = getHeight();
+        float maxX = db_maxX.floatValue();
+        float maxY = db_maxY.floatValue();
+
+        return new BoundingBox(minX, maxX, minY, maxY);
+    }
 }
