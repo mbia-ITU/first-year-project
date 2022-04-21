@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 
 import java.io.Serializable;
 
-public class OSMNode implements Serializable {
+public class OSMNode implements Serializable, Drawable{
     public static final long serialVersionUID = 9082413;
     long id;
     float lat, lon;
@@ -25,4 +25,19 @@ public class OSMNode implements Serializable {
         return lat;
     }
 
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        Drawable.super.draw(gc);
+    }
+
+    @Override
+    public void fill(GraphicsContext gc) {
+        Drawable.super.fill(gc);
+    }
+
+    @Override
+    public void trace(GraphicsContext gc) {
+
+    }
 }

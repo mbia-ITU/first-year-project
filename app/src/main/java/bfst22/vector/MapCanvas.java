@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
+import java.awt.*;
+
 public class MapCanvas extends Canvas {
     Model model;
     Affine trans = new Affine();
@@ -15,9 +17,11 @@ public class MapCanvas extends Canvas {
     double zoomPercentage;
     int drawLevel = 0;
     double zp;
+
     GraphicsContext gc = getGraphicsContext2D();
+
     int drawType = 1;
-    Address destination;
+    Address[] destination = new Address[2];
 
     void init(Model model) {
         this.model = model;
@@ -33,6 +37,7 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
+
         if (drawType == 0){
             colorMap();
         }
@@ -43,7 +48,11 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
         }
-
+        for (var line : model.iterable(WayType.DESTINATION)) {
+                if (line == destination[0]) {
+                    line.fill(gc);
+                }
+            }
     }
 
     void pan(double dx, double dy) {
@@ -219,6 +228,9 @@ public class MapCanvas extends Canvas {
             for (var line : model.iterable(WayType.BUILDING)) {
                 line.fill(gc); }
         }
+        for (var line : model.iterable(WayType.DESTINATION)) {
+            line.draw(gc);
+        }
     }
 
     private void drawLineMap(){
@@ -313,6 +325,9 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.draw(gc);
         }
+        for (var line : model.iterable(WayType.DESTINATION)) {
+                line.draw(gc);
+        }
 
     }
 
@@ -322,11 +337,13 @@ public class MapCanvas extends Canvas {
     }
 
     public void addAddress1(Address a){
-        destination = a;
-        //gc.setStroke(Color.ORANGE);
-        //gc.strokeOval(a.getLat(), a.getLon() , 4000,4000);
-        //gc.fillOval(node.getLat(), node.getLon() ,4000,4000);
 
+        /*destination[0] = a;
+        //gc.setStroke(Color.ORANGE);
+        gc.strokeOval(a.getNode().getLat(), a.getNode().getLon() , 4000,4000);
+        gc.setFill(Color.ORANGE);
+        gc.fillOval(a.getNode().getLat(), a.getNode().getLon() ,4000,4000);
+*/
     }
 
 }

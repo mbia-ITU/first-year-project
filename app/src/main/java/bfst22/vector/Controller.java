@@ -204,22 +204,24 @@ public class Controller {
         desc.setText("The chosen file was not supported (try .osm)");
         desc.setFill(Color.RED);
         }
+        View.exitMenu();
     }
 
     @FXML
     private void onAddressPress(ActionEvent e){
         System.out.println(match.get(0).getNode().toString());
-        canvas.addAddress1(match.get(0));
+        System.out.println(match.get(0).getNode().getLat());
+        System.out.println(match.get(0).getNode().getLon());
+       // canvas.addAddress1(match.get(0));
+        model.add(match.get(0).getNode());
     }
     @FXML
     private void onLine(ActionEvent e){
-
-        canvas.setDrawType(0);
+        canvas.setDrawType(1);
     }
     @FXML
     private void onColor(ActionEvent e){
         canvas.setDrawType(0);
     }
-
 
 }
