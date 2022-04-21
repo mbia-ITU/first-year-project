@@ -39,6 +39,8 @@ public class KdTree implements Serializable {
     }
 
     public List<OSMWay> searchTree(BoundingBox box) {
+        //kald næste searchtree med en ny arrayliste
+        //giv den arrayliste med hver gang den anden searchtree bliver kaldt
         return searchTree(box, root);
     }
 

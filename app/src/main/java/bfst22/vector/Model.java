@@ -115,7 +115,7 @@ public class Model {
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
-                            if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
+                            if (k.equals("natural") && v.equals("water")) type = WayType.LAKE; 
                             //if (k.equals("waterway") && v.equals("river")) type = WayType.RIVER;
                             if (k.equals("type") && v.equals("waterway")) type = WayType.RIVER;
                             if (k.equals("natural") && v.equals("heath")) type = WayType.HEATH;
@@ -200,7 +200,7 @@ public class Model {
                     switch (reader.getLocalName()) {
                         case "way":
                             var way = new PolyLine(nodes);
-                            id2way.put(relID, new OSMWay(nodes));
+                            id2way.put(relID, new OSMWay(nodes, type));
                             lines.get(type).add(way);
                             totalOSMWays.add(id2way.get(relID));
                             nodes.clear();

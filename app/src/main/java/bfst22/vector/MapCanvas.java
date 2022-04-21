@@ -17,9 +17,11 @@ public class MapCanvas extends Canvas {
     int drawLevel = 0;
     double zp;
     BoundingBox box;
+    KdTree tree;
 
     void init(Model model) {
         this.model = model;
+        this.tree = model.getTree();
         pan(-model.minlon, -model.minlat);
         zoom(640 / (model.maxlon - model.minlon), 0, 0);
         model.addObserver(this::repaint);
@@ -28,16 +30,19 @@ public class MapCanvas extends Canvas {
     }
 
     void repaint() {
-        List<OSMWay> results = new ArrayList<>(KdTree.searchTree(frame));
+        List<OSMWay> results = tree.searchTree(frame());
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
-        for(ways : KdTree.searchTree(frame())){
-            //if(way.type() == LAKE){
-                //}
-            }
+        System.out.println(results.size());
+        //Driller
+        for(OSMWay way : results){
+            
+                System.out.println(way.getType());
+                
+        }
 
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {

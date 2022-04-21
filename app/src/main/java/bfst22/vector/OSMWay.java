@@ -7,16 +7,17 @@ import javax.management.RuntimeErrorException;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class OSMWay implements Serializable {
+public class OSMWay implements Serializable{
     public static final long serialVersionUID = 42;
     List<OSMNode> nodes;
     float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
     static Comparator<OSMWay> OSMWayComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
     static Comparator<OSMWay> OSMWayComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
-    WayType type; //skal kende sin egen type
+    WayType type;
     
-    public OSMWay(List<OSMNode> nodes) {
+    public OSMWay(List<OSMNode> nodes, WayType type) {
         this.nodes = new ArrayList<>(nodes);
+        this.type = type;
     }
     
     public BoundingBox getPlotBounds() {
@@ -63,4 +64,9 @@ public class OSMWay implements Serializable {
             return listOfOSMWays; 
         
     }
+
+    public WayType getType(){
+        return type;
+    }
+
 }
