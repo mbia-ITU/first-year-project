@@ -253,10 +253,7 @@ public class Model {
         //to test same addresses for different post numbers
         addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
-
-        //ENABLE THIS TO TEST SEARCHING
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-
     }
 
     public void addObserver(Runnable observer) {
@@ -268,11 +265,35 @@ public class Model {
             observer.run();
         }
     }
+    public void addStart(OSMNode node){
+        lines.get(WayType.STARTPOINT).add(new Cirkle(node));
+        notifyObservers();
+        //System.out.println(lines.get(WayType.STARTPOINT).toString());
+    }
 
-    public void add(OSMNode node){
+    public List<Drawable> getStart(){
+        return lines.get(WayType.STARTPOINT);
+    }
+
+    public void clearStart(){
+        lines.get(WayType.STARTPOINT).clear();
+        notifyObservers();
+    }
+
+    public void addDestination(OSMNode node){
         lines.get(WayType.DESTINATION).add(new Cirkle(node));
         notifyObservers();
     }
+
+    public void clearDestination(){
+        lines.get(WayType.DESTINATION).clear();
+        notifyObservers();
+    }
+
+    public List<Drawable> getDestination(){
+        return lines.get(WayType.DESTINATION);
+    }
+
 
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);

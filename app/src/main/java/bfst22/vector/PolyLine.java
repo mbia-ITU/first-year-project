@@ -25,4 +25,8 @@ public class PolyLine implements Drawable, Serializable {
             gc.lineTo(coords[i], coords[i+1]);
         }
     }
+
+    public void resize(double zoomlevel) {
+
+    }
 }

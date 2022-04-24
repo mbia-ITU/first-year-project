@@ -10,27 +10,32 @@ public class Cirkle implements Drawable, Serializable {
     public static final long serialVersionUID = 1325234;
     List<Drawable> parts = new ArrayList<>();
     List<OSMNode> nodes = new ArrayList<>();
-    int radius;
     float x;
     float y;
-    float plus = (float) 0.00018;
+    float radius = (float) 0.00018;
 
     public Cirkle(OSMNode node) {
         this.radius = 40;
         this.x = node.getLat();
         this.y = node.getLon();
         //a square not a cirkle
-        nodes.add(new OSMNode(1,this.x + plus,this.y+plus));
-        nodes.add(new OSMNode(1,this.x+plus,this.y-plus));
-        nodes.add(new OSMNode(1,this.x-plus,this.y-plus));
-        nodes.add(new OSMNode(1,this.x-plus,this.y+plus));
-        nodes.add(new OSMNode(1,this.x+plus,this.y+plus));
+        nodes.add(new OSMNode(1,this.x + radius,this.y+radius));
+        nodes.add(new OSMNode(1,this.x+radius,this.y-radius));
+        nodes.add(new OSMNode(1,this.x-radius,this.y-radius));
+        nodes.add(new OSMNode(1,this.x-radius,this.y+radius));
+        nodes.add(new OSMNode(1,this.x+radius,this.y+radius));
         parts.add(new PolyLine(nodes));
     }
     @Override
     public void trace(GraphicsContext gc) {
-        gc.setFill(Color.ORANGE);
-        gc.fillOval(x,y,0.00018,0.00018);
+        //gc.setFill(Color.RED);
+        gc.fillOval(x,y,radius,radius);
+        gc.setLineWidth(10);
+        for (var part : parts) part.trace(gc);
+    }
+    //changes size based on zoom
+    public void resize(double zoomLevel){
+        this.radius = (float) (20/zoomLevel);
     }
 
 }

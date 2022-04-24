@@ -37,7 +37,6 @@ class MapView {
     public MapView(Model model, Stage mapStage, String name)throws IOException{
         mapStage.setWidth(800);
         mapStage.setHeight(400);
-
         mapStage.show();
         var loader = new FXMLLoader(getClass().getResource(name));
         mapStage.setScene(loader.load());

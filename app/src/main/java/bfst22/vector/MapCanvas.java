@@ -14,7 +14,7 @@ public class MapCanvas extends Canvas {
     Affine trans = new Affine();
     double initialZoomLevel;
     double currentZoomLevel;
-    double zoomPercentage;
+    double zoomPercentage = 112;
     int drawLevel = 0;
     double zp;
 
@@ -34,30 +34,45 @@ public class MapCanvas extends Canvas {
 
     void repaint() {
         gc.setTransform(new Affine());
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, getWidth(), getHeight());
-        gc.setTransform(trans);
 
         if (drawType == 0){
+            gc.setFill(Color.DEEPSKYBLUE);
+            gc.fillRect(0, 0, getWidth(), getHeight());
+            gc.setTransform(trans);
             colorMap();
         }
         else if (drawType == 1) {
+            gc.setFill(Color.WHITE);
+            gc.fillRect(0, 0, getWidth(), getHeight());
+            gc.setTransform(trans);
             drawLineMap();
         }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
         }
+
         for (var line : model.iterable(WayType.DESTINATION)) {
-                if (line == destination[0]) {
-                    line.fill(gc);
-                }
+            gc.setFill(Color.RED);
+            line.draw(gc);
+            gc.setFill(Color.WHITE);
             }
+
+        for (var line : model.iterable(WayType.STARTPOINT)) {
+            //gc.setFill(Color.ORANGE);
+            gc.setFill(Color.ORANGE);
+            line.draw(gc);
+            gc.setFill(Color.WHITE);
+        }
     }
 
     void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
         repaint();
+    }
+
+    public double getCurrentZoomLevel(){
+        return currentZoomLevel;
     }
 
     void zoom(double factor, double x, double y) {
@@ -89,7 +104,9 @@ public class MapCanvas extends Canvas {
         return (double) percent2/100;
     }
 
+
     private void colorMap(){
+
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);
@@ -229,6 +246,12 @@ public class MapCanvas extends Canvas {
                 line.fill(gc); }
         }
         for (var line : model.iterable(WayType.DESTINATION)) {
+            line.resize(currentZoomLevel);
+            line.draw(gc);
+        }
+
+        for (var line : model.iterable(WayType.STARTPOINT)) {
+            line.resize(currentZoomLevel);
             line.draw(gc);
         }
     }
@@ -326,7 +349,12 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
         }
         for (var line : model.iterable(WayType.DESTINATION)) {
+            line.resize(currentZoomLevel);
                 line.draw(gc);
+        }
+        for (var line : model.iterable(WayType.STARTPOINT)) {
+            line.resize(currentZoomLevel);
+            line.draw(gc);
         }
 
     }
@@ -334,16 +362,6 @@ public class MapCanvas extends Canvas {
     public void setDrawType(int l){
         drawType = l;
         repaint();
-    }
-
-    public void addAddress1(Address a){
-
-        /*destination[0] = a;
-        //gc.setStroke(Color.ORANGE);
-        gc.strokeOval(a.getNode().getLat(), a.getNode().getLon() , 4000,4000);
-        gc.setFill(Color.ORANGE);
-        gc.fillOval(a.getNode().getLat(), a.getNode().getLon() ,4000,4000);
-*/
     }
 
 }

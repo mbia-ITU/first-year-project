@@ -40,4 +40,9 @@ public class OSMNode implements Serializable, Drawable{
     public void trace(GraphicsContext gc) {
 
     }
+
+    @Override
+    public void resize(double zoomlevel) {
+
+    }
 }

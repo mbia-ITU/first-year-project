@@ -14,4 +14,5 @@ public interface Drawable {
         gc.fill();
     }
     void trace(GraphicsContext gc);
+    void resize(double zoomlevel);
 }

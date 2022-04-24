@@ -98,6 +98,11 @@ public class Address implements Comparable<Address>, Comparator<Address>, Drawab
 
     }
 
+    @Override
+    public void resize(double zoomlevel) {
+
+    }
+
 
     public static class Builder {
         private String street, house, floor, side, postcode, city;
