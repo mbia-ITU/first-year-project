@@ -1,5 +1,7 @@
 package bfst22.vector;
 
+import javafx.scene.shape.Circle;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -24,6 +26,7 @@ import static java.util.stream.Collectors.toList;
 public class Model {
     float minlat, minlon, maxlat, maxlon;
     ArrayList<Address> addresses = new ArrayList<>();
+    OSMNode addrNode;
     String housenumber = "";
     String street = "";
     String postcode = "";
@@ -100,6 +103,7 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
+                            addrNode = new OSMNode(id, 0.56f * lon, -lat);
                             break;
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -171,14 +175,8 @@ public class Model {
                             if (k.equals("addr:city")){city=v;}
                             if (k.equals("addr:postcode")){postcode=v;}
                             if (k.equals("addr:street")){street=v;
-                                Address addr = new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1));
-                                for(int i = 0; i < addresses.size(); i++){
-                                    if(addr.getAdress().compareTo(addresses.get(i).getAdress()) > 0){
-
-                                    }
-                                }
-
-                                addresses.add(new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1)));
+                                addresses.add(new Address(street,housenumber, postcode,city,addrNode));
+                                //lines.get(WayType.DESTINATION).add(new Cirkle(400,addresses.get(addresses.size()-1).getNode().lat,addresses.get(addresses.size()-1).getNode().lon));
                                 street="";
                                 city="";
                                 postcode="";
@@ -255,10 +253,7 @@ public class Model {
         //to test same addresses for different post numbers
         addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
-
-        //ENABLE THIS TO TEST SEARCHING
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-
     }
 
     public void addObserver(Runnable observer) {
@@ -270,6 +265,35 @@ public class Model {
             observer.run();
         }
     }
+    public void addStart(OSMNode node){
+        lines.get(WayType.STARTPOINT).add(new Cirkle(node));
+        notifyObservers();
+        //System.out.println(lines.get(WayType.STARTPOINT).toString());
+    }
+
+    public List<Drawable> getStart(){
+        return lines.get(WayType.STARTPOINT);
+    }
+
+    public void clearStart(){
+        lines.get(WayType.STARTPOINT).clear();
+        notifyObservers();
+    }
+
+    public void addDestination(OSMNode node){
+        lines.get(WayType.DESTINATION).add(new Cirkle(node));
+        notifyObservers();
+    }
+
+    public void clearDestination(){
+        lines.get(WayType.DESTINATION).clear();
+        notifyObservers();
+    }
+
+    public List<Drawable> getDestination(){
+        return lines.get(WayType.DESTINATION);
+    }
+
 
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);

@@ -30,6 +30,8 @@ public class Controller {
     private ArrayList<Address> match = new ArrayList<>();
     MenuItem item1 = new MenuItem();
     private Model model;
+    private Address start;
+    private Address destination;
     //private Button btn;
 
     @FXML
@@ -74,38 +76,40 @@ public class Controller {
     //Searchbar for from listener
         searching.textProperty().addListener((observable, oldValue, newValue) -> {
             String input = newValue;
-            ArrayList<Address> result = getMatches(input,model);
+
+            start = getMatches(input,model).get(0);
             if(newValue.isEmpty()){
-                result.clear();
-                sear.setText("");
+                start = null;
                 result1.setVisible(false);
             }else if (!newValue.equals(oldValue)){
-                result = getMatches(input,model);
-                    result1.setText(result.get(0).getAdress());
-                    if(result.get(0)==null){
+
+                start = getMatches(input,model).get(0);
+                    result1.setText(start.getAdress());
+                    if(start==null){
                         result1.setVisible(false);
                     }else {
                         result1.setVisible(true);
                     }
-                sear.setText(result.get(0).getAdress());
             }
         });
         searching1.textProperty().addListener((observable, oldValue, newValue) -> {
             String input1 = newValue;
-            ArrayList<Address> result = getMatches(input1,model);
+            destination = getMatches(input1,model).get(0);
             if(newValue.isEmpty()){
-                result.clear();
+                destination = null;
                 sear.setText("");
                 result2.setVisible(false);
             }else if (!newValue.equals(oldValue)){
-                result = getMatches(input1,model);
-                result2.setText(result.get(0).getAdress());
-                if(result.get(0)==null){
+
+                destination = getMatches(input1,model).get(0);
+                result2.setText(destination.getAdress());
+                if(destination==null){
                     result2.setVisible(false);
                 }else {
                     result2.setVisible(true);
                 }
-                sear.setText(result.get(0).getAdress());
+
+                //sear.setText(result.get(0).getAdress());
             }
         });
     }
@@ -141,7 +145,31 @@ public class Controller {
         };
         //binary search
         pos = Collections.binarySearch(model.getAddresses(),new Address(addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity(), null), c);
-        match.add(model.getAddresses().get(pos));
+        if(pos >= 0 && pos <= model.getAddresses().size()-1){
+            match.add(model.getAddresses().get(pos));
+        }else{
+
+            int first = 0;
+            int last = model.getAddresses().size() - 1;
+            int mid = (first + last) / 2;
+            //binarysearch for incomplete streetnames
+            while (first <= last) {
+                if (model.getAddresses().get(mid).getStreet().compareTo(addr.getStreet()) > 0) {
+                    first = mid + 1;
+                } else if (model.getAddresses().get(mid).getStreet().contains(addr.getStreet())) {
+                    match.add(model.getAddresses().get(mid));
+                    //doTheThing
+                    break;
+                } else {
+                    last = mid - 1;
+                }
+                mid = (first + last) / 2;
+            }
+            if (first > last) {
+                match.add(model.getAddresses().get(mid));
+            }
+        }
+
 
         return match;
     }
@@ -149,9 +177,14 @@ public class Controller {
 
     @FXML
     private void onScroll(ScrollEvent e) {
+        System.out.println(canvas.initialZoomLevel);
         var factor = e.getDeltaY();
-        canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
-        percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
+        System.out.println(e.getDeltaY());
+        if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
+            canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
+            percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
+        }
+
     }
 
     @FXML
@@ -204,16 +237,30 @@ public class Controller {
         desc.setText("The chosen file was not supported (try .osm)");
         desc.setFill(Color.RED);
         }
+        View.exitMenu();
     }
 
     @FXML
-    private void onAddressPress(ActionEvent e){
-        System.out.println(match.get(0).getNode().toString());
-        canvas.addAddress1(match.get(0));
+    private void onAddressPress1(ActionEvent e){
+        //panning needs kd tree
+       // var dx = match.get(0).getNode().getLat();
+        //var dy = match.get(0).getNode().getLon();
+            //canvas.pan(-dx, dy);
+        if(model.getStart().size()>0){
+            model.clearStart();
+        }
+        model.addStart(start.getNode());
     }
+    @FXML
+    private void onAddressPress2(ActionEvent e){
+        if(model.getDestination().size()>0){
+            model.clearDestination();
+        }
+        model.addDestination(destination.getNode());
+    }
+
     @FXML
     private void onLine(ActionEvent e){
-
         canvas.setDrawType(1);
     }
     @FXML
