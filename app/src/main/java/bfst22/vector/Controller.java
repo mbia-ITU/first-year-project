@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.CheckBox;
 
 
 import javax.swing.*;
@@ -26,13 +27,16 @@ import java.util.regex.Pattern;
 
 
 public class Controller {
+
+
+
     private Point2D lastMouse;
+    private Point2D currentMouse;
     private ArrayList<Address> match = new ArrayList<>();
     MenuItem item1 = new MenuItem();
     private Model model;
     private Address start;
     private Address destination;
-    //private Button btn;
 
     @FXML
     private MenuItem color;
@@ -44,7 +48,8 @@ public class Controller {
     private Label percentText;
     @FXML
     private Text desc;
-
+    @FXML
+    private CheckBox highlighter;
 
     @FXML
     private Button result1;
@@ -54,14 +59,8 @@ public class Controller {
     private TextField searching;
     @FXML
     private TextField searching1;
-    @FXML
-    private Label sear;
-    @FXML
-    private Label sear1;
-    @FXML
-    private Label sear2;
-    @FXML
-    private ContextMenu result;
+
+
 
     private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
@@ -97,7 +96,6 @@ public class Controller {
             destination = getMatches(input1,model).get(0);
             if(newValue.isEmpty()){
                 destination = null;
-                sear.setText("");
                 result2.setVisible(false);
             }else if (!newValue.equals(oldValue)){
 
@@ -122,9 +120,7 @@ public class Controller {
 
         Comparator<Address> c = new Comparator<Address>() {
             public int compare(Address a1, Address a2) {
-                //Todo: implement floors + sides
 
-                //System.out.println("post: x" + a2.getCity() + "x");
                 if (a2.getHousenumber().equals("") && a2.getPostcode() == null) {
                     //searches streets
                     return a1.getStreet().toLowerCase().compareTo(a2.getStreet().toLowerCase());
@@ -178,9 +174,7 @@ public class Controller {
 
     @FXML
     private void onScroll(ScrollEvent e) {
-        System.out.println(canvas.initialZoomLevel);
         var factor = e.getDeltaY();
-        System.out.println(e.getDeltaY());
         if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
             canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
             percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
@@ -269,4 +263,11 @@ public class Controller {
         canvas.setDrawType(0);
     }
 
+    @FXML
+    private void onMouseMoved(MouseEvent e){
+        if(highlighter.isSelected()){
+            currentMouse = new Point2D(e.getX(),e.getY());
+            System.out.println(canvas.mouseToModel(currentMouse).toString());
+        }
+    }
 }
