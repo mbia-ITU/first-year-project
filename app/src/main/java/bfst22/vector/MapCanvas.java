@@ -106,14 +106,15 @@ public class MapCanvas extends Canvas {
     private void colorMap(){
 
 
-        /*gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }*/
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         gc.setFill(Color.BEIGE);
+        for (var line : model.iterable(WayType.UNKNOWN)) {
+            line.fill(gc);
+        }
+        /*gc.setFill(Color.BEIGE);
         for (var line : model.iterable(WayType.PLACEHOLDER)) {
             line.fill(gc); }
-
+*/
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);

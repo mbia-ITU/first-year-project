@@ -117,6 +117,7 @@ public class Model {
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
+
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
                             //if (k.equals("waterway") && v.equals("river")) type = WayType.RIVER;
                             if (k.equals("type") && v.equals("waterway")) type = WayType.RIVER;
@@ -203,6 +204,12 @@ public class Model {
                                 postcode="";
                                 housenumber="";
                             }
+
+                            //irrelevant lines/nodes
+                            if(k.equals("route") && v.equals("ferry")) type = WayType.FERRY;
+                            if(k.equals("type") && v.equals(("boundary"))) type = WayType.BORDER;
+
+
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
