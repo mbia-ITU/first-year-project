@@ -29,4 +29,38 @@ public class PolyLine implements Drawable, Serializable {
     public void resize(double zoomlevel) {
 
     }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        // find værdierne minX, maxX, minY, max Y
+        float minX = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+
+        for (int i = 0; i >= coords.length; i++){
+            //Find latitude for Boundingbox
+            if (coords[i]<minY){
+                minY = coords[i];
+            }
+
+            if (coords[0]>maxY){
+                maxY = coords[i];
+            }
+
+            //Find longitude for Boundingbox
+            if (coords[i+1]<minX){
+                minX = coords[i+1];
+            }
+
+            if (coords[i+1]>maxX){
+                maxX = coords[i+1];
+            }
+
+            i++;
+        }
+
+        //Return new Boundingbox with max coordinates and min coordinates from Polyline coordinates
+        return new BoundingBox(minX, maxX, minY, maxY);
+    }
 }

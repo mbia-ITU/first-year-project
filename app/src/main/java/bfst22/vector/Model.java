@@ -58,11 +58,8 @@ public class Model {
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
             }
-        } else {
-            lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
-                .map(Line::new)
-                .collect(toList()));
         }
+        
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
         if (!filename.endsWith(".obj")) save(filename);

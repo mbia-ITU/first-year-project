@@ -6,24 +6,24 @@ import java.util.*;
 public class KdTree implements Serializable {
     BoundingBox box;
     KdNode root;
-    List<OSMWay> totalWays;
+    List<Drawable> totalWays;
 
-    public KdTree(List<OSMWay> ways) {
+    public KdTree(List<Drawable> ways) {
         this.totalWays = ways;
         root = buildKdTree(totalWays, 0);
         box = root.box;
     }
 
-    public KdNode buildKdTree(List<OSMWay> ways, int currentDepth) {
+    public KdNode buildKdTree(List<Drawable> ways, int currentDepth) {
 
         KdNode node = new KdNode(ways);
 
         if (ways.size() > 500) {
-            List<List<OSMWay>> lists;
+            List<List<Drawable>> lists;
             if (currentDepth % 2 == 0) {
-                lists = OSMWay.splitOnX(ways);
+                lists = Drawable.splitOnX(ways);
             } else {
-                lists = OSMWay.splitOnY(ways);
+                lists = Drawable.splitOnY(ways);
             }
 
             var leftList = lists.get(0);
@@ -38,16 +38,16 @@ public class KdTree implements Serializable {
 
     }
 
-    public List<OSMWay> searchTree(BoundingBox box) {
+    public List<Drawable> searchTree(BoundingBox box) {
         //kald næste searchtree med en ny arrayliste
         //giv den arrayliste med hver gang den anden searchtree bliver kaldt
         return searchTree(box, root);
     }
 
-    private List<OSMWay> searchTree(BoundingBox box, KdNode node) {
+    private List<Drawable> searchTree(BoundingBox box, KdNode node) {
 
         if(node.box.intersect(box)){
-            List<OSMWay> results = new ArrayList<>();
+            List<Drawable> results = new ArrayList<>();
             if(node.wayList == null){
                 results.addAll(searchTree(box, node.left));
                 results.addAll(searchTree(box, node.right));
