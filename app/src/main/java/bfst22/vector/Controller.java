@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.CheckBox;
 
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 
 public class Controller {
     private Point2D lastMouse;
+    private Point2D currentMouse;
     private ArrayList<Address> match = new ArrayList<>();
     MenuItem item1 = new MenuItem();
     private Model model;
@@ -44,7 +46,8 @@ public class Controller {
     private Label percentText;
     @FXML
     private Text desc;
-
+    @FXML
+    private CheckBox highlighter;
 
     @FXML
     private Button result1;
@@ -54,14 +57,8 @@ public class Controller {
     private TextField searching;
     @FXML
     private TextField searching1;
-    @FXML
-    private Label sear;
-    @FXML
-    private Label sear1;
-    @FXML
-    private Label sear2;
-    @FXML
-    private ContextMenu result;
+
+
 
     private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
@@ -97,7 +94,6 @@ public class Controller {
             destination = getMatches(input1,model).get(0);
             if(newValue.isEmpty()){
                 destination = null;
-                sear.setText("");
                 result2.setVisible(false);
             }else if (!newValue.equals(oldValue)){
 
@@ -144,6 +140,7 @@ public class Controller {
             }
         };
         //binary search
+
         pos = Collections.binarySearch(model.getAddresses(),new Address(addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity(), null), c);
         if(pos >= 0 && pos <= model.getAddresses().size()-1){
             match.add(model.getAddresses().get(pos));
@@ -268,5 +265,11 @@ public class Controller {
         canvas.setDrawType(0);
     }
 
-
+    @FXML
+    private void onMouseMoved(MouseEvent e){
+        if(highlighter.isSelected()){
+            currentMouse = new Point2D(e.getX(),e.getY());
+            System.out.println(canvas.mouseToModel(currentMouse).toString());
+        }
+    }
 }

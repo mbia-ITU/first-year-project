@@ -34,7 +34,6 @@ public class MapCanvas extends Canvas {
 
     void repaint() {
         gc.setTransform(new Affine());
-
         if (drawType == 0){
             gc.setFill(Color.DEEPSKYBLUE);
             gc.fillRect(0, 0, getWidth(), getHeight());
@@ -47,10 +46,9 @@ public class MapCanvas extends Canvas {
             gc.setTransform(trans);
             drawLineMap();
         }
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }
+
+
+
 
         for (var line : model.iterable(WayType.DESTINATION)) {
             gc.setFill(Color.RED);
@@ -107,6 +105,16 @@ public class MapCanvas extends Canvas {
 
     private void colorMap(){
 
+
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        gc.setFill(Color.BEIGE);
+        for (var line : model.iterable(WayType.UNKNOWN)) {
+            line.fill(gc);
+        }
+        /*gc.setFill(Color.BEIGE);
+        for (var line : model.iterable(WayType.PLACEHOLDER)) {
+            line.fill(gc); }
+*/
         gc.setFill(Color.PINK);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);
@@ -119,11 +127,11 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.FARMLAND)) {
             line.fill(gc);
         }
-        if (drawLevel >= 1) {
-            gc.setFill(Color.LIGHTGREY);
-            for (var line : model.iterable(WayType.RESIDENTIAL)) {
-                line.fill(gc); }
-        }
+
+        gc.setFill(Color.LIGHTGREY);
+        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+            line.fill(gc); }
+
         gc.setFill(Color.TAN);
         for (var line : model.iterable(WayType.HEATH)) {
             line.fill(gc);
@@ -160,7 +168,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.GRASS)) {
             line.fill(gc);
         }
-        if (drawLevel == 2){
+        if (drawLevel == 1){
             gc.setFill(Color.SEASHELL);
             for (var line : model.iterable(WayType.RESORT)) {
                 line.fill(gc); }
@@ -224,12 +232,7 @@ public class MapCanvas extends Canvas {
             for (var line : model.iterable(WayType.CEMETERY)) {
                 line.fill(gc); }
         }
-        /*
-        gc.setFill(Color.ORANGE);
-        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
-            line.fill(gc);
-        }
-        */
+
         if (drawLevel == 2) {
             gc.setFill(Color.LIGHTSTEELBLUE);
             for (var line : model.iterable(WayType.RACE)) {
@@ -245,7 +248,27 @@ public class MapCanvas extends Canvas {
             for (var line : model.iterable(WayType.BUILDING)) {
                 line.fill(gc); }
         }
+
+
+
+        if(drawLevel == 2) {
+            gc.setLineWidth(0.00008);
+            gc.setStroke(Color.DARKGRAY);
+            for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
+                line.draw(gc);
+            }
+        }
+
+        gc.setLineWidth(0.00013);
+        gc.setStroke(Color.ORANGE);
+        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+            line.draw(gc);
+        }
+
+        gc.setStroke(Color.BLACK);
+
         for (var line : model.iterable(WayType.DESTINATION)) {
+            gc.setFill(Color.RED);
             line.resize(currentZoomLevel);
             line.draw(gc);
         }
@@ -254,6 +277,7 @@ public class MapCanvas extends Canvas {
             line.resize(currentZoomLevel);
             line.draw(gc);
         }
+
     }
 
     private void drawLineMap(){
@@ -348,6 +372,21 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.WETLAND)) {
             line.draw(gc);
         }
+        //Segment for roads
+        gc.setLineWidth(0.00008);
+        gc.setStroke(Color.LIGHTGREY);
+        for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
+            line.draw(gc);
+        }
+
+        gc.setLineWidth(0.00013);
+        gc.setStroke(Color.DARKGRAY);
+        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+            line.draw(gc);
+        }
+        gc.setStroke(Color.BLACK);
+
+        //for searched addresses
         for (var line : model.iterable(WayType.DESTINATION)) {
             line.resize(currentZoomLevel);
                 line.draw(gc);
