@@ -20,4 +20,8 @@ public class MultiPolygon implements Drawable, Serializable {
         for (var part : parts)
             part.trace(gc);
     }
+
+
+    public void resize(double zoomlevel) {
+    }
 }

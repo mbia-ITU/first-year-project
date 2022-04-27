@@ -16,4 +16,5 @@ public interface Drawable {
     }
 
     void trace(GraphicsContext gc);
+    void resize(double zoomlevel);
 }

@@ -27,4 +27,9 @@ public class Line implements Drawable {
         gc.lineTo(to.getX(), to.getY());
         gc.stroke();
     }
+
+    @Override
+    public void resize(double zoomlevel) {
+
+    }
 }

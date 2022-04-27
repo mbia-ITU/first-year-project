@@ -1,9 +1,13 @@
 package bfst22.vector;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-public class Address implements Comparable<Address>, Comparator<Address> {
+public class Address implements Comparable<Address>, Comparator<Address>, Drawable, Serializable {
     private String street;
     private String city;
     private String postcode;
@@ -76,6 +80,27 @@ public class Address implements Comparable<Address>, Comparator<Address> {
     public int compare(Address a1, Address a2)
     {
         return a1.getAdress().compareTo(a2.getAdress());
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        Drawable.super.draw(gc);
+    }
+
+    @Override
+    public void fill(GraphicsContext gc) {
+        gc.setFill(Color.ORANGE);
+        gc.fillOval(node.getLat(), node.getLon() ,4000,4000);
+    }
+
+    @Override
+    public void trace(GraphicsContext gc) {
+
+    }
+
+    @Override
+    public void resize(double zoomlevel) {
+
     }
 
 

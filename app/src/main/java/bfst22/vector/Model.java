@@ -1,5 +1,7 @@
 package bfst22.vector;
 
+import javafx.scene.shape.Circle;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -24,6 +26,7 @@ import static java.util.stream.Collectors.toList;
 public class Model {
     float minlat, minlon, maxlat, maxlon;
     ArrayList<Address> addresses = new ArrayList<>();
+    OSMNode addrNode;
     String housenumber = "";
     String street = "";
     String postcode = "";
@@ -53,6 +56,7 @@ public class Model {
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
+                addresses = (ArrayList<Address>) input.readObject();
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
@@ -71,6 +75,7 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
+            out.writeObject(addresses);
         }
     }
 
@@ -98,6 +103,7 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
+                            addrNode = new OSMNode(id, 0.56f * lon, -lat);
                             break;
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -107,9 +113,11 @@ public class Model {
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
                             type = WayType.UNKNOWN;
                             break;
+
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
+
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
                             //if (k.equals("waterway") && v.equals("river")) type = WayType.RIVER;
                             if (k.equals("type") && v.equals("waterway")) type = WayType.RIVER;
@@ -147,9 +155,30 @@ public class Model {
                             if (k.equals("landuse") && v.equals("cemetery")) type = WayType.CEMETERY;
                             if (k.equals("landuse") && v.equals("quarry")) type = WayType.INDUSTRIAL;
                             if (k.equals("landuse") && v.equals("vineyard")) type = WayType.VINEYARD;
-                            if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
-                            if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
-                            //if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
+                            //if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
+                            //if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
+                            //roads
+                            if(k.equals("highway")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("name") && v.equals("Bornholm")) type = WayType.PLACEHOLDER;
+                            /*if(k.equals("highway") && v.equals("service")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("path")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("pedestrian")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("secondary")) type = WayType.RESIDENTIALWAY; //max speed = 50
+                            //if(k.equals("highway") && v.equals("traffic_signals")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("crossing")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("tertiary")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("give_way")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("mini_roundabout")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("turning_circle")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("turning_loop")) type = WayType.RESIDENTIALWAY;
+*/
+                            //Roundabout:
+                            if(k.equals("junction") && v.equals("roundabout")) type = WayType.RESIDENTIALWAY;
+
+
+
+
+                            if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
                             if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
                             if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
@@ -164,24 +193,23 @@ public class Model {
                             if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
                             if (k.equals("caravans") && v.equals("yes")) type = WayType.GOLFCOURSE;
                             if (k.equals("man_made") && v.equals("wastewater_plant")) type = WayType.INDUSTRIAL;
-
                             if (k.equals("addr:housenumber")){housenumber = v;}
                             if (k.equals("addr:city")){city=v;}
                             if (k.equals("addr:postcode")){postcode=v;}
                             if (k.equals("addr:street")){street=v;
-                                Address addr = new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1));
-                                for(int i = 0; i < addresses.size(); i++){
-                                    if(addr.getAdress().compareTo(addresses.get(i).getAdress()) > 0){
-
-                                    }
-                                }
-
-                                addresses.add(new Address(street,housenumber, postcode,city,id2node.get(id2node.size()-1)));
+                                addresses.add(new Address(street,housenumber, postcode,city,addrNode));
+                                //lines.get(WayType.DESTINATION).add(new Cirkle(400,addresses.get(addresses.size()-1).getNode().lat,addresses.get(addresses.size()-1).getNode().lon));
                                 street="";
                                 city="";
                                 postcode="";
                                 housenumber="";
                             }
+
+                            //irrelevant lines/nodes
+                            if(k.equals("route") && v.equals("ferry")) type = WayType.FERRY;
+                            if(k.equals("type") && v.equals(("boundary"))) type = WayType.BORDER;
+
+
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
@@ -201,8 +229,16 @@ public class Model {
                     switch (reader.getLocalName()) {
                         case "way":
                             var way = new PolyLine(nodes);
+                            //this is the nodes to use for dijkstra?
                             id2way.put(relID, new OSMWay(nodes));
-                            lines.get(type).add(way);
+                            //trying this for Dijkstra
+                            if(type == WayType.RESIDENTIALWAY){
+                                lines.get(WayType.RESIDENTIALWAY).add(way);
+                            }else if(type == WayType.PRIMARYHIGHWAY){
+                                lines.get(WayType.PRIMARYHIGHWAY).add(way);
+                            }else{
+                                lines.get(type).add(way);
+                            }
                             nodes.clear();
                             break;
                         case "relation":
@@ -242,6 +278,9 @@ public class Model {
                             if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+                            if(type == WayType.PLACEHOLDER && !rel.isEmpty()){
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
                             
                             rel.clear();
                             break;
@@ -251,12 +290,9 @@ public class Model {
             }
         }
         //to test same addresses for different post numbers
-        addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
-        addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
-
-        //ENABLE THIS TO TEST SEARCHING
+        //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
+        //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-
     }
 
     public void addObserver(Runnable observer) {
@@ -267,6 +303,33 @@ public class Model {
         for (var observer : observers) {
             observer.run();
         }
+    }
+    public void addStart(OSMNode node){
+        lines.get(WayType.STARTPOINT).add(new Cirkle(node));
+        notifyObservers();
+    }
+
+    public List<Drawable> getStart(){
+        return lines.get(WayType.STARTPOINT);
+    }
+
+    public void clearStart(){
+        lines.get(WayType.STARTPOINT).clear();
+        notifyObservers();
+    }
+
+    public void addDestination(OSMNode node){
+        lines.get(WayType.DESTINATION).add(new Cirkle(node));
+        notifyObservers();
+    }
+
+    public void clearDestination(){
+        lines.get(WayType.DESTINATION).clear();
+        notifyObservers();
+    }
+
+    public List<Drawable> getDestination(){
+        return lines.get(WayType.DESTINATION);
     }
 
     public Iterable<Drawable> iterable(WayType type) {

@@ -18,6 +18,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.CheckBox?>
 <Scene fx:controller="bfst22.vector.Controller" fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
 <VBox prefHeight="400.0" prefWidth="640.0"  >
@@ -75,16 +76,18 @@
                                        onScroll="#onScroll"
                                        onMousePressed="#onMousePressed"
                                        onMouseDragged="#onMouseDragged"
+                                       onMouseMoved="#onMouseMoved"
                             />
                     </center>
                     <left>
                         <VBox fx:id="Searchresults" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="240.0" spacing="2.0" BorderPane.alignment="TOP_CENTER" style="-fx-background-color: #6E7069;">
                             <children >
                                 <TextField fx:id="searching" promptText="From" minWidth="260"/>
-                                <Button fx:id="result1" onAction="#onAddressPress" prefWidth="240.0"/>
+                                <Button fx:id="result1" onAction="#onAddressPress1" prefWidth="240.0"/>
                                 <TextField fx:id="searching1" promptText="To" minWidth="260"/>
-                                <Button fx:id="result2" onAction="#onAddressPress" prefWidth="240.0"/>
+                                <Button fx:id="result2" onAction="#onAddressPress2" prefWidth="240.0"/>
                                 <Label  fx:id="percentText" text="Zoom: 100.0%"  style="-fx-text-fill:#ECECEC"/>
+                                <CheckBox fx:id="highlighter" text="Highlighter"/>
 
 
                             </children>
