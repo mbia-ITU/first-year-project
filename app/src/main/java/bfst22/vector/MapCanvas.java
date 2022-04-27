@@ -1,5 +1,7 @@
 package bfst22.vector;
 
+import java.util.*;
+
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,6 +19,8 @@ public class MapCanvas extends Canvas {
     double zoomPercentage = 112;
     int drawLevel = 0;
     double zp;
+    BoundingBox box;
+    KdTree tree;
 
     GraphicsContext gc = getGraphicsContext2D();
 
@@ -25,6 +29,7 @@ public class MapCanvas extends Canvas {
 
     void init(Model model) {
         this.model = model;
+        this.tree = model.getTree();
         pan(-model.minlon, -model.minlat);
         zoom(640 / (model.maxlon - model.minlon), 0, 0);
         model.addObserver(this::repaint);
@@ -40,6 +45,28 @@ public class MapCanvas extends Canvas {
             gc.setTransform(trans);
             colorMap();
         }
+
+        // Color boundingbox KdTree (Driller)
+        /*
+        List<OSMWay> results = tree.searchTree(frame());
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, getWidth(), getHeight());
+        System.out.println(results.size());
+        
+        for(OSMWay way : results){
+            
+                System.out.println(way.getType());
+                
+        }
+        
+
+        
+        gc.setFill(Color.PINK);
+        for (var line : model.iterable(WayType.COASTLINE)) {
+            line.fill(gc);
+        }
+        */
+
         else if (drawType == 1) {
             gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, getWidth(), getHeight());

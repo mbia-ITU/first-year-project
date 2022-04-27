@@ -1,41 +1,62 @@
 package bfst22.vector;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class kdTree {
-    /*
-    float leftNode, rightNode, root;
-    int currentDepth;
-    int maxDepth;
+public class KdTree implements Serializable {
+    BoundingBox box;
+    KdNode root;
+    List<OSMWay> totalWays;
 
-    List<OSMWay> ways;
-
-    public kdTree(List<OSMWay> ways, int maxDepth) {
-        root = buildKdTree(ways);
-        this.maxDepth = maxDepth;
-        currentDepth = 0;
+    public KdTree(List<OSMWay> ways) {
+        this.totalWays = ways;
+        root = buildKdTree(totalWays, 0);
+        box = root.box;
     }
 
-    public kdNode buildKdTree(List<OSMWay> ways) {
-        
-        kdNode node = new kdNode(ways);
+    public KdNode buildKdTree(List<OSMWay> ways, int currentDepth) {
 
-        for (int i = 0; i < maxDepth; i++) {
-            if (ways.size() < 1000) {
-                node.left = buildKdTree(leftNode, OSMWay.splitOnX(ways, maxDepth));
-                node.right = buildKdTree(rightNode, OSMWay.splitOnY(ways, maxDepth));
-                return node;
-                
+        KdNode node = new KdNode(ways);
+
+        if (ways.size() > 500) {
+            List<List<OSMWay>> lists;
+            if (currentDepth % 2 == 0) {
+                lists = OSMWay.splitOnX(ways);
+            } else {
+                lists = OSMWay.splitOnY(ways);
             }
-            else if (currentDepth % 2 == 0) {
-                currentDepth++;
-            } else if (currentDepth % 2 == 1) {
-                currentDepth++;
-            }
+
+            var leftList = lists.get(0);
+            var rightList = lists.get(1);
+            node.left = buildKdTree(leftList, currentDepth + 1);
+            node.right = buildKdTree(rightList, currentDepth + 1);
+
+        } else {
+            node.wayList = ways;
         }
-        return null;
+        return node;
+
+    }
+
+    public List<OSMWay> searchTree(BoundingBox box) {
+        //kald næste searchtree med en ny arrayliste
+        //giv den arrayliste med hver gang den anden searchtree bliver kaldt
+        return searchTree(box, root);
+    }
+
+    private List<OSMWay> searchTree(BoundingBox box, KdNode node) {
+
+        if(node.box.intersect(box)){
+            List<OSMWay> results = new ArrayList<>();
+            if(node.wayList == null){
+                results.addAll(searchTree(box, node.left));
+                results.addAll(searchTree(box, node.right));
+                    
+            }
+            return results;
+        }
+        else
+        return new ArrayList<>();
         
     }
-    */
-
 }
