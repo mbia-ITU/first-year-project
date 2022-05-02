@@ -39,6 +39,8 @@ public class OSMWay implements Serializable{
         return new BoundingBox(minX, maxX, minY, maxY);
     }
 
+    /*MOVED TO DRAWABLE
+    
     public static List<List<OSMWay>> splitOnX(List<OSMWay> list){
         List<OSMWay> leftList;
         List<OSMWay> rightList;
@@ -52,8 +54,10 @@ public class OSMWay implements Serializable{
 
         return listOfOSMWays; 
     
-    }
+    }*/
 
+    /*MOVED TO DRAWABLE
+    
     public static List<List<OSMWay>> splitOnY(List<OSMWay> list){
         List<OSMWay> leftList;
         List<OSMWay> rightList;
@@ -71,6 +75,6 @@ public class OSMWay implements Serializable{
 
     public WayType getType(){
         return type;
-    }
+    }*/
 
 }
