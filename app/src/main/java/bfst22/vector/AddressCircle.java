@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Cirkle implements Drawable, Serializable {
+public class AddressCircle implements Drawable, Serializable {
     public static final long serialVersionUID = 1325234;
     List<Drawable> parts = new ArrayList<>();
     List<OSMNode> nodes = new ArrayList<>();
@@ -14,7 +14,7 @@ public class Cirkle implements Drawable, Serializable {
     float y;
     float radius = (float) 0.00018;
 
-    public Cirkle(OSMNode node) {
+    public AddressCircle(OSMNode node) {
         this.radius = 40;
         this.x = node.getLat();
         this.y = node.getLon();
@@ -37,6 +37,11 @@ public class Cirkle implements Drawable, Serializable {
     public void resize(double zoomLevel){
         this.radius = (float) (20/zoomLevel);
     }
+
+@Override
+public BoundingBox getBoundingBox() {
+    return new BoundingBox(x,x,y,y);
+}
 
 }
 

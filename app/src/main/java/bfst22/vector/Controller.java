@@ -20,8 +20,11 @@ import javafx.scene.control.CheckBox;
 
 
 import javax.swing.*;
+import javax.xml.crypto.NodeSetData;
+
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -230,7 +233,7 @@ public class Controller {
             Stage mapStage = new Stage();
             new MapView(model, mapStage, "UI.fxml");
             View.exitMenu();
-        }catch (Exception ex){
+        }catch (IOException ex){
         desc.setText("The chosen file was not supported (try .osm)");
         desc.setFill(Color.RED);
         }

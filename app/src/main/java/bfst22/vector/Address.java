@@ -103,6 +103,11 @@ public class Address implements Comparable<Address>, Comparator<Address>, Drawab
 
     }
 
+    @Override
+    public BoundingBox getBoundingBox() {
+        return node.getBoundingBox();
+    }
+
 
     public static class Builder {
         private String street, house, floor, side, postcode, city;

@@ -33,11 +33,11 @@ public class Model {
     String city = "";
     String floor = "";
     String side = "";
-    ArrayList<OSMNode> points= new ArrayList<>();
-
+    static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
+    Map<WayType, KdTree> MapOfKdTrees = new EnumMap<>(WayType.class); 
     List<Runnable> observers = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
@@ -58,11 +58,8 @@ public class Model {
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
             }
-        } else {
-            lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
-                .map(Line::new)
-                .collect(toList()));
         }
+        
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
         if (!filename.endsWith(".obj")) save(filename);
@@ -228,17 +225,20 @@ public class Model {
                 case XMLStreamConstants.END_ELEMENT:
                     switch (reader.getLocalName()) {
                         case "way":
-                            var way = new PolyLine(nodes);
+                            var polyline = new PolyLine(nodes);
                             //this is the nodes to use for dijkstra?
-                            id2way.put(relID, new OSMWay(nodes));
+                            //id2way.put(relID, new OSMWay(nodes));
                             //trying this for Dijkstra
                             if(type == WayType.RESIDENTIALWAY){
-                                lines.get(WayType.RESIDENTIALWAY).add(way);
+                                lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else if(type == WayType.PRIMARYHIGHWAY){
-                                lines.get(WayType.PRIMARYHIGHWAY).add(way);
+                                lines.get(WayType.PRIMARYHIGHWAY).add(polyline);
                             }else{
-                                lines.get(type).add(way);
+                                lines.get(type).add(polyline);
                             }
+                            id2way.put(relID, new OSMWay(nodes, type));
+                            lines.get(type).add(polyline);
+                            totalDrawables.add(polyline);
                             nodes.clear();
                             break;
                         case "relation":
@@ -293,6 +293,13 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
+
+        // Creates KD tree for each waytype
+        for (var entry : lines.entrySet()) {
+            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
+        }
+
+        System.out.println("Done");
     }
 
     public void addObserver(Runnable observer) {
@@ -305,7 +312,7 @@ public class Model {
         }
     }
     public void addStart(OSMNode node){
-        lines.get(WayType.STARTPOINT).add(new Cirkle(node));
+        lines.get(WayType.STARTPOINT).add(new AddressCircle(node));
         notifyObservers();
     }
 
@@ -319,7 +326,7 @@ public class Model {
     }
 
     public void addDestination(OSMNode node){
-        lines.get(WayType.DESTINATION).add(new Cirkle(node));
+        lines.get(WayType.DESTINATION).add(new AddressCircle(node));
         notifyObservers();
     }
 
@@ -332,12 +339,19 @@ public class Model {
         return lines.get(WayType.DESTINATION);
     }
 
-    public Iterable<Drawable> iterable(WayType type) {
+    /*public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
+    }*/
+
+    public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
+        return MapOfKdTrees.get(type).searchTree(bb);
     }
 
     public ArrayList<Address> getAddresses(){
         return addresses;
     }
 
+    public static List<Drawable> getDrawables(){
+        return totalDrawables;
+    }
 }

@@ -2,13 +2,15 @@ package bfst22.vector;
 
 import java.util.*;
 
-public class kdNode {
-    /*float split;
-    kdNode left, right;
-    BoundingBox box;
+public class KdNode {
+    List<Drawable> wayList;
+    KdNode left, right;
+    BoundingBox bb;
     
-    public kdNode(List<OSMWay> list) {
-        box = box.combineMany(list);
-    } */
+    public KdNode(List<Drawable> list) {
+        
+        bb = new BoundingBox(list);
+    }
+
 }
  
