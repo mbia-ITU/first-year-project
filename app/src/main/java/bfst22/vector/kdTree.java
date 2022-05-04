@@ -25,9 +25,10 @@ public class KdTree implements Serializable {
             } else {
                 lists = OSMWay.splitOnY(ways);
             }
-
+            //System.out.println(ways.size());
             var leftList = lists.get(0);
             var rightList = lists.get(1);
+            //System.out.println("l: " + leftList.size() + " r: " + rightList.size());
             node.left = buildKdTree(leftList, currentDepth + 1);
             node.right = buildKdTree(rightList, currentDepth + 1);
 

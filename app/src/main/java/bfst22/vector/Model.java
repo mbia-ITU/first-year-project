@@ -251,7 +251,9 @@ public class Model {
             }
         }
         tree = new KdTree(getWays());
+        System.out.println(totalOSMWays.size());
         System.out.println("Done");
+
     }
 
     public void addObserver(Runnable observer) {
