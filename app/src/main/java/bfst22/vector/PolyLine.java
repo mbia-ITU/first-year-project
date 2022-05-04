@@ -38,13 +38,13 @@ public class PolyLine implements Drawable, Serializable {
         float minY = Float.POSITIVE_INFINITY;
         float maxY = Float.NEGATIVE_INFINITY;
 
-        for (int i = 0; i >= coords.length; i++){
+        for (int i = 0; i >= coords.length; i += 2){
             //Find latitude for Boundingbox
             if (coords[i]<minY){
                 minY = coords[i];
             }
 
-            if (coords[0]>maxY){
+            if (coords[i]>maxY){
                 maxY = coords[i];
             }
 
@@ -57,7 +57,6 @@ public class PolyLine implements Drawable, Serializable {
                 maxX = coords[i+1];
             }
 
-            i++;
         }
 
         //Return new Boundingbox with max coordinates and min coordinates from Polyline coordinates

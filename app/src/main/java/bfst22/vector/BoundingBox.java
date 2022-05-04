@@ -13,6 +13,21 @@ public class BoundingBox {
         this.maxY = maxY;
     }
 
+    public BoundingBox (List<Drawable> drawables) {
+        minX = Float.POSITIVE_INFINITY;
+        maxX = Float.NEGATIVE_INFINITY;
+        minY = Float.POSITIVE_INFINITY;
+        maxY = Float.NEGATIVE_INFINITY;
+        for (Drawable node : drawables) {
+            BoundingBox bb = node.getBoundingBox();
+            minX = minX > bb.minX ? bb.minX : minX;
+            maxX = maxX > bb.maxX ? maxX : bb.maxX;
+            minY = minY > bb.minY ? bb.minY : minY;
+            maxY = maxY > bb.maxY ? maxY : bb.maxY;
+
+        }
+    }
+
     public float getCenterX() {
         return (minX + maxX) / 2;
     }
@@ -38,16 +53,17 @@ public class BoundingBox {
         return new BoundingBox(minX, maxX, minY, maxY);
     }
 
-    public BoundingBox combineMany(List<OSMWay> list) {
+    public BoundingBox combineMany(List<Drawable> list) {
         float minX = this.minX;
         float maxX = this.maxX;
         float minY = this.minY;
         float maxY = this.maxY;
-        for (OSMWay node : list) {
-            minX = minX > node.minX ? node.minX : minX;
-            maxX = maxX > node.maxX ? maxX : node.maxX;
-            minY = minY > node.minY ? node.minY : minY;
-            maxY = maxY > node.maxY ? maxY : node.maxY;
+        for (Drawable node : list) {
+            BoundingBox bb = node.getBoundingBox();
+            minX = minX > bb.minX ? bb.minX : minX;
+            maxX = maxX > bb.maxX ? maxX : bb.maxX;
+            minY = minY > bb.minY ? bb.minY : minY;
+            maxY = maxY > bb.maxY ? maxY : bb.maxY;
 
         }
         return new BoundingBox(minX, maxX, minY, maxY);

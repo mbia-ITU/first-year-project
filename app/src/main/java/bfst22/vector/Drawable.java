@@ -5,13 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.*;
 
 public interface Drawable {
-    static float minX = Float.MAX_VALUE;
-    static float minY = Float.MAX_VALUE;
-    static float maxX = Float.MIN_VALUE;
-    static float maxY = Float.MIN_VALUE;
-    static Comparator<Drawable> DrawableComparatorX = Comparator.comparing(list -> list.getPlotBounds().getCenterX());
-    static Comparator<Drawable> DrawableComparatorY = Comparator.comparing(list -> list.getPlotBounds().getCenterY());
-    List<OSMNode> nodes;
+    static Comparator<Drawable> DrawableComparatorX = Comparator.comparing(list -> list.getBoundingBox().getCenterX());
+    static Comparator<Drawable> DrawableComparatorY = Comparator.comparing(list -> list.getBoundingBox().getCenterY());
 
     default void draw(GraphicsContext gc) {
         gc.beginPath();
@@ -28,24 +23,7 @@ public interface Drawable {
     void trace(GraphicsContext gc);
     void resize(double zoomlevel);
 
-    default BoundingBox getBoundingBox() {
-        return null;
-    }
-
-    public default BoundingBox getPlotBounds() {
-        if (nodes.size() == 0) {
-            throw new RuntimeException("OSMWay does not have any nodes");
-        }
-
-        for (OSMNode node : nodes) {
-            minX = Math.min(minX, node.getLon());
-            minY = Math.min(minY, node.getLat());
-            maxX = Math.max(maxX, node.getLon());
-            maxY = Math.max(maxY, node.getLat());
-        }
-
-        return new BoundingBox(minX, maxX, minY, maxY);
-    }
+    BoundingBox getBoundingBox();
 
     public static List<List<Drawable>> splitOnX(List<Drawable> list){
         List<Drawable> leftList;
@@ -54,11 +32,11 @@ public interface Drawable {
         Collections.sort(list, DrawableComparatorX);
         leftList = list.subList(0, list.size() / 2);
         rightList = list.subList(list.size() / 2, list.size());
-        List<List<Drawable>> listOfDrawables = new ArrayList<List<Drawable>>();
-        listOfDrawables.add(leftList);
-        listOfDrawables.add(rightList);
+        List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
+        listOfOSMWays.add(leftList);
+        listOfOSMWays.add(rightList);
 
-        return listOfDrawables; 
+        return listOfOSMWays; 
     
     }
 
@@ -69,11 +47,11 @@ public interface Drawable {
             Collections.sort(list, DrawableComparatorY);
             leftList = list.subList(0, list.size() / 2);
             rightList = list.subList(list.size() / 2, list.size());
-            List<List<Drawable>> listOfDrawables = new ArrayList<List<Drawable>>();
-            listOfDrawables.add(leftList);
-            listOfDrawables.add(rightList);
+            List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
+            listOfOSMWays.add(leftList);
+            listOfOSMWays.add(rightList);
 
-            return listOfDrawables; 
+            return listOfOSMWays; 
         
     }
 }

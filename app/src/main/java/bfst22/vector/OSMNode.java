@@ -45,4 +45,9 @@ public class OSMNode implements Serializable, Drawable{
     public void resize(double zoomlevel) {
 
     }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return new BoundingBox(lon, lon, lat, lat);
+    }
 }

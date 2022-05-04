@@ -38,5 +38,10 @@ public class Cirkle implements Drawable, Serializable {
         this.radius = (float) (20/zoomLevel);
     }
 
+@Override
+public BoundingBox getBoundingBox() {
+    return new BoundingBox(x,x,y,y);
+}
+
 }
 
