@@ -11,7 +11,7 @@ public class KdTree implements Serializable {
     public KdTree(List<Drawable> ways) {
         this.totalWays = ways;
         root = buildKdTree(totalWays, 0);
-        box = root.bb;
+        box = root.box;
     }
 
     public KdNode buildKdTree(List<Drawable> ways, int currentDepth) {
@@ -38,19 +38,19 @@ public class KdTree implements Serializable {
 
     }
 
-    public List<Drawable> searchTree(BoundingBox bb) {
+    public List<Drawable> searchTree(BoundingBox box) {
         //kald næste searchtree med en ny arrayliste
         //giv den arrayliste med hver gang den anden searchtree bliver kaldt
-        return searchTree(bb, root);
+        return searchTree(box, root);
     }
 
-    private List<Drawable> searchTree(BoundingBox bb, KdNode node) {
+    private List<Drawable> searchTree(BoundingBox box, KdNode node) {
 
-        if(node.bb.intersect(bb)){
+        if(node.box.intersect(box)){
             List<Drawable> results = new ArrayList<>();
             if(node.wayList == null){
-                results.addAll(searchTree(bb, node.left));
-                results.addAll(searchTree(bb, node.right));
+                results.addAll(searchTree(box, node.left));
+                results.addAll(searchTree(box, node.right));
                     
             }
             return results;
