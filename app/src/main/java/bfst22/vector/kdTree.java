@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.*;
 
 public class KdTree implements Serializable {
-    BoundingBox box;
+    BoundingBox bb;
     KdNode root;
     List<Drawable> totalWays;
 
     public KdTree(List<Drawable> ways) {
         this.totalWays = ways;
         root = buildKdTree(totalWays, 0);
-        box = root.box;
+        bb = root.bb;
     }
 
     public KdNode buildKdTree(List<Drawable> ways, int currentDepth) {
@@ -38,19 +38,19 @@ public class KdTree implements Serializable {
 
     }
 
-    public List<Drawable> searchTree(BoundingBox box) {
+    public List<Drawable> searchTree(BoundingBox bb) {
         //kald næste searchtree med en ny arrayliste
         //giv den arrayliste med hver gang den anden searchtree bliver kaldt
-        return searchTree(box, root);
+        return searchTree(bb, root);
     }
 
-    private List<Drawable> searchTree(BoundingBox box, KdNode node) {
+    private List<Drawable> searchTree(BoundingBox bb, KdNode node) {
 
-        if(node.box.intersect(box)){
+        if(node.bb.intersect(bb)){
             List<Drawable> results = new ArrayList<>();
             if(node.wayList == null){
-                results.addAll(searchTree(box, node.left));
-                results.addAll(searchTree(box, node.right));
+                results.addAll(searchTree(bb, node.left));
+                results.addAll(searchTree(bb, node.right));
                     
             }
             return results;
