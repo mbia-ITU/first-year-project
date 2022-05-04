@@ -307,7 +307,7 @@ public class Model {
         }
     }
     public void addStart(OSMNode node){
-        lines.get(WayType.STARTPOINT).add(new Cirkle(node));
+        lines.get(WayType.STARTPOINT).add(new AddressCircle(node));
         notifyObservers();
     }
 
@@ -321,7 +321,7 @@ public class Model {
     }
 
     public void addDestination(OSMNode node){
-        lines.get(WayType.DESTINATION).add(new Cirkle(node));
+        lines.get(WayType.DESTINATION).add(new AddressCircle(node));
         notifyObservers();
     }
 
