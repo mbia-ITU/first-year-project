@@ -33,7 +33,7 @@ public class Model {
     String city = "";
     String floor = "";
     String side = "";
-    static ArrayList<OSMWay> totalOSMWays = new ArrayList<>();
+    static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     KdTree tree;
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -225,20 +225,20 @@ public class Model {
                 case XMLStreamConstants.END_ELEMENT:
                     switch (reader.getLocalName()) {
                         case "way":
-                            var way = new PolyLine(nodes);
+                            var polyline = new PolyLine(nodes);
                             //this is the nodes to use for dijkstra?
                             //id2way.put(relID, new OSMWay(nodes));
                             //trying this for Dijkstra
                             if(type == WayType.RESIDENTIALWAY){
-                                lines.get(WayType.RESIDENTIALWAY).add(way);
+                                lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else if(type == WayType.PRIMARYHIGHWAY){
-                                lines.get(WayType.PRIMARYHIGHWAY).add(way);
+                                lines.get(WayType.PRIMARYHIGHWAY).add(polyline);
                             }else{
-                                lines.get(type).add(way);
+                                lines.get(type).add(polyline);
                             }
                             id2way.put(relID, new OSMWay(nodes, type));
-                            lines.get(type).add(way);
-                            totalOSMWays.add(id2way.get(relID));
+                            lines.get(type).add(polyline);
+                            totalDrawables.add(polyline);
                             nodes.clear();
                             break;
                         case "relation":
@@ -293,7 +293,7 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-        tree = new KdTree(getWays());
+        tree = new KdTree(getDrawables());
         System.out.println("Done");
     }
 
@@ -342,8 +342,8 @@ public class Model {
         return addresses;
     }
 
-    public static List<OSMWay> getWays(){
-        return totalOSMWays;
+    public static List<Drawable> getDrawables(){
+        return totalDrawables;
     }
 
     public KdTree getTree(){

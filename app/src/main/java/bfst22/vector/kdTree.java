@@ -44,19 +44,19 @@ public class KdTree implements Serializable {
         return searchTree(bb, root);
     }
 
-    private List<Drawable> searchTree(BoundingBox bb, KdNode node) {
+    private List<Drawable> searchTree(BoundingBox searchbb, KdNode node) {
 
-        if(node.bb.intersect(bb)){
+        if(node.bb.intersect(searchbb)){
             List<Drawable> results = new ArrayList<>();
             if(node.wayList == null){
-                results.addAll(searchTree(bb, node.left));
-                results.addAll(searchTree(bb, node.right));
+                results.addAll(searchTree(searchbb, node.left));
+                results.addAll(searchTree(searchbb, node.right));
                     
+            } else {
+                results.addAll(node.wayList);
             }
             return results;
-        }
-        else
-        return new ArrayList<>();
-        
+        } else
+        return new ArrayList<>();   
     }
 }
