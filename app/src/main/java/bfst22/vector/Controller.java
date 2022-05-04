@@ -59,6 +59,8 @@ public class Controller {
     private TextField searching;
     @FXML
     private TextField searching1;
+    @FXML
+    private Button addToFavorites;
 
 
 
@@ -269,5 +271,11 @@ public class Controller {
             currentMouse = new Point2D(e.getX(),e.getY());
             System.out.println(canvas.mouseToModel(currentMouse).toString());
         }
+    }
+
+    @FXML
+    private void addToFavorites(ActionEvent e){
+        //add destination
+
     }
 }

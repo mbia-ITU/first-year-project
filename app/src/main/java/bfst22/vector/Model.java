@@ -31,8 +31,6 @@ public class Model {
     String street = "";
     String postcode = "";
     String city = "";
-    String floor = "";
-    String side = "";
     ArrayList<OSMNode> points= new ArrayList<>();
 
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
@@ -111,6 +109,7 @@ public class Model {
                             break;
                         case "way":
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
+
                             type = WayType.UNKNOWN;
                             break;
 
@@ -127,7 +126,7 @@ public class Model {
                             if (k.equals("natural") && v.equals("sand")) type = WayType.SAND;
                             if (k.equals("natural") && v.equals("scrub")) type = WayType.SCRUB;
                             if (k.equals("natural") && v.equals("grassland")) type = WayType.GRASS;
-                            //if (k.equals("natural") && v.equals("coastline")) type = WayType.COASTLINE;
+                            if (k.equals("natural") && v.equals("coastline")) type = WayType.COASTLINE;
                             if (k.equals("natural") && v.equals("wood")) type = WayType.FOREST;
                             if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
                             if (k.equals("leisure") && v.equals("pitch")) type = WayType.PITCH;
@@ -204,9 +203,11 @@ public class Model {
                                 postcode="";
                                 housenumber="";
                             }
+                            //LAND
 
                             //irrelevant lines/nodes
                             if(k.equals("route") && v.equals("ferry")) type = WayType.FERRY;
+                            if(k.equals("route")) type = WayType.FERRY;
                             if(k.equals("type") && v.equals(("boundary"))) type = WayType.BORDER;
 
 
@@ -232,8 +233,8 @@ public class Model {
                             //this is the nodes to use for dijkstra?
                             id2way.put(relID, new OSMWay(nodes));
                             //trying this for Dijkstra
-                            if(type == WayType.RESIDENTIALWAY){
-                                lines.get(WayType.RESIDENTIALWAY).add(way);
+                            if(type == WayType.RESIDENTIALWAY && !rel.isEmpty()){
+                                lines.get(WayType.RESIDENTIALWAY).add(new MultiPolygon(rel));
                             }else if(type == WayType.PRIMARYHIGHWAY){
                                 lines.get(WayType.PRIMARYHIGHWAY).add(way);
                             }else{

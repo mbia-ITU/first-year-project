@@ -48,8 +48,6 @@ public class MapCanvas extends Canvas {
         }
 
 
-
-
         for (var line : model.iterable(WayType.DESTINATION)) {
             gc.setFill(Color.RED);
             line.draw(gc);
@@ -105,20 +103,34 @@ public class MapCanvas extends Canvas {
 
     private void colorMap(){
 
-
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        gc.setFill(Color.BEIGE);
-        for (var line : model.iterable(WayType.UNKNOWN)) {
+        //gc.setFill(Color.BEIGE);
+        /*for (var line : model.iterable(WayType.UNKNOWN)) {
             line.fill(gc);
-        }
+        }*/
         /*gc.setFill(Color.BEIGE);
         for (var line : model.iterable(WayType.PLACEHOLDER)) {
             line.fill(gc); }
+
 */
-        gc.setFill(Color.PINK);
+        /*gc.setFill(Color.MOCCASIN);
+        for (var line : model.iterable(WayType.BEACH)) {
+            line.draw(gc);
+        }*/
+
+        gc.setFill(Color.RED);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.fill(gc);
         }
+
+        gc.setLineWidth(0.0008);
+        gc.setStroke(Color.WHITE);
+        for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
+                line.draw(gc);
+        }
+
+
+
         gc.setFill(Color.DARKGREEN);
         for (var line : model.iterable(WayType.FOREST)) {
             line.fill(gc);
@@ -136,10 +148,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.HEATH)) {
             line.fill(gc);
         }
-        gc.setFill(Color.MOCCASIN);
-        for (var line : model.iterable(WayType.BEACH)) {
-            line.fill(gc);
-        }
+
         gc.setFill(Color.OLDLACE);
         for (var line : model.iterable(WayType.SAND)) {
             line.fill(gc);
@@ -250,16 +259,8 @@ public class MapCanvas extends Canvas {
         }
 
 
-
-        if(drawLevel == 2) {
-            gc.setLineWidth(0.00008);
-            gc.setStroke(Color.DARKGRAY);
-            for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
-                line.draw(gc);
-            }
-        }
-
-        gc.setLineWidth(0.00013);
+        //gc.setLineWidth(0.00013);
+        gc.setLineWidth(1.5/Math.sqrt(trans.determinant()));
         gc.setStroke(Color.ORANGE);
         for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
             line.draw(gc);
@@ -291,6 +292,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.CEMETERY)) {
             line.draw(gc);
         }
+        gc.setFill(Color.ORANGE);
         for (var line : model.iterable(WayType.COASTLINE)) {
             line.draw(gc);
         }
