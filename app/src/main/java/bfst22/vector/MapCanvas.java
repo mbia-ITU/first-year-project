@@ -68,6 +68,7 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    //This method returns the current user view as a bounding box
     BoundingBox BoundingBoxFromScreen() {
         Point2D p1_xy = new Point2D(0, 0);
         Point2D p2_xy = new Point2D(getWidth(), getHeight());
@@ -79,8 +80,9 @@ public class MapCanvas extends Canvas {
         float f_p2_lon = (float) p2_latlon.getX();
         float f_p1_lat = (float) p1_latlon.getY();
         float f_p2_lat = (float) p2_latlon.getY();
+        //System.out.println(f_p1_lon + " " + f_p2_lon + " " + f_p1_lat + " " + f_p2_lat);
 
-        return new BoundingBox(f_p1_lon, f_p2_lon, f_p2_lat, f_p1_lat);
+        return new BoundingBox(f_p1_lon, f_p2_lon, f_p1_lat, f_p2_lat);
 
         
     }

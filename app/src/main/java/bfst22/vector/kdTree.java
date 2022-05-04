@@ -18,7 +18,7 @@ public class KdTree implements Serializable {
 
         KdNode node = new KdNode(ways);
 
-        if (ways.size() > 500) {
+        if (ways.size() > 50) {
             List<List<Drawable>> lists;
             if (currentDepth % 2 == 0) {
                 lists = Drawable.splitOnX(ways);
@@ -41,7 +41,9 @@ public class KdTree implements Serializable {
     public List<Drawable> searchTree(BoundingBox bb) {
         //kald næste searchtree med en ny arrayliste
         //giv den arrayliste med hver gang den anden searchtree bliver kaldt
-        return searchTree(bb, root);
+        var results = searchTree(bb, root);
+        System.out.println(results.size());
+        return results;
     }
 
     private List<Drawable> searchTree(BoundingBox searchbb, KdNode node) {
