@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
@@ -85,6 +86,7 @@ public class Model {
         var id2way = new HashMap<Long, OSMWay>();
         var nodes = new ArrayList<OSMNode>();
         var rel = new ArrayList<OSMWay>();
+        var border = new ArrayList<OSMWay>();
         long relID = 0;
         var type = WayType.UNKNOWN;
         while (reader.hasNext()) {
@@ -207,7 +209,6 @@ public class Model {
 
                             //irrelevant lines/nodes
                             if(k.equals("route") && v.equals("ferry")) type = WayType.FERRY;
-                            if(k.equals("type") && v.equals(("boundary"))) type = WayType.BORDER;
 
 
                             break;
@@ -215,14 +216,15 @@ public class Model {
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var elm = id2way.get(ref);
                             if (elm != null) rel.add(elm);
+                            var role = reader.getAttributeValue(null, "role");
+                            if(role.equals("outer")){
+                                type = WayType.BORDER;
+                            }
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
-                            if (id == 1305702) {
-                                System.out.println("Done");
-                            }
-                            break;
 
+                            break;
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -242,6 +244,9 @@ public class Model {
                             nodes.clear();
                             break;
                         case "relation":
+                            if(type == WayType.BORDER && !rel.isEmpty()){
+                                lines.get(type).add(new MultiPolygon(rel));
+                            }
                             if (type == WayType.GOLFCOURSE && !rel.isEmpty()) {
                             lines.get(type).add(new MultiPolygon(rel));
                             }

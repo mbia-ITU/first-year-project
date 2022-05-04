@@ -282,6 +282,11 @@ public class MapCanvas extends Canvas {
 
     private void drawLineMap(){
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        gc.setFill(Color.BLUE);
+        for (var line : model.iterable(WayType.BORDER)) {
+            line.fill(gc);
+        }
+        gc.setStroke(Color.BLACK);
         for (var line : model.iterable(WayType.BEACH)) {
             line.draw(gc);
         }
