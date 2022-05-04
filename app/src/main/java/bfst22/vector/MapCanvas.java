@@ -5,6 +5,7 @@ import java.util.*;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Light.Point;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -29,7 +30,6 @@ public class MapCanvas extends Canvas {
 
     void init(Model model) {
         this.model = model;
-        this.tree = model.getTree();
         pan(-model.minlon, -model.minlat);
         zoom(640 / (model.maxlon - model.minlon), 0, 0);
         model.addObserver(this::repaint);
@@ -44,30 +44,7 @@ public class MapCanvas extends Canvas {
             gc.fillRect(0, 0, getWidth(), getHeight());
             gc.setTransform(trans);
             colorMap();
-        }
-
-        // Color boundingbox KdTree (Driller)
-        /*
-        List<OSMWay> results = tree.searchTree(frame());
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, getWidth(), getHeight());
-        System.out.println(results.size());
-        
-        for(OSMWay way : results){
-            
-                System.out.println(way.getType());
-                
-        }
-        
-
-        
-        gc.setFill(Color.PINK);
-        for (var line : model.iterable(WayType.COASTLINE)) {
-            line.fill(gc);
-        }
-        */
-
-        else if (drawType == 1) {
+        } else if (drawType == 1) {
             gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, getWidth(), getHeight());
             gc.setTransform(trans);
@@ -77,18 +54,35 @@ public class MapCanvas extends Canvas {
 
 
 
-        for (var line : model.iterable(WayType.DESTINATION)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             gc.setFill(Color.RED);
             line.draw(gc);
             gc.setFill(Color.WHITE);
             }
 
-        for (var line : model.iterable(WayType.STARTPOINT)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             //gc.setFill(Color.ORANGE);
             gc.setFill(Color.ORANGE);
             line.draw(gc);
             gc.setFill(Color.WHITE);
         }
+    }
+
+    BoundingBox BoundingBoxFromScreen() {
+        Point2D p1_xy = new Point2D(0, 0);
+        Point2D p2_xy = new Point2D(getWidth(), getHeight());
+
+        Point2D p1_latlon = mouseToModel(p1_xy);
+        Point2D p2_latlon = mouseToModel(p2_xy);
+
+        float f_p1_lon = (float) p1_latlon.getX();
+        float f_p2_lon = (float) p2_latlon.getX();
+        float f_p1_lat = (float) p1_latlon.getY();
+        float f_p2_lat = (float) p2_latlon.getY();
+
+        return new BoundingBox(f_p1_lon, f_p2_lon, f_p2_lat, f_p1_lat);
+
+        
     }
 
     void pan(double dx, double dy) {
@@ -135,7 +129,7 @@ public class MapCanvas extends Canvas {
 
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         gc.setFill(Color.BEIGE);
-        for (var line : model.iterable(WayType.UNKNOWN)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.UNKNOWN, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         /*gc.setFill(Color.BEIGE);
@@ -143,75 +137,75 @@ public class MapCanvas extends Canvas {
             line.fill(gc); }
 */
         gc.setFill(Color.PINK);
-        for (var line : model.iterable(WayType.COASTLINE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.DARKGREEN);
-        for (var line : model.iterable(WayType.FOREST)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.KHAKI);
-        for (var line : model.iterable(WayType.FARMLAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
 
         gc.setFill(Color.LIGHTGREY);
-        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
             line.fill(gc); }
 
         gc.setFill(Color.TAN);
-        for (var line : model.iterable(WayType.HEATH)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.HEATH, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.MOCCASIN);
-        for (var line : model.iterable(WayType.BEACH)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.OLDLACE);
-        for (var line : model.iterable(WayType.SAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.SAND, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.TEAL);
-        for (var line : model.iterable(WayType.WETLAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.WETLAND, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.DARKSEAGREEN);
-        for (var line : model.iterable(WayType.SCRUB)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.SCRUB, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.PALEGREEN);
-        for (var line : model.iterable(WayType.MEADOW)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.MEADOW, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.PEACHPUFF);
-        for (var line : model.iterable(WayType.FARMYARD)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMYARD, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.PLUM);
-        for (var line : model.iterable(WayType.INDUSTRIAL)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         gc.setFill(Color.LIGHTGREEN);
-        for (var line : model.iterable(WayType.GRASS)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.GRASS, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         if (drawLevel == 1){
             gc.setFill(Color.SEASHELL);
-            for (var line : model.iterable(WayType.RESORT)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2){
             gc.setFill(Color.LIGHTYELLOW);
-            for (var line : model.iterable(WayType.HOSPITAL)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.HOSPITAL, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2){
             gc.setFill(Color.MEDIUMPURPLE);
-            for (var line : model.iterable(WayType.HELIPAD)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.HELIPAD, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
         /*
@@ -226,53 +220,53 @@ public class MapCanvas extends Canvas {
         */
         if (drawLevel == 2) {
             gc.setFill(Color.DARKTURQUOISE);
-            for (var line : model.iterable(WayType.PITCH)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.DARKTURQUOISE);
-            for (var line : model.iterable(WayType.SOCCER)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.SOCCER, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.LAVENDER);
-            for (var line : model.iterable(WayType.PARKING)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PARKING, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.HONEYDEW);
-            for (var line : model.iterable(WayType.GOLFCOURSE)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel >= 1) {
             gc.setFill(Color.GOLDENROD);
-            for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel >= 1) {
             gc.setFill(Color.SEASHELL);
-            for (var line : model.iterable(WayType.RESERVE)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.MEDIUMAQUAMARINE);
-            for (var line : model.iterable(WayType.CEMETERY)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
 
         if (drawLevel == 2) {
             gc.setFill(Color.LIGHTSTEELBLUE);
-            for (var line : model.iterable(WayType.RACE)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RACE, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.RED);
-            for (var line : model.iterable(WayType.RACEWAY)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RACEWAY, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.GRAY);
-            for (var line : model.iterable(WayType.BUILDING)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
                 line.fill(gc); }
         }
 
@@ -281,26 +275,26 @@ public class MapCanvas extends Canvas {
         if(drawLevel == 2) {
             gc.setLineWidth(0.00008);
             gc.setStroke(Color.DARKGRAY);
-            for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
         }
 
         gc.setLineWidth(0.00013);
         gc.setStroke(Color.ORANGE);
-        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
 
         gc.setStroke(Color.BLACK);
 
-        for (var line : model.iterable(WayType.DESTINATION)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             gc.setFill(Color.RED);
             line.resize(currentZoomLevel);
             line.draw(gc);
         }
 
-        for (var line : model.iterable(WayType.STARTPOINT)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
             line.draw(gc);
         }
@@ -309,116 +303,116 @@ public class MapCanvas extends Canvas {
 
     private void drawLineMap(){
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.BEACH)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.BUILDING)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.CEMETERY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.COASTLINE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.FARMLAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.FARMYARD)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMYARD, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.FOREST)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.GOLFCOURSE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.GRASS)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.GRASS, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.HEATH)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.HEATH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.HELIPAD)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.HELIPAD, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.HOSPITAL)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.HOSPITAL, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.INDUSTRIAL)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.LAKE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.MEADOW)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.MEADOW, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.PARKING)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PARKING, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.PITCH)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.PROTECTEDAREA)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RACE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RACE, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RACEWAY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RACEWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RESERVE)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RESIDENTIAL)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RESORT)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.RIVER)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RIVER, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.SAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.SAND, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.SCRUB)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.SCRUB, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.SOCCER)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.SOCCER, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.TERTIARY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.TERTIARY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.iterable(WayType.WETLAND)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.WETLAND, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
         //Segment for roads
         gc.setLineWidth(0.00008);
         gc.setStroke(Color.LIGHTGREY);
-        for (var line : model.iterable(WayType.RESIDENTIALWAY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
 
         gc.setLineWidth(0.00013);
         gc.setStroke(Color.DARKGRAY);
-        for (var line : model.iterable(WayType.PRIMARYHIGHWAY)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
         gc.setStroke(Color.BLACK);
 
         //for searched addresses
-        for (var line : model.iterable(WayType.DESTINATION)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
                 line.draw(gc);
         }
-        for (var line : model.iterable(WayType.STARTPOINT)) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
             line.draw(gc);
         }

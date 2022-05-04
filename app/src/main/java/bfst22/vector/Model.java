@@ -34,10 +34,10 @@ public class Model {
     String floor = "";
     String side = "";
     static ArrayList<Drawable> totalDrawables = new ArrayList<>();
-    KdTree tree;
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
+    Map<WayType, KdTree> MapOfKdTrees = new EnumMap<>(WayType.class); 
     List<Runnable> observers = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
@@ -293,7 +293,12 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-        tree = new KdTree(getDrawables());
+
+        // Creates KD tree for each waytype
+        for (var entry : lines.entrySet()) {
+            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
+        }
+
         System.out.println("Done");
     }
 
@@ -334,8 +339,12 @@ public class Model {
         return lines.get(WayType.DESTINATION);
     }
 
-    public Iterable<Drawable> iterable(WayType type) {
+    /*public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
+    }*/
+
+    public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
+        return MapOfKdTrees.get(type).searchTree(bb);
     }
 
     public ArrayList<Address> getAddresses(){
@@ -344,9 +353,5 @@ public class Model {
 
     public static List<Drawable> getDrawables(){
         return totalDrawables;
-    }
-
-    public KdTree getTree(){
-        return tree;
     }
 }
