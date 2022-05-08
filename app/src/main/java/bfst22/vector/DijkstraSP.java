@@ -1,8 +1,11 @@
 package bfst22.vector;
+import java.util.*;
+
 
 public class DijkstraSP {
-    private double[] distTo;          // distTo[v] = distance  of shortest s->v path
-    private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
+    private Map<OSMNode, Double> distTo;          // distTo[v] = distance  of shortest s->v path
+    private Map<OSMNode, DirectedEdge> edgeTo;
+    //private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
 
     /**
@@ -14,27 +17,30 @@ public class DijkstraSP {
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public DijkstraSP(EdgeWeightedDigraph G, int s) {
+    public DijkstraSP(EdgeWeightedDigraph G, OSMNode s) {
         for (DirectedEdge e : G.edges()) {
             if (e.weight() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
-        distTo = new double[G.V()];
-        edgeTo = new DirectedEdge[G.V()];
 
-        validateVertex(s);
+        distTo = new HashMap<OSMNode, Double>();
+        edgeTo = new HashMap<OSMNode, DirectedEdge>();
+        //edgeTo = new DirectedEdge[G.V()];
 
-        for (int v = 0; v < G.V(); v++)
-            distTo[v] = Double.POSITIVE_INFINITY;
-        distTo[s] = 0.0;
+        validateVertex(s, G);
+
+        for (OSMNode n : G.allNodes()) {
+            distTo.put(n, Double.POSITIVE_INFINITY);
+        }
+        distTo.put(s, 0.0);
 
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(G.V());
-        pq.insert(s, distTo[s]);
+        pq.insert(s, distTo.get(s));
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj(v))
+            for (DirectedEdge e : G.adj.get(v))
                 relax(e);
         }
 
@@ -45,11 +51,11 @@ public class DijkstraSP {
     // relax edge e and update pq if changed
     private void relax(DirectedEdge e) {
         OSMNode v = e.from(), w = e.to();
-        if (distTo[w] > distTo[v] + e.weight()) {
-            distTo[w] = distTo[v] + e.weight();
-            edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
-            else                pq.insert(w, distTo[w]);
+        if (distTo.get(w) > distTo.get(v) + e.weight()) {
+            distTo.put(w, distTo.get(v) + e.weight());
+            edgeTo.put(w, e);
+            if (pq.contains(w)) pq.decreaseKey(w, distTo.get(w));
+            else                pq.insert(w, distTo.get(w));
         }
     }
 
@@ -60,9 +66,9 @@ public class DijkstraSP {
      *         {@code Double.POSITIVE_INFINITY} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public double distTo(int v) {
-        validateVertex(v);
-        return distTo[v];
+    public double distTo(OSMNode v, EdgeWeightedDigraph G) {
+        validateVertex(v, G);
+        return distTo.get(v);
     }
 
     /**
@@ -73,9 +79,9 @@ public class DijkstraSP {
      *         {@code s} to vertex {@code v}; {@code false} otherwise
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public boolean hasPathTo(int v) {
-        validateVertex(v);
-        return distTo[v] < Double.POSITIVE_INFINITY;
+    public boolean hasPathTo(OSMNode v, EdgeWeightedDigraph G) {
+        validateVertex(v, G);
+        return distTo.get(v) < Double.POSITIVE_INFINITY;
     }
 
     /**
@@ -86,11 +92,11 @@ public class DijkstraSP {
      *         as an iterable of edges, and {@code null} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<DirectedEdge> pathTo(int v) {
-        validateVertex(v);
-        if (!hasPathTo(v)) return null;
+    public Iterable<DirectedEdge> pathTo(OSMNode v, EdgeWeightedDigraph G) {
+        validateVertex(v, G);
+        if (!hasPathTo(v, G)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+        for (DirectedEdge e = edgeTo.get(v); e != null; e = edgeTo.get(e.from())) {
             path.push(e);
         }
         return path;
@@ -100,7 +106,7 @@ public class DijkstraSP {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(EdgeWeightedDigraph G, OSMNode s) {
 
         // check that edge weights are non-negative
         for (DirectedEdge e : G.edges()) {
@@ -111,23 +117,23 @@ public class DijkstraSP {
         }
 
         // check that distTo[v] and edgeTo[v] are consistent
-        if (distTo[s] != 0.0 || edgeTo[s] != null) {
+        if (distTo.get(s) != 0.0 || edgeTo.get(s) != null) {
             System.err.println("distTo[s] and edgeTo[s] inconsistent");
             return false;
         }
-        for (int v = 0; v < G.V(); v++) {
-            if (v == s) continue;
-            if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
+        for (OSMNode v : G.allNodes()) {
+            if (v.equals(s)) continue;
+            if (edgeTo.get(v) == null && distTo.get(v) != Double.POSITIVE_INFINITY) {
                 System.err.println("distTo[] and edgeTo[] inconsistent");
                 return false;
             }
         }
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
-        for (int v = 0; v < G.V(); v++) {
-            for (DirectedEdge e : G.adj(v)) {
-                int w = e.to();
-                if (distTo[v] + e.weight() < distTo[w]) {
+        for (OSMNode v: G.allNodes()) {
+            for (DirectedEdge e : G.adj.get(v)) {
+                OSMNode w = e.to();
+                if (distTo.get(v) + e.weight() < distTo.get(w)) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
                 }
@@ -135,12 +141,12 @@ public class DijkstraSP {
         }
 
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
-        for (int w = 0; w < G.V(); w++) {
-            if (edgeTo[w] == null) continue;
-            DirectedEdge e = edgeTo[w];
-            int v = e.from();
+        for (OSMNode w : G.allNodes()) {
+            if (edgeTo.get(w) == null) continue;
+            DirectedEdge e = edgeTo.get(w);
+            OSMNode v = e.from();
             if (w != e.to()) return false;
-            if (distTo[v] + e.weight() != distTo[w]) {
+            if (distTo.get(v) + e.weight() != distTo.get(w)) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;
             }
@@ -149,10 +155,11 @@ public class DijkstraSP {
     }
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
-    private void validateVertex(int v) {
-        int V = distTo.length;
-        if (v < 0 || v >= V)
-            throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V-1));
+    private void validateVertex(OSMNode v, EdgeWeightedDigraph G) {
+
+        if (!G.allNodes().contains(v)){
+            throw new IllegalArgumentException("Node " + v + " does not exist");
+        }
     }
 
     /**

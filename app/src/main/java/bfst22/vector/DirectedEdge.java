@@ -30,4 +30,5 @@ public class DirectedEdge {
     public OSMNode to(){
         return w;
     }
+
 }
