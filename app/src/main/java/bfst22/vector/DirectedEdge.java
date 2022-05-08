@@ -16,7 +16,7 @@ public class DirectedEdge {
     }
 
     public double calcDist(){
-        return Math.sqrt(Math.abs(v.getLat() - w.getLat()) + Math.abs(v.getLon() - w.getLon())); 
+        return Math.sqrt(Math.pow(Math.abs(v.getLat() - w.getLat()), 2) + Math.pow(Math.abs(v.getLon() - w.getLon()), 2)); 
     }
 
     public double weight(){
