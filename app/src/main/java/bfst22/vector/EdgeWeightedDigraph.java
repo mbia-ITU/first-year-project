@@ -1,8 +1,9 @@
 package bfst22.vector;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class EdgeWeightedDigraph {
+public class EdgeWeightedDigraph implements Serializable {
     public Map<OSMNode, ArrayList<DirectedEdge>> adj;
     public Map<OSMNode, Integer> index;
     public Map<Integer, OSMNode> indexNode;

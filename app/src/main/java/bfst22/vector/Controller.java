@@ -250,6 +250,7 @@ public class Controller {
             model.clearStart();
         }
         model.addStart(start.getNode());
+        canvas.repaint();
     }
     @FXML
     private void onAddressPress2(ActionEvent e){
@@ -257,6 +258,7 @@ public class Controller {
             model.clearDestination();
         }
         model.addDestination(destination.getNode());
+        canvas.repaint();
     }
 
     @FXML

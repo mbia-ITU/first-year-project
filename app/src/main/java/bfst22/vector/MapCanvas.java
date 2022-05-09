@@ -23,7 +23,7 @@ public class MapCanvas extends Canvas {
     BoundingBox box;
     KdTree tree;
     
-
+    int a = 0;
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
 
@@ -46,10 +46,7 @@ public class MapCanvas extends Canvas {
         for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode.get(3000), model.routeGraph)){
             if (!hasfirst) {wat.add(e.to());}
             wat.add(e.from());
-            System.out.println("from: " + e.from() + " to: " + e.to());
-            
         }
-
         model.addRoute(wat);
     }
 
@@ -62,16 +59,18 @@ public class MapCanvas extends Canvas {
             colorMap();
         } else if (drawType == 1) {
             gc.setFill(Color.WHITE);
+            gc.setStroke(Color.BLACK);
             gc.fillRect(0, 0, getWidth(), getHeight());
             gc.setTransform(trans);
             drawLineMap();
         }
 
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
+       /* for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
             gc.setStroke(Color.BLUE);
             line.draw(gc);
             gc.setStroke(Color.BLACK);
-            }
+            }*/
+
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             gc.setFill(Color.RED);
@@ -80,7 +79,6 @@ public class MapCanvas extends Canvas {
             }
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
-            //gc.setFill(Color.ORANGE);
             gc.setFill(Color.ORANGE);
             line.draw(gc);
             gc.setFill(Color.WHITE);
@@ -122,7 +120,7 @@ public class MapCanvas extends Canvas {
         currentZoomLevel = trans.getMxx();
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
         if (zoomPercentage < 200) drawLevel = 0;
-        if (zoomPercentage > 200 && zoomPercentage < 500) drawLevel = 1;
+        if (zoomPercentage > 300 && zoomPercentage < 500) drawLevel = 1;
         if (zoomPercentage > 500) drawLevel = 2;
         //System.out.println(zoomPercentage);
         //System.out.println(drawLevel);
@@ -327,92 +325,105 @@ public class MapCanvas extends Canvas {
         for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
-            line.draw(gc);
+        if (drawLevel >= 1) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
         }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.FARMYARD, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.GRASS, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.HEATH, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.HELIPAD, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.HOSPITAL, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.MEADOW, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PARKING, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RACE, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RACEWAY, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.RIVER, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.SAND, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.SCRUB, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.SOCCER, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.TERTIARY, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
-        for (var line : model.getDrawablesFromTypeInBB(WayType.WETLAND, BoundingBoxFromScreen())) {
-            line.draw(gc);
+        if (drawLevel == 2) {
+            for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.FARMYARD, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.GRASS, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.HEATH, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.HELIPAD, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.HOSPITAL, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.MEADOW, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PARKING, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RACE, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RACEWAY, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RIVER, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.SAND, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.SCRUB, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.SOCCER, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.TERTIARY, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.WETLAND, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
         }
         //Segment for roads
         gc.setLineWidth(0.00008);
@@ -426,13 +437,13 @@ public class MapCanvas extends Canvas {
         for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(0.01);
+
+        gc.setLineWidth(1.5/Math.sqrt(trans.determinant()));
+        gc.setStroke(Color.RED);
+        //gc.setLineWidth(0.01);
         for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
                 line.draw(gc);
         }
-
-        gc.setStroke(Color.BLACK);
 
         //for searched addresses
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {

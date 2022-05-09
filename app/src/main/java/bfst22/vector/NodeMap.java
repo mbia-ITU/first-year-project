@@ -1,9 +1,10 @@
 package bfst22.vector;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class NodeMap extends ArrayList<OSMNode> {
+public class NodeMap extends ArrayList<OSMNode> implements Serializable {
     boolean sorted;
 
     public boolean add(OSMNode node) {
