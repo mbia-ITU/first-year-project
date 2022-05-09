@@ -177,9 +177,9 @@ public class Controller {
 
     @FXML
     private void onScroll(ScrollEvent e) {
-        System.out.println(canvas.initialZoomLevel);
+        //System.out.println(canvas.initialZoomLevel);
         var factor = e.getDeltaY();
-        System.out.println(e.getDeltaY());
+        //System.out.println(e.getDeltaY());
         if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
             canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
             percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
@@ -272,7 +272,7 @@ public class Controller {
     private void onMouseMoved(MouseEvent e){
         if(highlighter.isSelected()){
             currentMouse = new Point2D(e.getX(),e.getY());
-            System.out.println(canvas.mouseToModel(currentMouse).toString());
+            //System.out.println(canvas.mouseToModel(currentMouse).toString());
         }
     }
 }
