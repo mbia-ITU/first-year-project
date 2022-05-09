@@ -13,7 +13,7 @@ public class EdgeWeightedDigraph {
         adj = new HashMap<>();
         index = new HashMap<>();
         indexNode = new HashMap<>();
-        indexCounter = 1;
+        indexCounter = 0;
     }
 
     public int V() {
@@ -31,7 +31,6 @@ public class EdgeWeightedDigraph {
     }
 
     public void addEdge(OSMNode n, DirectedEdge e){
-        System.out.println("i recieved node: " + n + " and edge: " + e);
         if (adj.containsKey(n)){
             adj.get(n).add(e);
 

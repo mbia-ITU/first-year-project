@@ -22,8 +22,10 @@ public class MapCanvas extends Canvas {
     double zp;
     BoundingBox box;
     KdTree tree;
+    
 
     GraphicsContext gc = getGraphicsContext2D();
+    public DijkstraSP sp;
 
     int drawType = 1;
     Address[] destination = new Address[2];
@@ -36,6 +38,19 @@ public class MapCanvas extends Canvas {
         repaint();
         initialZoomLevel = trans.getMxx();
         System.out.println("this is the amount of vertex: " + model.routeGraph.V());
+        System.out.println("this is the size of index: " + model.routeGraph.index.size());
+        sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode.get(1));
+        boolean hasfirst = false;
+
+        ArrayList<OSMNode> wat = new ArrayList<>();
+        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode.get(3000), model.routeGraph)){
+            if (!hasfirst) {wat.add(e.to());}
+            wat.add(e.from());
+            System.out.println("from: " + e.from() + " to: " + e.to());
+            
+        }
+
+        model.addRoute(wat);
     }
 
     void repaint() {
@@ -52,8 +67,11 @@ public class MapCanvas extends Canvas {
             drawLineMap();
         }
 
-
-
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
+            gc.setStroke(Color.BLUE);
+            line.draw(gc);
+            gc.setStroke(Color.BLACK);
+            }
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             gc.setFill(Color.RED);
@@ -408,6 +426,12 @@ public class MapCanvas extends Canvas {
         for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(0.01);
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
+                line.draw(gc);
+        }
+
         gc.setStroke(Color.BLACK);
 
         //for searched addresses

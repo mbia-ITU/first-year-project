@@ -39,7 +39,6 @@ public class DijkstraSP {
         
 
         // relax vertices in order of distance from s
-        /*
         pq = new IndexMinPQ<Double>(G.V());
         int tempIn = G.index.get(s);
         pq.insert(tempIn, distTo.get(s));
@@ -63,7 +62,7 @@ public class DijkstraSP {
             int tempIndex = G.index.get(w);
             if (pq.contains(tempIndex)) pq.decreaseKey(tempIndex, distTo.get(w));
             else                pq.insert(tempIndex, distTo.get(w));
-        }*/
+        }
     }
 
     /**
