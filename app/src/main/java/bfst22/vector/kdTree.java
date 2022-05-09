@@ -42,7 +42,7 @@ public class KdTree implements Serializable {
         //kald næste searchtree med en ny arrayliste
         //giv den arrayliste med hver gang den anden searchtree bliver kaldt
         var results = searchTree(bb, root);
-        System.out.println(results.size());
+        //System.out.println(results.size());
         return results;
     }
 

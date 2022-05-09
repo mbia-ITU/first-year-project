@@ -1,3 +1,4 @@
+
 package bfst22.vector;
 import java.util.*;
 
@@ -38,8 +39,10 @@ public class DijkstraSP {
         
 
         // relax vertices in order of distance from s
+        /*
         pq = new IndexMinPQ<Double>(G.V());
-        pq.insert(G.index.get(s), distTo.get(s));
+        int tempIn = G.index.get(s);
+        pq.insert(tempIn, distTo.get(s));
         while (!pq.isEmpty()) {
             int v = pq.delMin();
             OSMNode w = G.indexNode.get(v);
@@ -57,9 +60,10 @@ public class DijkstraSP {
         if (distTo.get(w) > distTo.get(v) + e.weight()) {
             distTo.put(w, distTo.get(v) + e.weight());
             edgeTo.put(w, e);
-            if (pq.contains(G.index.get(w))) pq.decreaseKey(G.index.get(w), distTo.get(w));
-            else                pq.insert(G.index.get(w), distTo.get(w));
-        }
+            int tempIndex = G.index.get(w);
+            if (pq.contains(tempIndex)) pq.decreaseKey(tempIndex, distTo.get(w));
+            else                pq.insert(tempIndex, distTo.get(w));
+        }*/
     }
 
     /**

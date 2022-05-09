@@ -31,8 +31,7 @@ public class Model {
     String street = "";
     String postcode = "";
     String city = "";
-    String floor = "";
-    String side = "";
+    EdgeWeightedDigraph routeGraph = new EdgeWeightedDigraph();
     static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -155,7 +154,12 @@ public class Model {
                             //if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
                             //if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
                             //roads
-                            if(k.equals("highway")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway")){ type = WayType.RESIDENTIALWAY;
+                                for(int i = 0; i < nodes.size()-1; i++){
+                                    routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
+                                    routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
+                                }
+                            }
                             if(k.equals("name") && v.equals("Bornholm")) type = WayType.PLACEHOLDER;
                             /*if(k.equals("highway") && v.equals("service")) type = WayType.RESIDENTIALWAY;
                             if(k.equals("highway") && v.equals("path")) type = WayType.RESIDENTIALWAY;

@@ -35,6 +35,7 @@ public class MapCanvas extends Canvas {
         model.addObserver(this::repaint);
         repaint();
         initialZoomLevel = trans.getMxx();
+        System.out.println("this is the amount of vertex: " + model.routeGraph.V());
     }
 
     void repaint() {
