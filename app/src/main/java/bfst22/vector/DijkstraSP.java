@@ -35,13 +35,16 @@ public class DijkstraSP {
         }
         distTo.put(s, 0.0);
 
+        
+
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(G.V());
-        pq.insert(s, distTo.get(s));
+        pq.insert(G.index.get(s), distTo.get(s));
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj.get(v))
-                relax(e);
+            OSMNode w = G.indexNode.get(v);
+            for (DirectedEdge e : G.adj.get(w))
+                relax(e, G);
         }
 
         // check optimality conditions
@@ -49,13 +52,13 @@ public class DijkstraSP {
     }
 
     // relax edge e and update pq if changed
-    private void relax(DirectedEdge e) {
+    private void relax(DirectedEdge e, EdgeWeightedDigraph G) {
         OSMNode v = e.from(), w = e.to();
         if (distTo.get(w) > distTo.get(v) + e.weight()) {
             distTo.put(w, distTo.get(v) + e.weight());
             edgeTo.put(w, e);
-            if (pq.contains(w)) pq.decreaseKey(w, distTo.get(w));
-            else                pq.insert(w, distTo.get(w));
+            if (pq.contains(G.index.get(w))) pq.decreaseKey(G.index.get(w), distTo.get(w));
+            else                pq.insert(G.index.get(w), distTo.get(w));
         }
     }
 
