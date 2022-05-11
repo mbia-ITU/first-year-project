@@ -358,4 +358,10 @@ public class Model {
     public static List<Drawable> getDrawables(){
         return totalDrawables;
     }
+
+    public void addRoute(List<OSMNode> vertexes){
+        var polyline1 = new PolyLine(vertexes);
+        lines.get(WayType.PATHTO).add(polyline1);
+        notifyObservers();
+    }
 }
