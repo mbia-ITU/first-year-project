@@ -53,6 +53,7 @@ public class Model {
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
                 routeGraph = (EdgeWeightedDigraph) input.readObject();
+                MapOfKdTrees = (EnumMap<WayType,KdTree>) input.readObject();
             }
         }
 
@@ -82,7 +83,7 @@ public class Model {
             for(var s : MapOfKdTrees.entrySet()){
                 System.out.println(s.toString());
             }
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

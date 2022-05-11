@@ -31,8 +31,8 @@ public interface Drawable extends Serializable {
         List<Drawable> rightList;
 
         Collections.sort(list, DrawableComparatorX);
-        leftList = list.subList(0, list.size() / 2);
-        rightList = list.subList(list.size() / 2, list.size());
+        leftList = new ArrayList<>(list.subList(0, list.size() / 2));
+        rightList = new ArrayList<>(list.subList(list.size() / 2, list.size()));
         List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
         listOfOSMWays.add(leftList);
         listOfOSMWays.add(rightList);
@@ -46,8 +46,8 @@ public interface Drawable extends Serializable {
         List<Drawable> rightList;
 
             Collections.sort(list, DrawableComparatorY);
-            leftList = list.subList(0, list.size() / 2);
-            rightList = list.subList(list.size() / 2, list.size());
+            leftList = new ArrayList<>(list.subList(0, list.size() / 2));
+            rightList = new ArrayList<>(list.subList(list.size() / 2, list.size()));
             List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
             listOfOSMWays.add(leftList);
             listOfOSMWays.add(rightList);
