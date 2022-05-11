@@ -1,6 +1,8 @@
 package bfst22.vector;
 
-public class DirectedEdge {
+import java.io.Serializable;
+
+public class DirectedEdge implements Serializable {
     private final OSMNode v;
     private final OSMNode w;
     private final int speedLimit;

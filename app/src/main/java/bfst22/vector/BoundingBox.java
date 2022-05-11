@@ -1,8 +1,9 @@
 package bfst22.vector;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class BoundingBox {
+public class BoundingBox implements Serializable {
     float minX, maxX, minY, maxY;
     List<OSMWay> list;
 

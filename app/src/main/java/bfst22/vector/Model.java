@@ -1,9 +1,5 @@
 package bfst22.vector;
 
-import javafx.scene.shape.Circle;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
@@ -21,23 +17,23 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import static java.util.stream.Collectors.toList;
-
 public class Model {
     float minlat, minlon, maxlat, maxlon;
     ArrayList<Address> addresses = new ArrayList<>();
     OSMNode addrNode;
-    String housenumber = "";
-    String street = "";
-    String postcode = "";
-    String city = "";
+    String housenumber;
+    String street;
+    String postcode;
+    String city;
     EdgeWeightedDigraph routeGraph = new EdgeWeightedDigraph();
     static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
-    Map<WayType, KdTree> MapOfKdTrees = new EnumMap<>(WayType.class); 
+    EnumMap<WayType, KdTree> MapOfKdTrees = new EnumMap<>(WayType.class);
     List<Runnable> observers = new ArrayList<>();
+    ArrayList<Drawable> path = new ArrayList<>();
+
 
     @SuppressWarnings("unchecked")
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
@@ -56,7 +52,13 @@ public class Model {
                 maxlon = input.readFloat();
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
+                routeGraph = (EdgeWeightedDigraph) input.readObject();
             }
+        }
+
+        // Creates KD tree for each waytype
+        for (var entry : lines.entrySet()) {
+            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
         }
         
         time += System.nanoTime();
@@ -72,6 +74,7 @@ public class Model {
             out.writeFloat(maxlon);
             out.writeObject(lines);
             out.writeObject(addresses);
+            out.writeObject(routeGraph);
         }
     }
 
@@ -230,9 +233,7 @@ public class Model {
                     switch (reader.getLocalName()) {
                         case "way":
                             var polyline = new PolyLine(nodes);
-                            //this is the nodes to use for dijkstra?
-                            //id2way.put(relID, new OSMWay(nodes));
-                            //trying this for Dijkstra
+
                             if(type == WayType.RESIDENTIALWAY){
                                 lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else if(type == WayType.PRIMARYHIGHWAY){
@@ -298,12 +299,7 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
 
-        // Creates KD tree for each waytype
-        for (var entry : lines.entrySet()) {
-            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
-        }
 
-        System.out.println("Done");
     }
 
     public void addObserver(Runnable observer) {
@@ -316,8 +312,10 @@ public class Model {
         }
     }
     public void addStart(OSMNode node){
-        lines.get(WayType.STARTPOINT).add(new AddressCircle(node));
-        notifyObservers();
+        var type = WayType.STARTPOINT;
+        ArrayList<Drawable> start = new ArrayList<>();
+        start.add(new AddressCircle(node));
+        MapOfKdTrees.put(type, new KdTree(start));
     }
 
     public List<Drawable> getStart(){
@@ -330,8 +328,10 @@ public class Model {
     }
 
     public void addDestination(OSMNode node){
-        lines.get(WayType.DESTINATION).add(new AddressCircle(node));
-        notifyObservers();
+        var type = WayType.DESTINATION;
+        ArrayList<Drawable> destination = new ArrayList<>();
+        destination.add(new AddressCircle(node));
+        MapOfKdTrees.put(type, new KdTree(destination));
     }
 
     public void clearDestination(){
@@ -359,9 +359,8 @@ public class Model {
         return totalDrawables;
     }
 
-    public void addRoute(List<OSMNode> vertexes){
-        var polyline1 = new PolyLine(vertexes);
-        lines.get(WayType.PATHTO).add(polyline1);
-        notifyObservers();
+    public void addRoute(ArrayList<OSMNode> vertexes){
+        path.add(new PolyLine(vertexes));
+        MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
     }
 }

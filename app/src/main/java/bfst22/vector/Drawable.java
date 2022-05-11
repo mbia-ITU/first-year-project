@@ -2,9 +2,10 @@ package bfst22.vector;
 
 import javafx.scene.canvas.GraphicsContext;
 
+import java.io.Serializable;
 import java.util.*;
 
-public interface Drawable {
+public interface Drawable extends Serializable {
     static Comparator<Drawable> DrawableComparatorX = Comparator.comparing(list -> list.getBoundingBox().getCenterX());
     static Comparator<Drawable> DrawableComparatorY = Comparator.comparing(list -> list.getBoundingBox().getCenterY());
 
