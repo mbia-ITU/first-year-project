@@ -42,12 +42,12 @@ public class MapCanvas extends Canvas {
         sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode.get(1));
         boolean hasfirst = false;
 
-        ArrayList<OSMNode> wat = new ArrayList<>();
+        ArrayList<OSMNode> routeArray = new ArrayList<>();
         for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode.get(3000), model.routeGraph)){
-            if (!hasfirst) {wat.add(e.to());}
-            wat.add(e.from());
+            if (!hasfirst) {routeArray.add(e.to());}
+            routeArray.add(e.from());
         }
-        model.addRoute(wat);
+        model.addRoute(routeArray);
     }
 
     void repaint() {

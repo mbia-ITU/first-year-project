@@ -5,8 +5,7 @@ import java.util.*;
 
 public class DijkstraSP {
     private Map<OSMNode, Double> distTo;          // distTo[v] = distance  of shortest s->v path
-    private Map<OSMNode, DirectedEdge> edgeTo;
-    //private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
+    private Map<OSMNode, DirectedEdge> edgeTo;      // edgeTo = last edge on shortest s->v path  
     private IndexMinPQ<Double> pq;    // priority queue of vertices
 
     /**
@@ -27,7 +26,6 @@ public class DijkstraSP {
 
         distTo = new HashMap<OSMNode, Double>();
         edgeTo = new HashMap<OSMNode, DirectedEdge>();
-        //edgeTo = new DirectedEdge[G.V()];
 
         validateVertex(s, G);
 
@@ -112,7 +110,7 @@ public class DijkstraSP {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, OSMNode s) {
+    public boolean check(EdgeWeightedDigraph G, OSMNode s) {
 
         // check that edge weights are non-negative
         for (DirectedEdge e : G.edges()) {
