@@ -75,6 +75,14 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(addresses);
             out.writeObject(routeGraph);
+            System.out.println("before");
+            out.writeObject(MapOfKdTrees);
+            System.out.println("after");
+        }catch (IOException e){
+            for(var s : MapOfKdTrees.entrySet()){
+                System.out.println(s.toString());
+            }
+            System.out.println(e.getMessage());
         }
     }
 
@@ -363,4 +371,5 @@ public class Model {
         path.add(new PolyLine(vertexes));
         MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
     }
+
 }
