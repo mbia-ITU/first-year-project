@@ -5,16 +5,18 @@ import java.util.*;
 
 public class EdgeWeightedDigraph implements Serializable {
     public Map<OSMNode, ArrayList<DirectedEdge>> adj;
-    public Map<OSMNode, Integer> index;
-    public Map<Integer, OSMNode> indexNode;
+    //public Map<OSMNode, Integer> index;
+    //public Map<Integer, OSMNode> indexNode;
+    public ArrayList<OSMNode> indexNode2;
     //private int[] indegree;
-    int indexCounter;
+    //int indexCounter;
 
     public EdgeWeightedDigraph() {
         adj = new HashMap<>();
-        index = new HashMap<>();
-        indexNode = new HashMap<>();
-        indexCounter = 0;
+        //index = new HashMap<>();
+        //indexNode = new HashMap<>();
+        indexNode2 = new ArrayList<>();
+        //indexCounter = 0;
     }
 
     public int V() {
@@ -34,15 +36,15 @@ public class EdgeWeightedDigraph implements Serializable {
     public void addEdge(OSMNode n, DirectedEdge e){
         if (adj.containsKey(n)){
             adj.get(n).add(e);
-
         }
         else{
             ArrayList<DirectedEdge> temp = new ArrayList<>();
             temp.add(e);
             adj.put(n, temp);
-            index.put(n, indexCounter);
-            indexNode.put(indexCounter, n);
-            indexCounter++;
+            indexNode2.add(n);
+            //index.put(n, indexCounter);
+            //indexNode.put(indexCounter, n);
+            //indexCounter++;
         }
         
     }

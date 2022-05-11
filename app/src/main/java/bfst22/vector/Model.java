@@ -25,7 +25,9 @@ public class Model {
     String street;
     String postcode;
     String city;
+
     EdgeWeightedDigraph routeGraph = new EdgeWeightedDigraph();
+
     static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -57,11 +59,6 @@ public class Model {
             }
         }
 
-        // Creates KD tree for each waytype
-        for (var entry : lines.entrySet()) {
-            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
-        }
-        
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
         if (!filename.endsWith(".obj")) save(filename);
@@ -166,7 +163,11 @@ public class Model {
                             //if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
                             //if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
                             //roads
-                            if(k.equals("highway")){ type = WayType.RESIDENTIALWAY;
+                            if(k.equals("highway") && v.equals("residential")){ type = WayType.RESIDENTIALWAY;
+
+                            }
+                            if (k.equals("highway") && v.equals("primary")) {
+                                type = WayType.PRIMARYHIGHWAY;
                                 for(int i = 0; i < nodes.size()-1; i++){
                                     routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
                                     routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
@@ -191,7 +192,7 @@ public class Model {
 
 
 
-                            if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
+
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
                             if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
                             if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
@@ -307,7 +308,10 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-
+        for (var entry : lines.entrySet()) {
+            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
+            //trees.add(new KdTree(entry.getValue()));
+        }
 
     }
 
@@ -372,5 +376,4 @@ public class Model {
         path.add(new PolyLine(vertexes));
         MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
     }
-
 }

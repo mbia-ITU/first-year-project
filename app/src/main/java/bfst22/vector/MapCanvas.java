@@ -20,15 +20,12 @@ public class MapCanvas extends Canvas {
     double zoomPercentage = 112;
     int drawLevel = 0;
     double zp;
-    BoundingBox box;
-    KdTree tree;
-    
-    int a = 0;
+    Boolean debug = false;
+
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
 
-    int drawType = 1;
-    Address[] destination = new Address[2];
+    int drawType = 0;
 
     void init(Model model) {
         this.model = model;
@@ -37,14 +34,16 @@ public class MapCanvas extends Canvas {
         model.addObserver(this::repaint);
         repaint();
         initialZoomLevel = trans.getMxx();
-        System.out.println("this is the amount of vertex: " + model.routeGraph.V());
-        System.out.println("this is the size of index: " + model.routeGraph.index.size());
-        sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode.get(1));
+        //System.out.println("this is the amount of vertex: " + model.routeGraph.V());
+        //System.out.println("this is the size of index: " + model.routeGraph.index.size());
+        sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode2.get(1));
         boolean hasfirst = false;
 
         ArrayList<OSMNode> wat = new ArrayList<>();
-        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode.get(3000), model.routeGraph)){
-            if (!hasfirst) {wat.add(e.to());}
+        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode2.get(3), model.routeGraph)) {
+            if (!hasfirst) {
+                wat.add(e.to());
+            }
             wat.add(e.from());
         }
         model.addRoute(wat);
@@ -52,7 +51,7 @@ public class MapCanvas extends Canvas {
 
     void repaint() {
         gc.setTransform(new Affine());
-        if (drawType == 0){
+        if (drawType == 0) {
             gc.setFill(Color.DEEPSKYBLUE);
             gc.fillRect(0, 0, getWidth(), getHeight());
             gc.setTransform(trans);
@@ -76,7 +75,7 @@ public class MapCanvas extends Canvas {
             gc.setFill(Color.RED);
             line.draw(gc);
             gc.setFill(Color.WHITE);
-            }
+        }
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             gc.setFill(Color.ORANGE);
@@ -90,6 +89,10 @@ public class MapCanvas extends Canvas {
         Point2D p1_xy = new Point2D(0, 0);
         Point2D p2_xy = new Point2D(getWidth(), getHeight());
 
+        if (debug) {
+            p1_xy = new Point2D(300, 250);
+            p2_xy = new Point2D(getWidth()-300, getHeight()-250);
+        }
         Point2D p1_latlon = mouseToModel(p1_xy);
         Point2D p2_latlon = mouseToModel(p2_xy);
 
@@ -101,7 +104,7 @@ public class MapCanvas extends Canvas {
 
         return new BoundingBox(f_p1_lon, f_p2_lon, f_p1_lat, f_p2_lat);
 
-        
+
     }
 
     void pan(double dx, double dy) {
@@ -109,7 +112,7 @@ public class MapCanvas extends Canvas {
         repaint();
     }
 
-    public double getCurrentZoomLevel(){
+    public double getCurrentZoomLevel() {
         return currentZoomLevel;
     }
 
@@ -135,18 +138,18 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public double getZoomPercentage(){
+    public double getZoomPercentage() {
         zp = zoomPercentage;
         double percent1 = zp * 100;
         int percent2 = (int) percent1;
-        return (double) percent2/100;
+        return (double) percent2 / 100;
     }
 
 
-    private void colorMap(){
+    private void colorMap() {
 
 
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         gc.setFill(Color.BEIGE);
         for (var line : model.getDrawablesFromTypeInBB(WayType.UNKNOWN, BoundingBoxFromScreen())) {
             line.fill(gc);
@@ -170,7 +173,8 @@ public class MapCanvas extends Canvas {
 
         gc.setFill(Color.LIGHTGREY);
         for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
-            line.fill(gc); }
+            line.fill(gc);
+        }
 
         gc.setFill(Color.TAN);
         for (var line : model.getDrawablesFromTypeInBB(WayType.HEATH, BoundingBoxFromScreen())) {
@@ -208,20 +212,23 @@ public class MapCanvas extends Canvas {
         for (var line : model.getDrawablesFromTypeInBB(WayType.GRASS, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
-        if (drawLevel == 1){
+        if (drawLevel == 1) {
             gc.setFill(Color.SEASHELL);
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
-        if (drawLevel == 2){
+        if (drawLevel == 2) {
             gc.setFill(Color.LIGHTYELLOW);
             for (var line : model.getDrawablesFromTypeInBB(WayType.HOSPITAL, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
-        if (drawLevel == 2){
+        if (drawLevel == 2) {
             gc.setFill(Color.MEDIUMPURPLE);
             for (var line : model.getDrawablesFromTypeInBB(WayType.HELIPAD, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         gc.setFill(Color.LIGHTBLUE);
         for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
@@ -240,58 +247,67 @@ public class MapCanvas extends Canvas {
         if (drawLevel == 2) {
             gc.setFill(Color.DARKTURQUOISE);
             for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.DARKTURQUOISE);
             for (var line : model.getDrawablesFromTypeInBB(WayType.SOCCER, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.LAVENDER);
             for (var line : model.getDrawablesFromTypeInBB(WayType.PARKING, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.HONEYDEW);
             for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel >= 1) {
             gc.setFill(Color.GOLDENROD);
             for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel >= 1) {
             gc.setFill(Color.SEASHELL);
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.MEDIUMAQUAMARINE);
             for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
 
         if (drawLevel == 2) {
             gc.setFill(Color.LIGHTSTEELBLUE);
             for (var line : model.getDrawablesFromTypeInBB(WayType.RACE, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.RED);
             for (var line : model.getDrawablesFromTypeInBB(WayType.RACEWAY, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
         if (drawLevel == 2) {
             gc.setFill(Color.GRAY);
             for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
-                line.fill(gc); }
+                line.fill(gc);
+            }
         }
 
 
-
-        if(drawLevel == 2) {
+        if (drawLevel == 2) {
             gc.setLineWidth(0.00008);
             gc.setStroke(Color.DARKGRAY);
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, BoundingBoxFromScreen())) {
@@ -320,8 +336,8 @@ public class MapCanvas extends Canvas {
 
     }
 
-    private void drawLineMap(){
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+    private void drawLineMap() {
+        gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
@@ -438,17 +454,17 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
         }
 
-        gc.setLineWidth(1.5/Math.sqrt(trans.determinant()));
+        gc.setLineWidth(1.5 / Math.sqrt(trans.determinant()));
         gc.setStroke(Color.RED);
         //gc.setLineWidth(0.01);
         for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
-                line.draw(gc);
+            line.draw(gc);
         }
 
         //for searched addresses
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
-                line.draw(gc);
+            line.draw(gc);
         }
         for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
@@ -457,9 +473,16 @@ public class MapCanvas extends Canvas {
 
     }
 
-    public void setDrawType(int l){
+    public void setDrawType(int l) {
         drawType = l;
         repaint();
     }
 
+    public void DebugMode() {
+        if (!debug) {
+            debug = true;
+        } else {
+            debug = false;
+        }
+    }
 }

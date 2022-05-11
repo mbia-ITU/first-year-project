@@ -9,7 +9,6 @@ public class KdNode implements Serializable {
     BoundingBox bb;
     
     public KdNode(List<Drawable> list) {
-        
         bb = new BoundingBox(list);
     }
 

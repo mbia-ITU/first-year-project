@@ -33,16 +33,11 @@ public class Controller {
     private Point2D lastMouse;
     private Point2D currentMouse;
     private ArrayList<Address> match = new ArrayList<>();
-    MenuItem item1 = new MenuItem();
     private Model model;
     private Address start;
     private Address destination;
     //private Button btn;
 
-    @FXML
-    private MenuItem color;
-    @FXML
-    private MenuItem line;
     @FXML
     private MapCanvas canvas;
     @FXML
@@ -51,7 +46,6 @@ public class Controller {
     private Text desc;
     @FXML
     private CheckBox highlighter;
-
     @FXML
     private Button result1;
     @FXML
@@ -60,8 +54,6 @@ public class Controller {
     private TextField searching;
     @FXML
     private TextField searching1;
-
-
 
     private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
@@ -180,10 +172,10 @@ public class Controller {
         //System.out.println(canvas.initialZoomLevel);
         var factor = e.getDeltaY();
         //System.out.println(e.getDeltaY());
-        if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
+        //if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
             canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
-            percentText.setText(String.valueOf("Zoom: "+ canvas.getZoomPercentage() + "%"));
-        }
+            percentText.setText("Zoom: "+ canvas.getZoomPercentage() + "%");
+        //}
 
     }
 
@@ -269,6 +261,11 @@ public class Controller {
     private void onColor(ActionEvent e){
         canvas.setDrawType(0);
     }
+    @FXML
+    private void onBoundingBox(ActionEvent e){
+        canvas.DebugMode();
+    }
+
 
     @FXML
     private void onMouseMoved(MouseEvent e){

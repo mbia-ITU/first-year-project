@@ -62,4 +62,5 @@ public class PolyLine implements Drawable, Serializable {
         //Return new Boundingbox with max coordinates and min coordinates from Polyline coordinates
         return new BoundingBox(minX, maxX, minY, maxY);
     }
+
 }
