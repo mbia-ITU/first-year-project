@@ -22,6 +22,7 @@ public class MapCanvas extends Canvas {
     double zp;
     BoundingBox box;
     KdTree tree;
+    Boolean debug = true;
 
     GraphicsContext gc = getGraphicsContext2D();
 
@@ -73,6 +74,11 @@ public class MapCanvas extends Canvas {
         Point2D p1_xy = new Point2D(0, 0);
         Point2D p2_xy = new Point2D(getWidth(), getHeight());
 
+        if (debug) {
+            p1_xy = new Point2D(200, 200);
+            p2_xy = new Point2D(getWidth()-200, getHeight()-200);
+        }
+
         Point2D p1_latlon = mouseToModel(p1_xy);
         Point2D p2_latlon = mouseToModel(p2_xy);
 
@@ -80,11 +86,8 @@ public class MapCanvas extends Canvas {
         float f_p2_lon = (float) p2_latlon.getX();
         float f_p1_lat = (float) p1_latlon.getY();
         float f_p2_lat = (float) p2_latlon.getY();
-        //System.out.println(f_p1_lon + " " + f_p2_lon + " " + f_p1_lat + " " + f_p2_lat);
 
-        return new BoundingBox(f_p1_lon, f_p2_lon, f_p1_lat, f_p2_lat);
-
-        
+        return new BoundingBox(f_p1_lon, f_p2_lon, f_p1_lat, f_p2_lat);        
     }
 
     void pan(double dx, double dy) {
