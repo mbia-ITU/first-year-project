@@ -22,7 +22,7 @@ public class MapCanvas extends Canvas {
     double zp;
     BoundingBox box;
     KdTree tree;
-    Boolean debug = true;
+    Boolean debug = false;
 
     GraphicsContext gc = getGraphicsContext2D();
 
@@ -69,14 +69,22 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    void DebugMode() {
+        if (!debug) {
+            debug = true;
+        } else {
+            debug = false;
+        }
+    }
+
     //This method returns the current user view as a bounding box
     BoundingBox BoundingBoxFromScreen() {
         Point2D p1_xy = new Point2D(0, 0);
         Point2D p2_xy = new Point2D(getWidth(), getHeight());
 
         if (debug) {
-            p1_xy = new Point2D(200, 200);
-            p2_xy = new Point2D(getWidth()-200, getHeight()-200);
+            p1_xy = new Point2D(300, 250);
+            p2_xy = new Point2D(getWidth()-300, getHeight()-250);
         }
 
         Point2D p1_latlon = mouseToModel(p1_xy);
