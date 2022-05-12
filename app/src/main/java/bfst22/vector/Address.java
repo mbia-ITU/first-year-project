@@ -8,11 +8,11 @@ import java.util.Comparator;
 import java.util.regex.Pattern;
 
 public class Address implements Comparable<Address>, Comparator<Address>, Drawable, Serializable {
-    private String street;
-    private String city;
-    private String postcode;
-    private String housenumber;
-    private OSMNode node;
+    public String street;
+    public String city;
+    public String postcode;
+    public String housenumber;
+    public OSMNode node;
 
     public Address(String street, String housenumber, String postcode, String city, OSMNode node) {
         this.street = street;
