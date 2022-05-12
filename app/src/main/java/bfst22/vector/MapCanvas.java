@@ -462,7 +462,6 @@ public class MapCanvas extends Canvas {
                             smallestDist = dist;
 
                         }
-                        System.out.println(dist);
                     }
 
             }
