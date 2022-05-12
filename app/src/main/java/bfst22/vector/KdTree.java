@@ -28,9 +28,10 @@ public class KdTree implements Serializable {
 
             var leftList = lists.get(0);
             var rightList = lists.get(1);
+            //THIS IS WHY YOU ARE NOT SERIALIZABLE
             node.left = buildKdTree(leftList, currentDepth + 1);
             node.right = buildKdTree(rightList, currentDepth + 1);
-
+            //
         } else {
             node.wayList = ways;
         }
@@ -57,8 +58,10 @@ public class KdTree implements Serializable {
             } else {
                 results.addAll(node.wayList);
             }
+
             return results;
         } else
-        return new ArrayList<>();   
+        return new ArrayList<>();
     }
+
 }

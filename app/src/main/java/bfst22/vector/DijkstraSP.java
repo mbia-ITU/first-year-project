@@ -38,11 +38,11 @@ public class DijkstraSP {
 
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(G.V());
-        int tempIn = G.index.get(s);
+        int tempIn = G.indexNode2.indexOf(s);
         pq.insert(tempIn, distTo.get(s));
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            OSMNode w = G.indexNode.get(v);
+            OSMNode w = G.indexNode2.get(v);
             for (DirectedEdge e : G.adj.get(w))
                 relax(e, G);
         }
@@ -57,7 +57,7 @@ public class DijkstraSP {
         if (distTo.get(w) > distTo.get(v) + e.weight()) {
             distTo.put(w, distTo.get(v) + e.weight());
             edgeTo.put(w, e);
-            int tempIndex = G.index.get(w);
+            int tempIndex = G.indexNode2.indexOf(w);
             if (pq.contains(tempIndex)) pq.decreaseKey(tempIndex, distTo.get(w));
             else                pq.insert(tempIndex, distTo.get(w));
         }
@@ -99,7 +99,7 @@ public class DijkstraSP {
     public Iterable<DirectedEdge> pathTo(OSMNode v, EdgeWeightedDigraph G) {
         validateVertex(v, G);
         if (!hasPathTo(v, G)) return null;
-        Stack<DirectedEdge> path = new Stack<DirectedEdge>();
+        Stack<DirectedEdge> path = new Stack<>();
         for (DirectedEdge e = edgeTo.get(v); e != null; e = edgeTo.get(e.from())) {
             path.push(e);
         }
@@ -160,16 +160,9 @@ public class DijkstraSP {
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
     private void validateVertex(OSMNode v, EdgeWeightedDigraph G) {
-
         if (!G.allNodes().contains(v)){
             throw new IllegalArgumentException("Node " + v + " does not exist");
         }
     }
-
-    /**
-     * Unit tests the {@code DijkstraSP} data type.
-     *
-     * @param args the command-line arguments
-     */
 
 }

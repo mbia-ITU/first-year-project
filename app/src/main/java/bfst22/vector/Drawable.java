@@ -5,9 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import java.io.Serializable;
 import java.util.*;
 
-public interface Drawable extends Serializable {
-    static Comparator<Drawable> DrawableComparatorX = Comparator.comparing(list -> list.getBoundingBox().getCenterX());
-    static Comparator<Drawable> DrawableComparatorY = Comparator.comparing(list -> list.getBoundingBox().getCenterY());
+public interface Drawable extends Serializable{
+    public static final long serialVersionUID =321;
+    Comparator<Drawable> DrawableComparatorX = Comparator.comparing(list -> list.getBoundingBox().getCenterX());
+    Comparator<Drawable> DrawableComparatorY = Comparator.comparing(list -> list.getBoundingBox().getCenterY());
 
     default void draw(GraphicsContext gc) {
         gc.beginPath();
@@ -31,14 +32,14 @@ public interface Drawable extends Serializable {
         List<Drawable> rightList;
 
         Collections.sort(list, DrawableComparatorX);
-        leftList = list.subList(0, list.size() / 2);
-        rightList = list.subList(list.size() / 2, list.size());
-        List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
+        leftList = new ArrayList<>(list.subList(0, list.size() / 2));
+        rightList = new ArrayList<>(list.subList(list.size() / 2, list.size()));
+        List<List<Drawable>> listOfOSMWays = new ArrayList<>();
         listOfOSMWays.add(leftList);
         listOfOSMWays.add(rightList);
 
-        return listOfOSMWays; 
-    
+        return listOfOSMWays;
+
     }
 
     public static List<List<Drawable>> splitOnY(List<Drawable> list){
@@ -46,13 +47,13 @@ public interface Drawable extends Serializable {
         List<Drawable> rightList;
 
             Collections.sort(list, DrawableComparatorY);
-            leftList = list.subList(0, list.size() / 2);
-            rightList = list.subList(list.size() / 2, list.size());
-            List<List<Drawable>> listOfOSMWays = new ArrayList<List<Drawable>>();
+            leftList = new ArrayList<>(list.subList(0, list.size() / 2));
+            rightList = new ArrayList<>(list.subList(list.size() / 2, list.size()));
+            List<List<Drawable>> listOfOSMWays = new ArrayList<>();
             listOfOSMWays.add(leftList);
             listOfOSMWays.add(rightList);
 
-            return listOfOSMWays; 
-        
+            return listOfOSMWays;
+
     }
 }

@@ -1,5 +1,6 @@
 package bfst22.vector;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
@@ -25,7 +26,9 @@ public class Model {
     String street;
     String postcode;
     String city;
+
     EdgeWeightedDigraph routeGraph = new EdgeWeightedDigraph();
+
     static ArrayList<Drawable> totalDrawables = new ArrayList<>();
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
@@ -53,14 +56,10 @@ public class Model {
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
                 routeGraph = (EdgeWeightedDigraph) input.readObject();
+                MapOfKdTrees = (EnumMap<WayType,KdTree>) input.readObject();
             }
         }
 
-        // Creates KD tree for each waytype
-        for (var entry : lines.entrySet()) {
-            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
-        }
-        
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
         if (!filename.endsWith(".obj")) save(filename);
@@ -75,6 +74,12 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(addresses);
             out.writeObject(routeGraph);
+            out.writeObject(MapOfKdTrees);
+        }catch (IOException e){
+            for(var s : MapOfKdTrees.entrySet()){
+                System.out.println(s.toString());
+            }
+            e.printStackTrace();
         }
     }
 
@@ -163,6 +168,10 @@ public class Model {
                                     routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
                                 }
                             }
+                            if (k.equals("highway") && v.equals("primary")) {
+                                type = WayType.PRIMARYHIGHWAY;
+
+                            }
                             if(k.equals("name") && v.equals("Bornholm")) type = WayType.PLACEHOLDER;
                             /*if(k.equals("highway") && v.equals("service")) type = WayType.RESIDENTIALWAY;
                             if(k.equals("highway") && v.equals("path")) type = WayType.RESIDENTIALWAY;
@@ -177,12 +186,15 @@ public class Model {
                             if(k.equals("highway") && v.equals("turning_loop")) type = WayType.RESIDENTIALWAY;
 */
                             //Roundabout:
-                            if(k.equals("junction") && v.equals("roundabout")) type = WayType.RESIDENTIALWAY;
+                            if(k.equals("junction") && v.equals("roundabout")) {
+                                type = WayType.RESIDENTIALWAY;
+                                for(int i = 0; i < nodes.size()-1; i++){
+                                    routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
+                                }
+                                routeGraph.addEdge(nodes.get(nodes.size()-1), new DirectedEdge(nodes.get(nodes.size()-1), nodes.get(0)));
+                            }
 
 
-
-
-                            if (k.equals("highway") && v.equals("primary")) type = WayType.PRIMARYHIGHWAY;
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
                             if (k.equals("amenity") && v.equals("parking")) type = WayType.PARKING;
                             if (k.equals("amenity") && v.equals("hospital")) type = WayType.HOSPITAL;
@@ -298,7 +310,10 @@ public class Model {
         //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
         //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
-
+        for (var entry : lines.entrySet()) {
+            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
+            //trees.add(new KdTree(entry.getValue()));
+        }
 
     }
 
@@ -363,4 +378,12 @@ public class Model {
         path.add(new PolyLine(vertexes));
         MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
     }
+
+    public void addTemp(Drawable line){
+        List<Drawable> a = new ArrayList<>();
+        a.add(line);
+        MapOfKdTrees.put(WayType.DESTINATION,new KdTree(a));
+    }
+
+
 }

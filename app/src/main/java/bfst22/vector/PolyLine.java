@@ -1,6 +1,7 @@
 package bfst22.vector;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -8,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PolyLine implements Drawable, Serializable {
     public static final long serialVersionUID = 134123;
     float[] coords;
+    List<OSMNode> nodes;
 
     public PolyLine(List<OSMNode> nodes) {
         coords = new float[nodes.size() * 2];
@@ -16,6 +18,7 @@ public class PolyLine implements Drawable, Serializable {
             coords[i++] = node.lat;
             coords[i++] = node.lon;
         }
+        this.nodes = new ArrayList<>(nodes);
     }
 
     @Override
@@ -28,6 +31,14 @@ public class PolyLine implements Drawable, Serializable {
 
     public void resize(double zoomlevel) {
 
+    }
+
+    public float[] getNodes(){
+        return coords;
+    }
+
+    public List<OSMNode> getListOfNodes(){
+        return this.nodes;
     }
 
     @Override
@@ -62,4 +73,5 @@ public class PolyLine implements Drawable, Serializable {
         //Return new Boundingbox with max coordinates and min coordinates from Polyline coordinates
         return new BoundingBox(minX, maxX, minY, maxY);
     }
+
 }

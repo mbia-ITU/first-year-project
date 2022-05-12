@@ -8,7 +8,6 @@ public class DirectedEdge implements Serializable {
     private final int speedLimit;
     private final double distance;
 
-
     public DirectedEdge(OSMNode v, OSMNode w, int speedLimit) {
         if (Double.isNaN(speedLimit)) throw new IllegalArgumentException("speedlimit is NaN");
         this.v = v;
