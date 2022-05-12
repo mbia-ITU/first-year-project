@@ -11,6 +11,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
 import java.awt.*;
+import java.util.List;
 
 public class MapCanvas extends Canvas {
     Model model;
@@ -25,8 +26,11 @@ public class MapCanvas extends Canvas {
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
     OSMNode targetStart;
+    double smallestDist = 420;
 
     int drawType = 0;
+    private BoundingBox addressBB1;
+    private BoundingBox addressBB2;
 
     void init(Model model) {
         this.model = model;
@@ -37,9 +41,8 @@ public class MapCanvas extends Canvas {
         initialZoomLevel = trans.getMxx();
         //System.out.println("this is the amount of vertex: " + model.routeGraph.V());
         //System.out.println("this is the size of index: " + model.routeGraph.index.size());
-        sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode2.get(1));
+        /*sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode2.get(1));
         boolean hasfirst = false;
-
         ArrayList<OSMNode> wat = new ArrayList<>();
         for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode2.get(1000), model.routeGraph)) {
             if (!hasfirst) {
@@ -47,7 +50,7 @@ public class MapCanvas extends Canvas {
             }
             wat.add(e.from());
         }
-        model.addRoute(wat);
+        model.addRoute(wat);*/
     }
 
     void repaint() {
@@ -451,30 +454,35 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
         }
 
-        gc.setStroke(Color.BLUE);
-        if(mousebox != null){
-            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, mousebox)) {
-                line.draw(gc);
-                //V1
-                    double smallestDist = 420;
-
-                    for(OSMNode node : ((PolyLine) line).getListOfNodes()){
-                        double dist = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
-                        if(dist < smallestDist){
-                            smallestDist = dist;
-
-                        }
-                        System.out.println(dist);
-                    }
-
-            }
-        }
 
         gc.setLineWidth(0.00013);
         gc.setStroke(Color.DARKGRAY);
         for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
+
+        //for inspection/highlighting of ways
+        if(mousebox != null){
+            gc.setStroke(Color.BLUE);
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, mousebox)) {
+                line.draw(gc);
+
+                for(OSMNode node : ((PolyLine) line).getListOfNodes()){
+                    double dist = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
+                    if(dist < smallestDist){
+                        smallestDist = dist;
+                        targetStart = node;
+                    }
+                }
+            }
+            List<OSMNode> toNN = new ArrayList<>();
+            toNN.add(new OSMNode(1,mousebox.getCenterX(), mousebox.getCenterY()));
+            toNN.add(targetStart);
+            PolyLine toNNs = new PolyLine(toNN);
+            gc.setStroke(Color.GREEN);
+            toNNs.draw(gc);
+        }
+
 
         gc.setLineWidth(1.5 / Math.sqrt(trans.determinant()));
         gc.setStroke(Color.RED);
@@ -492,14 +500,10 @@ public class MapCanvas extends Canvas {
             line.resize(currentZoomLevel);
             //line.draw(gc);
         }
+        if(toNNs!=null){
+            toNNs.draw(gc);
+        }
 
-
-
-    }
-    OSMNode closestNode;
-    OSMNode startNode;
-    public void setStartNode(OSMNode start){
-        startNode = start;
     }
 
     public void setDrawType(int l) {
@@ -522,4 +526,49 @@ public class MapCanvas extends Canvas {
     public void nullBox(){
         mousebox = null;
     }
+    List<OSMNode> toNN = new ArrayList<>();
+    PolyLine toNNs;
+    public OSMNode nearestRoad(BoundingBox bb){
+        smallestDist = 400;
+        for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, bb)) {
+            for(OSMNode node : ((PolyLine) line).getListOfNodes()){
+                double dist = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
+                if(dist < smallestDist){
+                    smallestDist = dist;
+                    targetStart = node;
+                }
+            }
+        }
+        return targetStart;
+    }
+
+    public OSMNode nearestWay(BoundingBox addressBB1){
+            smallestDist = 400;
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, addressBB1)) {
+                for(OSMNode node : ((PolyLine) line).getListOfNodes()){
+                    double dist = Math.sqrt(Math.pow((addressBB1.getCenterY() - node.getLon()),2)+Math.pow((addressBB1.getCenterX() - node.getLat()),2));
+                    if(dist < smallestDist){
+                        smallestDist = dist;
+                        targetStart = node;
+                    }
+                }
+            }
+            return targetStart;
+        }
+
+        public void drawRoute(OSMNode from, OSMNode to){
+        sp = new DijkstraSP(model.routeGraph, from);
+        boolean hasfirst = false;
+        ArrayList<OSMNode> routePath = new ArrayList<>();
+        for (DirectedEdge ed : sp.pathTo(to,model.routeGraph)) {
+
+            if (!hasfirst) {
+                routePath.add(ed.to());
+            }
+            hasfirst = true;
+            routePath.add(ed.from());
+        }
+        model.addRoute(routePath);
+        }
+
 }

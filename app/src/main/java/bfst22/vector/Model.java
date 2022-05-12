@@ -250,6 +250,7 @@ public class Model {
                                 lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else if(type == WayType.PRIMARYHIGHWAY){
                                 lines.get(WayType.PRIMARYHIGHWAY).add(polyline);
+                                lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else{
                                 lines.get(type).add(polyline);
                             }
@@ -306,13 +307,10 @@ public class Model {
                     break;
             }
         }
-        //to test same addresses for different post numbers
-        //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
-        //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
+
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
         for (var entry : lines.entrySet()) {
             MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
-            //trees.add(new KdTree(entry.getValue()));
         }
 
     }
@@ -358,9 +356,6 @@ public class Model {
         return lines.get(WayType.DESTINATION);
     }
 
-    /*public Iterable<Drawable> iterable(WayType type) {
-        return lines.get(type);
-    }*/
 
     public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
         return MapOfKdTrees.get(type).searchTree(bb);
@@ -375,15 +370,15 @@ public class Model {
     }
 
     public void addRoute(ArrayList<OSMNode> vertexes){
+        if(MapOfKdTrees.containsKey(WayType.PATHTO)){
+            MapOfKdTrees.remove(WayType.PATHTO);
+            path.clear();
+        }
         path.add(new PolyLine(vertexes));
-        MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
+        MapOfKdTrees.put(WayType.PATHTO, new KdTree(path));
+        observers.notify();
     }
 
-    public void addTemp(Drawable line){
-        List<Drawable> a = new ArrayList<>();
-        a.add(line);
-        MapOfKdTrees.put(WayType.DESTINATION,new KdTree(a));
-    }
 
 
 }
