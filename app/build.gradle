@@ -1,6 +1,26 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.11'
+    id 'jacoco'
+}
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification {
+    dependsOn test // tests are required to run before generating the report
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.0
+            }
+        }
+    }
 }
 
 repositories {
@@ -29,3 +49,4 @@ application {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
