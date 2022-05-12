@@ -242,6 +242,11 @@ public class Controller {
             model.clearStart();
         }
         model.addStart(start.getNode());
+        Point2D startPoint = new Point2D(start.getNode().getLat(),start.getNode().getLon());
+        BoundingBox addrbox = new BoundingBox((float)(startPoint.getX()-0.00009), (float) (startPoint.getX()+0.00009), (float) (startPoint.getY()-0.00009), (float) (startPoint.getY()+0.00009));
+        //model.MapOfKdTrees.get(WayType.RESIDENTIALWAY).searchTree(mouseBox);
+        //canvas.mouseBox(addrbox);
+
         canvas.repaint();
     }
     @FXML
@@ -265,13 +270,21 @@ public class Controller {
     private void onBoundingBox(ActionEvent e){
         canvas.DebugMode();
     }
-
-
+int count = 0;
     @FXML
     private void onMouseMoved(MouseEvent e){
         if(highlighter.isSelected()){
             currentMouse = new Point2D(e.getX(),e.getY());
+            Point2D currMouse = canvas.mouseToModel(currentMouse);
+            BoundingBox mouseBox = new BoundingBox((float)(currMouse.getX()-0.0009), (float) (currMouse.getX()+0.0009), (float) (currMouse.getY()-0.0009), (float) (currMouse.getY()+0.0009));
+            //model.MapOfKdTrees.get(WayType.RESIDENTIALWAY).searchTree(mouseBox);
+            canvas.mouseBox(mouseBox);
+            canvas.repaint();
             //System.out.println(canvas.mouseToModel(currentMouse).toString());
+        }else{
+            canvas.nullBox();
+            canvas.repaint();
         }
+
     }
 }

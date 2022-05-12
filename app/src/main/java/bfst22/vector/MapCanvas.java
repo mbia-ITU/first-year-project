@@ -21,7 +21,7 @@ public class MapCanvas extends Canvas {
     int drawLevel = 0;
     double zp;
     Boolean debug = false;
-
+    BoundingBox mousebox = null;
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
 
@@ -40,7 +40,7 @@ public class MapCanvas extends Canvas {
         boolean hasfirst = false;
 
         ArrayList<OSMNode> wat = new ArrayList<>();
-        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode2.get(3), model.routeGraph)) {
+        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode2.get(1000), model.routeGraph)) {
             if (!hasfirst) {
                 wat.add(e.to());
             }
@@ -69,6 +69,7 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
             gc.setStroke(Color.BLACK);
             }*/
+
 
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
@@ -321,17 +322,15 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
         }
 
-        gc.setStroke(Color.BLACK);
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
-            gc.setFill(Color.RED);
             line.resize(currentZoomLevel);
-            line.draw(gc);
+            //line.draw(gc);
         }
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
-            line.draw(gc);
+            //line.draw(gc);
         }
 
     }
@@ -441,11 +440,31 @@ public class MapCanvas extends Canvas {
                 line.draw(gc);
             }
         }
+
         //Segment for roads
-        gc.setLineWidth(0.00008);
+       gc.setLineWidth(0.00008);
+
+
         gc.setStroke(Color.LIGHTGREY);
         for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, BoundingBoxFromScreen())) {
             line.draw(gc);
+        }
+
+        gc.setStroke(Color.BLUE);
+        if(mousebox != null){
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, mousebox)) {
+                line.draw(gc);
+                /*for(OSMNode node: ((PolyLine) line).getNodes()){
+                    distance = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
+                    if((distance < distance2) || (distance2 == 0)){
+                        distance2 = distance;
+                        closestNode = node;
+                    }
+                }*/
+                //from Address
+               // System.out.println(closestNode.toString());
+                //model.routeGraph.addEdge(startNode,new DirectedEdge(startNode,closestNode));
+            }
         }
 
         gc.setLineWidth(0.00013);
@@ -464,13 +483,20 @@ public class MapCanvas extends Canvas {
         //for searched addresses
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
-            line.draw(gc);
+            //line.draw(gc);
         }
         for (var line : model.getDrawablesFromTypeInBB(WayType.STARTPOINT, BoundingBoxFromScreen())) {
             line.resize(currentZoomLevel);
-            line.draw(gc);
+            //line.draw(gc);
         }
 
+
+
+    }
+    OSMNode closestNode;
+    OSMNode startNode;
+    public void setStartNode(OSMNode start){
+        startNode = start;
     }
 
     public void setDrawType(int l) {
@@ -484,5 +510,13 @@ public class MapCanvas extends Canvas {
         } else {
             debug = false;
         }
+    }
+
+    public void mouseBox(BoundingBox mouseBox){
+        mousebox = mouseBox;
+    }
+
+    public void nullBox(){
+        mousebox = null;
     }
 }

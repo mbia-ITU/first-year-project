@@ -58,8 +58,10 @@ public class KdTree implements Serializable {
             } else {
                 results.addAll(node.wayList);
             }
+
             return results;
         } else
-        return new ArrayList<>();   
+        return new ArrayList<>();
     }
+
 }

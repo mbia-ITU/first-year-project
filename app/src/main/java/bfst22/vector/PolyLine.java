@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PolyLine implements Drawable, Serializable {
     public static final long serialVersionUID = 134123;
     float[] coords;
+    List<OSMNode> nodes;
 
     public PolyLine(List<OSMNode> nodes) {
         coords = new float[nodes.size() * 2];
@@ -16,6 +17,7 @@ public class PolyLine implements Drawable, Serializable {
             coords[i++] = node.lat;
             coords[i++] = node.lon;
         }
+        this.nodes=nodes;
     }
 
     @Override
@@ -28,6 +30,10 @@ public class PolyLine implements Drawable, Serializable {
 
     public void resize(double zoomlevel) {
 
+    }
+
+    public List<OSMNode> getNodes(){
+        return nodes;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package bfst22.vector;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
@@ -73,9 +74,7 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(addresses);
             out.writeObject(routeGraph);
-            System.out.println("before");
             out.writeObject(MapOfKdTrees);
-            System.out.println("after");
         }catch (IOException e){
             for(var s : MapOfKdTrees.entrySet()){
                 System.out.println(s.toString());
@@ -163,15 +162,15 @@ public class Model {
                             //if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
                             //if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
                             //roads
-                            if(k.equals("highway") && v.equals("residential")){ type = WayType.RESIDENTIALWAY;
-
-                            }
-                            if (k.equals("highway") && v.equals("primary")) {
-                                type = WayType.PRIMARYHIGHWAY;
+                            if(k.equals("highway")){ type = WayType.RESIDENTIALWAY;
                                 for(int i = 0; i < nodes.size()-1; i++){
                                     routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
                                     routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
                                 }
+                            }
+                            if (k.equals("highway") && v.equals("primary")) {
+                                type = WayType.PRIMARYHIGHWAY;
+
                             }
                             if(k.equals("name") && v.equals("Bornholm")) type = WayType.PLACEHOLDER;
                             /*if(k.equals("highway") && v.equals("service")) type = WayType.RESIDENTIALWAY;
@@ -187,10 +186,13 @@ public class Model {
                             if(k.equals("highway") && v.equals("turning_loop")) type = WayType.RESIDENTIALWAY;
 */
                             //Roundabout:
-                            if(k.equals("junction") && v.equals("roundabout")) type = WayType.RESIDENTIALWAY;
-
-
-
+                            if(k.equals("junction") && v.equals("roundabout")) {
+                                type = WayType.RESIDENTIALWAY;
+                                for(int i = 0; i < nodes.size()-1; i++){
+                                    routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
+                                }
+                                routeGraph.addEdge(nodes.get(nodes.size()-1), new DirectedEdge(nodes.get(nodes.size()-1), nodes.get(0)));
+                            }
 
 
                             if (k.equals("sport") && v.equals("soccer")) type = WayType.SOCCER;
@@ -376,4 +378,12 @@ public class Model {
         path.add(new PolyLine(vertexes));
         MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
     }
+
+    public void addTemp(Drawable line){
+        List<Drawable> a = new ArrayList<>();
+        a.add(line);
+        MapOfKdTrees.put(WayType.DESTINATION,new KdTree(a));
+    }
+
+
 }
