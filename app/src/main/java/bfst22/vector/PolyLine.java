@@ -1,6 +1,7 @@
 package bfst22.vector;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -17,7 +18,7 @@ public class PolyLine implements Drawable, Serializable {
             coords[i++] = node.lat;
             coords[i++] = node.lon;
         }
-        this.nodes=nodes;
+        this.nodes = new ArrayList<>(nodes);
     }
 
     @Override
@@ -32,8 +33,12 @@ public class PolyLine implements Drawable, Serializable {
 
     }
 
-    public List<OSMNode> getNodes(){
-        return nodes;
+    public float[] getNodes(){
+        return coords;
+    }
+
+    public List<OSMNode> getListOfNodes(){
+        return this.nodes;
     }
 
     @Override

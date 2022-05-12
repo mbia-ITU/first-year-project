@@ -24,6 +24,7 @@ public class MapCanvas extends Canvas {
     BoundingBox mousebox = null;
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
+    OSMNode targetStart;
 
     int drawType = 0;
 
@@ -454,16 +455,18 @@ public class MapCanvas extends Canvas {
         if(mousebox != null){
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, mousebox)) {
                 line.draw(gc);
-                /*for(OSMNode node: ((PolyLine) line).getNodes()){
-                    distance = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
-                    if((distance < distance2) || (distance2 == 0)){
-                        distance2 = distance;
-                        closestNode = node;
+                //V1
+                    double smallestDist = 420;
+
+                    for(OSMNode node : ((PolyLine) line).getListOfNodes()){
+                        double dist = Math.sqrt(Math.pow((mousebox.getCenterY() - node.getLon()),2)+Math.pow((mousebox.getCenterX() - node.getLat()),2));
+                        if(dist < smallestDist){
+                            smallestDist = dist;
+
+                        }
+                        System.out.println(dist);
                     }
-                }*/
-                //from Address
-               // System.out.println(closestNode.toString());
-                //model.routeGraph.addEdge(startNode,new DirectedEdge(startNode,closestNode));
+
             }
         }
 
