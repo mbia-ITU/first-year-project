@@ -1,14 +1,10 @@
 package bfst22.vector;
-
-import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,14 +14,31 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * The Model Class is used for initialization and maintenance of objects that will be used
+ * across all classes. the fields {minlat,minlon,maxlat,maxlon} represent the maximum and minimum coordinates
+ * of the map.
+ *
+ * {@code addresses} is the collection of all addresses from the parsed file
+ * {@code addrNode} is a placeholder for creating address objects that will be added to {@code addresses} along with
+ * the fields {@code housenumber, street, postcode, city}
+ *
+ * {@code routeGraph} is an edgeweighted digraph that will be used to compute the shortest path between any two addresses
+ *
+ * {@code totalDrawables} is an Arraylist used to contain all drawable objects.
+ *
+ * {@code lines} is a map that maps all WayTypes to a list of drawable objects
+ *
+ * {@code mapOfKdTrees} is a map that maps all waytypes to a Kd-Tree
+ *
+ * {@code route} is an arraylist of {@code Polyline} that are used to draw the shortest path between addresses
+ *
+ */
 public class Model {
     float minlat, minlon, maxlat, maxlon;
     ArrayList<Address> addresses = new ArrayList<>();
     OSMNode addrNode;
-    String housenumber;
-    String street;
-    String postcode;
-    String city;
+    String housenumber, street, postcode, city;
 
     EdgeWeightedDigraph routeGraph = new EdgeWeightedDigraph();
 
@@ -33,11 +46,22 @@ public class Model {
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
-    EnumMap<WayType, KdTree> MapOfKdTrees = new EnumMap<>(WayType.class);
+    EnumMap<WayType, KdTree> mapOfKdTrees = new EnumMap<>(WayType.class);
     List<Runnable> observers = new ArrayList<>();
     ArrayList<Drawable> path = new ArrayList<>();
 
-
+    /**
+     * Initiates model with a file, the file must be of the type ".osm" and either be zipped or parsed as an ".obj" file
+     * if the file is of the type ".osm" or ".zip" the {@code loadOSM()} method will be run to instantiate all the necessary objects
+     *
+     * if the file is of the toy ".obj" the registered objects will be read and instantiated much faster
+     *
+     * @param filename The name of the file to be read.
+     * @throws IOException Throws InputOutputException in case the file can't be found or is invalid
+     * @throws XMLStreamException Throws Exception in case the parsing has gone wrong
+     * @throws FactoryConfigurationError Thrown when a problem with configuration with the Parser Factories exists
+     * @throws ClassNotFoundException Throws Exception in case the class can't be found
+     */
     @SuppressWarnings("unchecked")
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
@@ -56,15 +80,22 @@ public class Model {
                 lines = (Map<WayType,List<Drawable>>) input.readObject();
                 addresses = (ArrayList<Address>) input.readObject();
                 routeGraph = (EdgeWeightedDigraph) input.readObject();
-                MapOfKdTrees = (EnumMap<WayType,KdTree>) input.readObject();
+                mapOfKdTrees = (EnumMap<WayType,KdTree>) input.readObject();
             }
         }
-
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
         if (!filename.endsWith(".obj")) save(filename);
     }
 
+    /**
+     * This method is run on startup and parses all objects used into a file of the type ".obj"
+     * with the puropse of faster parsing on future startups
+     *
+     * @param basename the name of the original file that is parsed
+     * @throws FileNotFoundException Thrown if the file is not found
+     * @throws IOException Thrown if the objects can't be saved
+     */
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {
             out.writeFloat(minlat);
@@ -74,15 +105,23 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(addresses);
             out.writeObject(routeGraph);
-            out.writeObject(MapOfKdTrees);
+            out.writeObject(mapOfKdTrees);
         }catch (IOException e){
-            for(var s : MapOfKdTrees.entrySet()){
+            for(var s : mapOfKdTrees.entrySet()){
                 System.out.println(s.toString());
             }
             e.printStackTrace();
         }
     }
 
+    /**
+     * this method runs through all OSM data in the input and initializes objects for the map
+     *
+     *
+     * @param input inputStream from the selected file
+     * @throws XMLStreamException Throws Exception in case the parsing has gone wrong
+     * @throws FactoryConfigurationError Thrown when a problem with configuration with the Parser Factories exists
+     */
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
         var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input));
         var id2node = new NodeMap();
@@ -338,7 +377,7 @@ public class Model {
 
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
         for (var entry : lines.entrySet()) {
-            MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
+            mapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
         }
 
     }
@@ -356,7 +395,7 @@ public class Model {
         var type = WayType.STARTPOINT;
         ArrayList<Drawable> start = new ArrayList<>();
         start.add(new AddressCircle(node));
-        MapOfKdTrees.put(type, new KdTree(start));
+        mapOfKdTrees.put(type, new KdTree(start));
     }
 
     public List<Drawable> getStart(){
@@ -372,7 +411,7 @@ public class Model {
         var type = WayType.DESTINATION;
         ArrayList<Drawable> destination = new ArrayList<>();
         destination.add(new AddressCircle(node));
-        MapOfKdTrees.put(type, new KdTree(destination));
+        mapOfKdTrees.put(type, new KdTree(destination));
     }
 
     public void clearDestination(){
@@ -386,7 +425,7 @@ public class Model {
 
 
     public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
-        return MapOfKdTrees.get(type).searchTree(bb);
+        return mapOfKdTrees.get(type).searchTree(bb);
     }
 
     public ArrayList<Address> getAddresses(){
@@ -398,14 +437,20 @@ public class Model {
     }
 
     public void addRoute(ArrayList<OSMNode> vertexes){
-        if(MapOfKdTrees.containsKey(WayType.PATHTO)){
-            MapOfKdTrees.remove(WayType.PATHTO);
+        if(mapOfKdTrees.containsKey(WayType.PATHTO)){
+            mapOfKdTrees.remove(WayType.PATHTO);
             path.clear();
         }
         path.add(new PolyLine(vertexes));
-        MapOfKdTrees.put(WayType.PATHTO, new KdTree(path));
+        mapOfKdTrees.put(WayType.PATHTO, new KdTree(path));
     }
 
+    /**
+     * Adds the searched addresses to the graph to be used in the Shortest path algorithm
+     *
+     * @param nodes nodes from the shortest path that has to be drawn from the Dijkstra shortestpath algorithm
+     *
+     */
     public void nodesToGraph(List<OSMNode> nodes){
         for(int i = 0; i < nodes.size()-1; i++){
             routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
