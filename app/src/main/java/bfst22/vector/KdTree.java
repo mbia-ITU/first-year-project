@@ -3,21 +3,36 @@ package bfst22.vector;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * The class {@code KdTree} represents a KdTree build up of KdNodes. 
+ * It contains three methods <em>buldKdTree</em>, <em>searchKdTree (public)</em> and <em>searchKdTree (private)</em>.
+ */
 public class KdTree implements Serializable {
-    BoundingBox bb;
-    KdNode root;
-    List<Drawable> totalWays;
+    BoundingBox bb;             //BoundingBox for KdTree.
+    KdNode root;                //KdNode at the root of KdTree.
+    List<Drawable> totalWays;   //List of total OSMWays.
 
+    /**
+     * The constructor for KdTree. Initializes a KdTree with {@code currentDepth = 0}. 
+     * Then builds the KdTree with the {@code buildKdTree} method.
+     * @param ways A list of drawable ways.
+     * @param root The root of a KdTree. It will build the KdTree from this node.
+     * @param bb Boundingbox for a KdTree. The BoundingBox is equal to the roots.
+     * BoundingBox since the root contains the list of drawable ways.
+     */
     public KdTree(List<Drawable> ways) {
         this.totalWays = ways;
         root = buildKdTree(totalWays, 0);
         bb = root.bb;
     }
 
-    public int size(){
-        return this.totalWays.size();
-    }
-
+    /**
+     * Returns KdNode(s) to add to KdTree. 
+     * 
+     * @param ways List of drawable ways.
+     * @param currentDepth Current depth in the KdTree.
+     * @return KdNode(s) to add to the KdTree.
+     */
     public KdNode buildKdTree(List<Drawable> ways, int currentDepth) {
 
         KdNode node = new KdNode(ways);
@@ -32,10 +47,8 @@ public class KdTree implements Serializable {
 
             var leftList = lists.get(0);
             var rightList = lists.get(1);
-            //THIS IS WHY YOU ARE NOT SERIALIZABLE
             node.left = buildKdTree(leftList, currentDepth + 1);
             node.right = buildKdTree(rightList, currentDepth + 1);
-            //
         } else {
             node.wayList = ways;
         }
@@ -43,29 +56,39 @@ public class KdTree implements Serializable {
 
     }
 
+    /**
+     * Returns list of nodes within a certain BoundingBox. 
+     * Does this by calling the {@code private searchTree} method with the selected BoundingBox
+     * and the root node of the KdTree which the method called on.
+     * @param bb BoundingBox you want nodes to be within.
+     * @return List of nodes that intersect with BoundingBox bb.
+     */
     public List<Drawable> searchTree(BoundingBox bb) {
-        //kald næste searchtree med en ny arrayliste
-        //giv den arrayliste med hver gang den anden searchtree bliver kaldt
         var results = searchTree(bb, root);
-        //System.out.println(results.size());
         return results;
     }
 
+    /**
+     * Returns list of nodes within a certain BoundingBox.
+     * @param searchbb BoundingBox to search within.
+     * @param node Root of KdTree to start search from.
+     * @return List of nodes that intersect with BoundingBox searchbb.
+     */
     private List<Drawable> searchTree(BoundingBox searchbb, KdNode node) {
 
-        if(node.bb.intersect(searchbb)){
+        if (node.bb.intersect(searchbb)) {
             List<Drawable> results = new ArrayList<>();
-            if(node.wayList == null){
+            if (node.wayList == null) {
                 results.addAll(searchTree(searchbb, node.left));
                 results.addAll(searchTree(searchbb, node.right));
-                    
+
             } else {
                 results.addAll(node.wayList);
             }
 
             return results;
         } else
-        return new ArrayList<>();
+            return new ArrayList<>();
     }
 
 }
