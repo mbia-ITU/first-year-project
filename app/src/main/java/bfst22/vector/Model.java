@@ -426,19 +426,36 @@ public class Model {
         return lines.get(WayType.DESTINATION);
     }
 
-
+    /**
+     * Returns lists of Drawables in a KdNode from a KdTree.
+     * @param type Waytype of the KdTree to be searched.
+     * @param bb BoundingBox to search within.
+     * @return lists of Drawables.
+     */
     public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
         return mapOfKdTrees.get(type).searchTree(bb);
     }
 
+    /**
+     * Returns Addresses.
+     * @return list of addresses.
+     */
     public ArrayList<Address> getAddresses(){
         return addresses;
     }
 
+    /**
+     * Returns list of all Drawables.
+     * @return list of all Drawables.
+     */
     public static List<Drawable> getDrawables(){
         return totalDrawables;
     }
 
+    /**
+     * Creates the route found by Dijkstra as a drawable Polyline
+     * @param vertexes list of OSMNodes found by Dijkstra shortestpath algorithm.
+     */
     public void addRoute(ArrayList<OSMNode> vertexes){
         if(mapOfKdTrees.containsKey(WayType.PATHTO)){
             mapOfKdTrees.remove(WayType.PATHTO);
