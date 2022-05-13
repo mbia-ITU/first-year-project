@@ -381,7 +381,10 @@ public class Model {
         }
 
     }
-
+    /**
+     * 
+     * @param observer
+     */
     public void addObserver(Runnable observer) {
         observers.add(observer);
     }
