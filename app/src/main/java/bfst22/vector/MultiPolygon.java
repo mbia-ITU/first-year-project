@@ -21,9 +21,9 @@ public class MultiPolygon implements Drawable, Serializable {
             part.trace(gc);
     }
 
-
     public void resize(double zoomlevel) {
     }
+
 
     @Override
     public BoundingBox getBoundingBox() {

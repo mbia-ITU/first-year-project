@@ -14,6 +14,10 @@ public class KdTree implements Serializable {
         bb = root.bb;
     }
 
+    public int size(){
+        return this.totalWays.size();
+    }
+
     public KdNode buildKdTree(List<Drawable> ways, int currentDepth) {
 
         KdNode node = new KdNode(ways);

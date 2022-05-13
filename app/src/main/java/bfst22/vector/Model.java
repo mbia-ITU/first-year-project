@@ -122,8 +122,16 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
 
+                            //if(k.equals("name")) type = WayType.FOREST;
+                            if (k.equals("natural") && v.equals("coastline")){ type = WayType.COASTLINE;
+
+                            }
+
+                            //if(k.equals("natural")) type =WayType.FOREST;
+
                             if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
-                            //if (k.equals("waterway") && v.equals("river")) type = WayType.RIVER;
+
+
                             if (k.equals("type") && v.equals("waterway")) type = WayType.RIVER;
                             if (k.equals("natural") && v.equals("heath")) type = WayType.HEATH;
                             if (k.equals("natural") && v.equals("beach")) type = WayType.BEACH;
@@ -131,8 +139,13 @@ public class Model {
                             if (k.equals("natural") && v.equals("sand")) type = WayType.SAND;
                             if (k.equals("natural") && v.equals("scrub")) type = WayType.SCRUB;
                             if (k.equals("natural") && v.equals("grassland")) type = WayType.GRASS;
-                            //if (k.equals("natural") && v.equals("coastline")) type = WayType.COASTLINE;
-                            if (k.equals("natural") && v.equals("wood")) type = WayType.FOREST;
+
+                            //if (k.equals("natural") && v.equals("wood")) type = WayType.FOREST;
+
+
+
+
+
                             if (k.equals("leisure") && v.equals("park")) type = WayType.GRASS;
                             if (k.equals("leisure") && v.equals("pitch")) type = WayType.PITCH;
                             if (k.equals("leisure") && v.equals("golf_course")) type = WayType.GOLFCOURSE;
@@ -140,6 +153,11 @@ public class Model {
                             if (k.equals("leisure") && v.equals("nature_reserve")) type = WayType.RESERVE;
                             if (k.equals("leisure") && v.equals("sports_centre")) type = WayType.RACE;
                             if (k.equals("leisure") && v.equals("playground")) type = WayType.RACE;
+
+
+
+
+
                             if (k.equals("building") && v.equals("yes")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("retail")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("industrial")) type = WayType.BUILDING;
@@ -148,6 +166,10 @@ public class Model {
                             if (k.equals("building") && v.equals("office")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("detached")) type = WayType.BUILDING;
                             if (k.equals("building") && v.equals("bungalow")) type = WayType.BUILDING;
+
+
+
+
                             if (k.equals("landuse") && v.equals("forest")) type = WayType.FOREST;
                             if (k.equals("landuse") && v.equals("farmyard")) type = WayType.FARMYARD;
                             if (k.equals("landuse") && v.equals("farmland")) type = WayType.FARMLAND;
@@ -159,39 +181,31 @@ public class Model {
                             if (k.equals("landuse") && v.equals("cemetery")) type = WayType.CEMETERY;
                             if (k.equals("landuse") && v.equals("quarry")) type = WayType.INDUSTRIAL;
                             if (k.equals("landuse") && v.equals("vineyard")) type = WayType.VINEYARD;
-                            //if (k.equals("highway") && v.equals("tertiary")) type = WayType.TERTIARY;
-                            //if (k.equals("highway") && v.equals("raceway")) type = WayType.RACEWAY;
+
+
                             //roads
                             if(k.equals("highway")){ type = WayType.RESIDENTIALWAY;
-                                for(int i = 0; i < nodes.size()-1; i++){
-                                    routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
-                                    routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
-                                }
+                                nodesToGraph(nodes);
                             }
+
                             if (k.equals("highway") && v.equals("primary")) {
                                 type = WayType.PRIMARYHIGHWAY;
-
+                                nodesToGraph(nodes);
                             }
-                            if(k.equals("name") && v.equals("Bornholm")) type = WayType.PLACEHOLDER;
-                            /*if(k.equals("highway") && v.equals("service")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("path")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("pedestrian")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("secondary")) type = WayType.RESIDENTIALWAY; //max speed = 50
-                            //if(k.equals("highway") && v.equals("traffic_signals")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("crossing")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("tertiary")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("give_way")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("mini_roundabout")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("turning_circle")) type = WayType.RESIDENTIALWAY;
-                            if(k.equals("highway") && v.equals("turning_loop")) type = WayType.RESIDENTIALWAY;
-*/
+
+                            if (k.equals("highway") && v.equals("track")) {
+                                type = WayType.MOTORWAY;
+                                nodesToGraph(nodes);
+                            }
                             //Roundabout:
                             if(k.equals("junction") && v.equals("roundabout")) {
                                 type = WayType.RESIDENTIALWAY;
-                                for(int i = 0; i < nodes.size()-1; i++){
-                                    routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
+                                if(nodes.size()>0) {
+                                    for (int i = 0; i < nodes.size() - 1; i++) {
+                                        routeGraph.addEdge(nodes.get(i + 1), new DirectedEdge(nodes.get(i + 1), nodes.get(i)));
+                                    }
+                                    routeGraph.addEdge(nodes.get(0), new DirectedEdge(nodes.get(0), nodes.get(nodes.size() - 1)));
                                 }
-                                routeGraph.addEdge(nodes.get(nodes.size()-1), new DirectedEdge(nodes.get(nodes.size()-1), nodes.get(0)));
                             }
 
 
@@ -209,12 +223,12 @@ public class Model {
                             if (k.equals("power") && v.equals("generator")) type = WayType.INDUSTRIAL;
                             if (k.equals("caravans") && v.equals("yes")) type = WayType.GOLFCOURSE;
                             if (k.equals("man_made") && v.equals("wastewater_plant")) type = WayType.INDUSTRIAL;
+
                             if (k.equals("addr:housenumber")){housenumber = v;}
                             if (k.equals("addr:city")){city=v;}
                             if (k.equals("addr:postcode")){postcode=v;}
                             if (k.equals("addr:street")){street=v;
                                 addresses.add(new Address(street,housenumber, postcode,city,addrNode));
-                                //lines.get(WayType.DESTINATION).add(new Cirkle(400,addresses.get(addresses.size()-1).getNode().lat,addresses.get(addresses.size()-1).getNode().lon));
                                 street="";
                                 city="";
                                 postcode="";
@@ -222,21 +236,34 @@ public class Model {
                             }
 
                             //irrelevant lines/nodes
-                            if(k.equals("route") && v.equals("ferry")) type = WayType.FERRY;
-                            if(k.equals("type") && v.equals(("boundary"))) type = WayType.BORDER;
-
+                            if(k.equals("route") && v.equals("ferry")) type = WayType.UNKNOWN;
+                            if(k.equals("type") && v.equals(("boundary"))) type = WayType.UNKNOWN;
+                            if(k.equals("boundary") && v.equals("administrative")) type = WayType.UNKNOWN;
+                            if(k.equals("highway") && v.equals("footway")) type = WayType.UNKNOWN;
+                            if(k.equals("route") && v.equals("hiking")) type = WayType.UNKNOWN;
+                            if(k.equals("cables")) type = WayType.UNKNOWN;
+                            if(k.equals("boundary") && v.equals("administrative")) type = WayType.UNKNOWN;
+                            if(k.equals("type") && v.equals("boundary")) type = WayType.UNKNOWN;
+                            if(k.equals("maritime")) type = WayType.UNKNOWN;
+                            if(k.equals("proposed") && v.equals("tunnel")) type = WayType.UNKNOWN;
 
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
+                            var role = reader.getAttributeValue(null, "role");
+
                             var elm = id2way.get(ref);
-                            if (elm != null) rel.add(elm);
+
+                            if (elm != null)
+                            {
+
+                                rel.add(elm);
+                            }
+
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
-                            if (id == 1305702) {
-                                System.out.println("Done");
-                            }
+
                             break;
 
                     }
@@ -250,6 +277,7 @@ public class Model {
                                 lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else if(type == WayType.PRIMARYHIGHWAY){
                                 lines.get(WayType.PRIMARYHIGHWAY).add(polyline);
+                                lines.get(WayType.RESIDENTIALWAY).add(polyline);
                             }else{
                                 lines.get(type).add(polyline);
                             }
@@ -257,10 +285,11 @@ public class Model {
                             lines.get(type).add(polyline);
                             totalDrawables.add(polyline);
                             nodes.clear();
+
                             break;
                         case "relation":
                             if (type == WayType.GOLFCOURSE && !rel.isEmpty()) {
-                            lines.get(type).add(new MultiPolygon(rel));
+                                lines.get(type).add(new MultiPolygon(rel));
                             }
                             if (type == WayType.FARMLAND && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
@@ -268,7 +297,7 @@ public class Model {
                             if (type == WayType.FARMYARD && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
-                            
+
                             if (type == WayType.LAKE && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
@@ -298,7 +327,7 @@ public class Model {
                             if(type == WayType.PLACEHOLDER && !rel.isEmpty()){
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
-                            
+
                             rel.clear();
                             break;
                             
@@ -306,13 +335,10 @@ public class Model {
                     break;
             }
         }
-        //to test same addresses for different post numbers
-        //addresses.add(new Address("Nexøvej","37", "3730","Aakirkeby",id2node.get(id2node.size()-1)));
-        //addresses.add(new Address("Nexøvej","37", "3720","Køge",id2node.get(id2node.size()-1)));
+
         Collections.sort(addresses,Comparator.comparing(Address::getAdress));
         for (var entry : lines.entrySet()) {
             MapOfKdTrees.put(entry.getKey(), new KdTree(entry.getValue()));
-            //trees.add(new KdTree(entry.getValue()));
         }
 
     }
@@ -358,9 +384,6 @@ public class Model {
         return lines.get(WayType.DESTINATION);
     }
 
-    /*public Iterable<Drawable> iterable(WayType type) {
-        return lines.get(type);
-    }*/
 
     public List<Drawable> getDrawablesFromTypeInBB(WayType type, BoundingBox bb) {
         return MapOfKdTrees.get(type).searchTree(bb);
@@ -375,15 +398,21 @@ public class Model {
     }
 
     public void addRoute(ArrayList<OSMNode> vertexes){
+        if(MapOfKdTrees.containsKey(WayType.PATHTO)){
+            MapOfKdTrees.remove(WayType.PATHTO);
+            path.clear();
+        }
         path.add(new PolyLine(vertexes));
-        MapOfKdTrees.put(WayType.DESTINATION, new KdTree(path));
+        MapOfKdTrees.put(WayType.PATHTO, new KdTree(path));
     }
 
-    public void addTemp(Drawable line){
-        List<Drawable> a = new ArrayList<>();
-        a.add(line);
-        MapOfKdTrees.put(WayType.DESTINATION,new KdTree(a));
+    public void nodesToGraph(List<OSMNode> nodes){
+        for(int i = 0; i < nodes.size()-1; i++){
+            routeGraph.addEdge(nodes.get(i), new DirectedEdge(nodes.get(i), nodes.get(i+1)));
+            routeGraph.addEdge(nodes.get(i+1), new DirectedEdge(nodes.get(i+1), nodes.get(i)));
+        }
     }
+
 
 
 }
