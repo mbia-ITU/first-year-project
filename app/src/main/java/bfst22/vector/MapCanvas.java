@@ -116,7 +116,7 @@ public class MapCanvas extends Canvas {
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
         if (zoomPercentage < 200) drawLevel = 0;
         if (zoomPercentage > 300 && zoomPercentage < 500) drawLevel = 1;
-        //if (zoomPercentage > 500) drawLevel = 2;
+        if (zoomPercentage > 500) drawLevel = 2;
         if (currentZoomLevel == initialZoomLevel) drawLevel = 0;
         repaint();
     }
