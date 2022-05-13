@@ -9,9 +9,9 @@ import java.util.*;
  */
 
 public class KdNode implements Serializable {
-    List<Drawable> wayList; //List of OSMWays.
-    KdNode left, right;     //KdNodes used by KdTree to branch tree.
-    BoundingBox bb;         //BoundingBox of KdNode.
+    List<Drawable> wayList; // List of OSMWays.
+    KdNode left, right; // KdNodes used by KdTree to branch tree.
+    BoundingBox bb; // BoundingBox of KdNode.
 
     /**
      * Constructor for the KdNode Class.
