@@ -36,7 +36,6 @@ public class Controller {
     private Model model;
     private Address start;
     private Address destination;
-    private ArrayList<OSMNode> path;
 
     //private Button btn;
 
@@ -56,6 +55,8 @@ public class Controller {
     private TextField searching;
     @FXML
     private TextField searching1;
+    @FXML
+    private Label warning;
 
     private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
@@ -93,7 +94,6 @@ public class Controller {
                 destination = null;
                 result2.setVisible(false);
             }else if (!newValue.equals(oldValue)){
-
                 destination = getMatches(input1,model).get(0);
                 result2.setText(destination.getAdress());
                 if(destination==null){
@@ -102,7 +102,6 @@ public class Controller {
                     result2.setVisible(true);
                 }
 
-                //sear.setText(result.get(0).getAdress());
             }
         });
     }
@@ -131,7 +130,6 @@ public class Controller {
                     return (a1.getStreet().toLowerCase() + a1.getHousenumber() + a1.getPostcode()).compareTo(a2.getStreet().toLowerCase() + a2.getHousenumber() + a2.getPostcode());
                 }
                     //searches the entire address
-
                 return a1.getAdress().toLowerCase().compareTo(a2.getAdress().toLowerCase());
             }
         };
@@ -254,8 +252,12 @@ public class Controller {
             if (start.getNode() != null && destination.getNode() != null) {
                 canvas.drawRoute(start.getNode(), destination.getNode());
             }
-        }catch (Exception ed){
-            ed.printStackTrace();
+            warning.setStyle("-fx-text-fill:#ECECEC");
+            warning.setText("");
+        }catch (NullPointerException exc){
+            warning.setText("No path found");
+            warning.setStyle("-fx-text-fill:#ff0000");
+            exc.printStackTrace();
         }
         canvas.repaint();
     }
@@ -274,8 +276,16 @@ public class Controller {
         model.routeGraph.addEdge(destination.getNode(),new DirectedEdge(destination.getNode(),canvas.nearestWay(endAddrBox)));
         model.routeGraph.addEdge(canvas.nearestWay(endAddrBox),new DirectedEdge(canvas.nearestWay(endAddrBox),destination.getNode()));
 
-        if(start.getNode() != null && destination.getNode() != null){
-            canvas.drawRoute(start.getNode(),destination.getNode());
+        try {
+            if(start.getNode() != null && destination.getNode() != null){
+                canvas.drawRoute(start.getNode(),destination.getNode());
+            }
+            warning.setStyle("-fx-text-fill:#ECECEC");
+            warning.setText("");
+        }catch (NullPointerException exc){
+            warning.setText("No path found");
+            warning.setStyle("-fx-text-fill:#ff0000");
+            exc.printStackTrace();
         }
         canvas.repaint();
     }

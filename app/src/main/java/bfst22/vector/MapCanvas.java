@@ -29,28 +29,16 @@ public class MapCanvas extends Canvas {
     double smallestDist = 420;
 
     int drawType = 0;
-    private BoundingBox addressBB1;
-    private BoundingBox addressBB2;
 
     void init(Model model) {
         this.model = model;
         pan(-model.minlon, -model.minlat);
         zoom(640 / (model.maxlon - model.minlon), 0, 0);
         model.addObserver(this::repaint);
-        repaint();
+
         initialZoomLevel = trans.getMxx();
-        //System.out.println("this is the amount of vertex: " + model.routeGraph.V());
-        //System.out.println("this is the size of index: " + model.routeGraph.index.size());
-        /*sp = new DijkstraSP(model.routeGraph, model.routeGraph.indexNode2.get(1));
-        boolean hasfirst = false;
-        ArrayList<OSMNode> wat = new ArrayList<>();
-        for (DirectedEdge e : sp.pathTo(model.routeGraph.indexNode2.get(1000), model.routeGraph)) {
-            if (!hasfirst) {
-                wat.add(e.to());
-            }
-            wat.add(e.from());
-        }
-        model.addRoute(wat);*/
+        repaint();
+
     }
 
     void repaint() {
@@ -73,8 +61,12 @@ public class MapCanvas extends Canvas {
             line.draw(gc);
             gc.setStroke(Color.BLACK);
             }*/
-
-
+        gc.setLineWidth(1.7 / Math.sqrt(trans.determinant()));
+        gc.setStroke(Color.RED);
+        //gc.setLineWidth(0.01);
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
+            line.draw(gc);
+        }
 
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
             gc.setFill(Color.RED);
@@ -129,7 +121,8 @@ public class MapCanvas extends Canvas {
         zoomPercentage = 100 / (initialZoomLevel / currentZoomLevel);
         if (zoomPercentage < 200) drawLevel = 0;
         if (zoomPercentage > 300 && zoomPercentage < 500) drawLevel = 1;
-        if (zoomPercentage > 500) drawLevel = 2;
+        //if (zoomPercentage > 500) drawLevel = 2;
+        if (currentZoomLevel == initialZoomLevel) drawLevel = 0;
         //System.out.println(zoomPercentage);
         //System.out.println(drawLevel);
         repaint();
@@ -156,15 +149,13 @@ public class MapCanvas extends Canvas {
 
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         gc.setFill(Color.BEIGE);
-        for (var line : model.getDrawablesFromTypeInBB(WayType.UNKNOWN, BoundingBoxFromScreen())) {
+        for (var line : model.getDrawablesFromTypeInBB(WayType.PLACEHOLDER, BoundingBoxFromScreen())) {
             line.fill(gc);
         }
-        /*gc.setFill(Color.BEIGE);
-        for (var line : model.iterable(WayType.PLACEHOLDER)) {
-            line.fill(gc); }
-*/
+
         gc.setFill(Color.PINK);
         for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
+            line.trace(gc);
             line.fill(gc);
         }
         gc.setFill(Color.DARKGREEN);
@@ -344,8 +335,20 @@ public class MapCanvas extends Canvas {
         for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
             line.draw(gc);
         }
+        for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
+            line.draw(gc);
+        }
         if (drawLevel >= 1) {
             for (var line : model.getDrawablesFromTypeInBB(WayType.BUILDING, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
+                line.draw(gc);
+            }
+            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
         }
@@ -353,19 +356,12 @@ public class MapCanvas extends Canvas {
             for (var line : model.getDrawablesFromTypeInBB(WayType.CEMETERY, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
-
-            for (var line : model.getDrawablesFromTypeInBB(WayType.COASTLINE, BoundingBoxFromScreen())) {
-                line.draw(gc);
-            }
-            for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
+            /*for (var line : model.getDrawablesFromTypeInBB(WayType.FARMLAND, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
             for (var line : model.getDrawablesFromTypeInBB(WayType.FARMYARD, BoundingBoxFromScreen())) {
                 line.draw(gc);
-            }
-            for (var line : model.getDrawablesFromTypeInBB(WayType.FOREST, BoundingBoxFromScreen())) {
-                line.draw(gc);
-            }
+            }*/
 
             for (var line : model.getDrawablesFromTypeInBB(WayType.GOLFCOURSE, BoundingBoxFromScreen())) {
                 line.draw(gc);
@@ -386,10 +382,6 @@ public class MapCanvas extends Canvas {
             }
 
 
-            for (var line : model.getDrawablesFromTypeInBB(WayType.INDUSTRIAL, BoundingBoxFromScreen())) {
-                line.draw(gc);
-            }
-
             for (var line : model.getDrawablesFromTypeInBB(WayType.LAKE, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
@@ -404,9 +396,7 @@ public class MapCanvas extends Canvas {
             for (var line : model.getDrawablesFromTypeInBB(WayType.PITCH, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
-            for (var line : model.getDrawablesFromTypeInBB(WayType.PRIMARYHIGHWAY, BoundingBoxFromScreen())) {
-                line.draw(gc);
-            }
+
             for (var line : model.getDrawablesFromTypeInBB(WayType.PROTECTEDAREA, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
@@ -419,9 +409,7 @@ public class MapCanvas extends Canvas {
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESERVE, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
-            for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIAL, BoundingBoxFromScreen())) {
-                line.draw(gc);
-            }
+
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESORT, BoundingBoxFromScreen())) {
                 line.draw(gc);
             }
@@ -485,11 +473,7 @@ public class MapCanvas extends Canvas {
 
 
         gc.setLineWidth(1.5 / Math.sqrt(trans.determinant()));
-        gc.setStroke(Color.RED);
-        //gc.setLineWidth(0.01);
-        for (var line : model.getDrawablesFromTypeInBB(WayType.PATHTO, BoundingBoxFromScreen())) {
-            line.draw(gc);
-        }
+
 
         //for searched addresses
         for (var line : model.getDrawablesFromTypeInBB(WayType.DESTINATION, BoundingBoxFromScreen())) {
