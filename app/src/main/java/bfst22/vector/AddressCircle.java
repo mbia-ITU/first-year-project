@@ -1,5 +1,4 @@
 package bfst22.vector;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
  * that scales in size depending on the zoomlevel of the {@code MapCanvas}
  *
  */
-public class AddressCircle implements Drawable, Serializable {
+public class AddressCircle implements Drawable {
     private List<Drawable> parts = new ArrayList<>();
     private List<OSMNode> nodes = new ArrayList<>();
     private float x;

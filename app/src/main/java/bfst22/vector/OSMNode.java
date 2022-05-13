@@ -1,15 +1,12 @@
 package bfst22.vector;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
-import java.io.Serializable;
 
 /**
  * The class {@code OSMNode} represents an OSMNode from the OSM-datafile.
  */
-public class OSMNode implements Serializable, Drawable {
+public class OSMNode implements Drawable {
     public static final long serialVersionUID = 9082413; // Used to declare specific serializable class.
     long id; // Id of OSMNode.
     float lat, lon; // Latitude and longitude of OSMNode.

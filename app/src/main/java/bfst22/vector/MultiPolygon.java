@@ -1,6 +1,5 @@
 package bfst22.vector;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
  * The class {@code MultiPolygon} represents a drawable line to be drawn by
  * {@code MapCanvas}.
  */
-public class MultiPolygon implements Drawable, Serializable {
+public class MultiPolygon implements Drawable {
     public static final long serialVersionUID = 1325234; // Used to declare specific serializable class.
     List<Drawable> parts = new ArrayList<>(); // List of drawables that make up MultiPolygon.
 

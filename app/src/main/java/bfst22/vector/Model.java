@@ -289,7 +289,6 @@ public class Model {
                             break;
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
-                            var role = reader.getAttributeValue(null, "role");
 
                             var elm = id2way.get(ref);
 

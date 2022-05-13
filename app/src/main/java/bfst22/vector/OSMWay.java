@@ -3,10 +3,6 @@ package bfst22.vector;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.management.RuntimeErrorException;
-
-import javafx.scene.canvas.GraphicsContext;
-
 /**
  * The class {@code OSMWay} represents an OSMWay from the OSM-datefile.
  */

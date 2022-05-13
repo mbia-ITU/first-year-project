@@ -2,7 +2,6 @@ package bfst22.vector;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
@@ -18,7 +17,7 @@ import java.util.regex.Pattern;
  * the class also implements drawable, such that addresses can be marked on the map visibly.
  */
 
-public class Address implements Comparable<Address>, Comparator<Address>, Drawable, Serializable {
+public class Address implements Comparable<Address>, Comparator<Address>, Drawable {
     public String street;
     public String city;
     public String postcode;
