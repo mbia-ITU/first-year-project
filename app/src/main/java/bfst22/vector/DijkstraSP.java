@@ -1,7 +1,40 @@
 
 package bfst22.vector;
 import java.util.*;
-
+/*
+    This code was heavily inspired by the DijkstraSP class written by Robert Sedgewick and Kevin Wayne,
+    but was rewritten to fit the programs use of nodes and edges, instead of the usual integer to integer 
+    style, which used a pseudo graph.
+    below you will find the original doc for the class ->
+*/
+/**
+ *  The {@code DijkstraSP} class represents a data type for solving the
+ *  single-source shortest paths problem in edge-weighted digraphs
+ *  where the edge weights are non-negative.
+ *  <p>
+ *  This implementation uses <em>Dijkstra's algorithm</em> with a
+ *  <em>binary heap</em>. The constructor takes
+ *  &Theta;(<em>E</em> log <em>V</em>) time in the worst case,
+ *  where <em>V</em> is the number of vertices and <em>E</em> is
+ *  the number of edges. Each instance method takes &Theta;(1) time.
+ *  It uses &Theta;(<em>V</em>) extra space (not including the
+ *  edge-weighted digraph).
+ *  <p>
+ *  This correctly computes shortest paths if all arithmetic performed is
+ *  without floating-point rounding error or arithmetic overflow.
+ *  This is the case if all edge weights are integers and if none of the
+ *  intermediate results exceeds 2<sup>52</sup>. Since all intermediate
+ *  results are sums of edge weights, they are bounded by <em>V C</em>,
+ *  where <em>V</em> is the number of vertices and <em>C</em> is the maximum
+ *  weight of any edge.
+ *  <p>
+ *  For additional documentation,    
+ *  see <a href="https://algs4.cs.princeton.edu/44sp">Section 4.4</a> of    
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne. 
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
 
 public class DijkstraSP {
     private Map<OSMNode, Double> distTo;          // distTo[v] = distance  of shortest s->v path
@@ -23,12 +56,14 @@ public class DijkstraSP {
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
-
+        //init maps 
         distTo = new HashMap<OSMNode, Double>();
         edgeTo = new HashMap<OSMNode, DirectedEdge>();
 
+        //checks that the source vertex is applicable 
         validateVertex(s, G);
 
+        //sets all nodes to max lenght from "s", this is to isolate nodes that might not be connected
         for (OSMNode n : G.allNodes()) {
             distTo.put(n, Double.POSITIVE_INFINITY);
         }
