@@ -13,23 +13,31 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import java.awt.*;
 import java.util.List;
 
+
+/**
+ * The class {@code MapCanvas} is in charge of the drawable part of the view, and 
+ * keeping track of the zoom and different drawtypes that the user is able to 
+ * choose from in the open javaFX ui
+ */
 public class MapCanvas extends Canvas {
     Model model;
     Affine trans = new Affine();
     double initialZoomLevel;
     double currentZoomLevel;
-    double zoomPercentage = 112;
+    double zoomPercentage = 100;
     int drawLevel = 0;
-    double zp;
+    int drawType = 0;
     Boolean debug = false;
     BoundingBox mousebox = null;
     GraphicsContext gc = getGraphicsContext2D();
     public DijkstraSP sp;
     OSMNode targetStart;
-    double smallestDist = 420;
+    double smallestDist = Double.POSITIVE_INFINITY;
 
-    int drawType = 0;
-
+    /**
+     * initializes the canvas using the dimensions provided by the {@code Model} class
+     * @param model object of the Model Class which parses the file selected by the user.
+     */
     void init(Model model) {
         this.model = model;
         pan(-model.minlon, -model.minlat);
@@ -40,6 +48,12 @@ public class MapCanvas extends Canvas {
 
     }
 
+    /**
+     * the repaint() method draws lines, relations as figures and if drawtype == 0, it will call the colormap which will repaint the map in color, and if drawtype == 1,
+     * it will color the map using relations.
+     * this method is called whenever the user takes any action that would change the display (such as zoom, pan or change in the viewtype).
+     * repaint also draws the {@code DijkstraSP} shortest path (WayType.PATHTO) from (Waytype.STARTPOINT) and two (WayType.DESTINATION) 
+     */
     void repaint() {
         gc.setTransform(new Affine());
         if (drawType == 0) {
@@ -76,7 +90,10 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    //This method returns the current user view as a bounding box
+    /**
+     * This method returns the current user view as a bounding box
+     * @return a BoundingBox using the corners of the pane in which the map is displayed in. 
+     */
     BoundingBox BoundingBoxFromScreen() {
         Point2D p1_xy = new Point2D(0, 0);
         Point2D p2_xy = new Point2D(getWidth(), getHeight());
@@ -92,22 +109,37 @@ public class MapCanvas extends Canvas {
         float f_p2_lon = (float) p2_latlon.getX();
         float f_p1_lat = (float) p1_latlon.getY();
         float f_p2_lat = (float) p2_latlon.getY();
-        //System.out.println(f_p1_lon + " " + f_p2_lon + " " + f_p1_lat + " " + f_p2_lat);
 
         return new BoundingBox(f_p1_lon, f_p2_lon, f_p1_lat, f_p2_lat);
 
 
     }
 
+    /**
+     * a method to pan the map using the mouse (used in the Controller OnMouseDragged())
+     * @param dx the x coordinate the mouse is panning to
+     * @param dy the y coordinate the mouse is panning to
+     */
     void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
         repaint();
     }
 
+    /**
+     * returns the current zoom level in %
+     * @return the current zoom level in %
+     */
     public double getCurrentZoomLevel() {
         return currentZoomLevel;
     }
 
+    /**
+     * zooms in and out on the map (used in the onScroll(ActionEven e) in the controller)
+     * also adjusts the drawlevel according to the zoomlevel
+     * @param factor the amount the map is zoomed in on a single scroll tick
+     * @param x the x coordinate of the mouse where the zoom is zoomed towards
+     * @param y the y coordinate of the mouse where the zoom is zoomed towards
+     */
     void zoom(double factor, double x, double y) {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
@@ -121,6 +153,11 @@ public class MapCanvas extends Canvas {
         repaint();
     }
 
+    /**
+     * returns coordinates according to the coordinates on the map instead of on the screens pane
+     * @param point a point on the pane 
+     * @return a point on the map
+     */
     public Point2D mouseToModel(Point2D point) {
         try {
             return trans.inverseTransform(point);
@@ -129,14 +166,19 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    /**
+     * returns the zoom as percentage 
+     * @return the zoom as percentage with max 2 digits after the comma.
+     */
     public double getZoomPercentage() {
-        zp = zoomPercentage;
-        double percent1 = zp * 100;
+        double percent1 = zoomPercentage * 100;
         int percent2 = (int) percent1;
         return (double) percent2 / 100;
     }
 
-
+    /**
+     * draws lines and relations and fills relations with the color set in the graphiccontext "gc"
+     */
     private void colorMap() {
 
 
@@ -344,6 +386,9 @@ public class MapCanvas extends Canvas {
 
     }
 
+    /**
+     * draws the map without color as lines using the graphiccontext
+     */
     private void drawLineMap() {
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         for (var line : model.getDrawablesFromTypeInBB(WayType.BEACH, BoundingBoxFromScreen())) {
@@ -503,11 +548,18 @@ public class MapCanvas extends Canvas {
 
     }
 
+    /**
+     * sets the drawtype as either colorMap(0) or lineMap(1)
+     * @param l the integer representing the type of which should be drawn (could be made as boolean, but this opens up posibility for more types)
+     */
     public void setDrawType(int l) {
         drawType = l;
         repaint();
     }
 
+    /**
+     * turns the DebugMode on and off using a boolean
+     */
     public void DebugMode() {
         if (!debug) {
             debug = true;
@@ -516,10 +568,17 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    public void mouseBox(BoundingBox mouseBox){
+    /**
+     * sets a boundingbox on the mouse location
+     * @param mouseBox the boundingBox used for the mouse
+     */
+    public void setMouseBox(BoundingBox mouseBox){
         mousebox = mouseBox;
     }
 
+    /**
+     * used by the highlighter function on the map, removes the highlighted roads which were previously highlighted when the box was checked
+     */
     public void nullBox(){
         mousebox = null;
     }
@@ -539,6 +598,11 @@ public class MapCanvas extends Canvas {
         return targetStart;
     }
 
+    /**
+     * finds and returns the nearest node in relation to the nearest road (RESEDENTIALWAY)
+     * @param addressBB1 the boundingbox of the searched address
+     * @return the nearest node in relation to the nearest road (RESEDENTIALWAY)
+     */
     public OSMNode nearestWay(BoundingBox addressBB1){
             smallestDist = 400;
             for (var line : model.getDrawablesFromTypeInBB(WayType.RESIDENTIALWAY, addressBB1)) {
@@ -553,7 +617,12 @@ public class MapCanvas extends Canvas {
             return targetStart;
         }
 
-        public void drawRoute(OSMNode from, OSMNode to){
+        /**
+         * draws the DijkstraSP shortest path between two vertices (OSMNode) 
+         * @param from the startingpoint of the path
+         * @param to the end point of the path
+         */
+        public void drawShortestPath(OSMNode from, OSMNode to){
         sp = new DijkstraSP(model.routeGraph, from);
         boolean hasfirst = false;
         ArrayList<OSMNode> routePath = new ArrayList<>();

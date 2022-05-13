@@ -28,6 +28,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * the controller of the program, which hold all the methods using ActionListeners, taking in the userinput and calling the various methods of classes
+ * which are used by the buttons and inputfields in the ui
+ */
 
 public class Controller {
     private Point2D lastMouse;
@@ -58,9 +62,16 @@ public class Controller {
     @FXML
     private Label warning;
 
+    /**
+     * the regex used to parse the Adresses written in the textfield by the user
+     */
     private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
 
+    /**
+     * initialized the controller such that it can call methods in the pane and in the {@code MapCanvas} class
+     * @param model an {@code Model} object used to initialize the {@code MapCanvas} and taken in to get values parsed from the data file chosen.
+     */
     public void init(Model model) {
         this.model=model;
         canvas.init(model);
@@ -106,7 +117,12 @@ public class Controller {
         });
     }
 
-    //returns an arraylist so we may keep earlier searches another time
+    /**
+     * returns an arraylist of addresses that fit the searchcriteria provided by the regex and written in the textfield by the user
+     * @param searchStr the string written in the textfield by the user
+     * @param model {@code Model} object used to get the full list of addresses
+     * @return a list of addresses that fit the criteria found through binarysearch
+     */
     private ArrayList<Address> getMatches(String searchStr, Model model) {
         int pos = 0;
         match.clear();
@@ -165,19 +181,22 @@ public class Controller {
         return match;
     }
 
-
+    /**
+     * zooms in or out on the canvas when the mouse is scrolled
+     * @param e scrollevent on the mouse
+     */
     @FXML
     private void onScroll(ScrollEvent e) {
-        //System.out.println(canvas.initialZoomLevel);
         var factor = e.getDeltaY();
-        //System.out.println(e.getDeltaY());
-        //if(((factor > 0 && canvas.getZoomPercentage() < 2600)||(factor > 0 && canvas.getZoomPercentage()>100000))||(factor < 0 && canvas.getZoomPercentage()>40)) {
             canvas.zoom(Math.pow(1.003, factor), e.getX(), e.getY());
             percentText.setText("Zoom: "+ canvas.getZoomPercentage() + "%");
-        //}
 
     }
 
+    /**
+     * drags the map around on the map when the left mousebutton is held and the mouse is moved
+     * @param e mouse hold and drag
+     */
     @FXML
     private void onMouseDragged(MouseEvent e) {
         var dx = e.getX() - lastMouse.getX();
@@ -186,12 +205,20 @@ public class Controller {
         lastMouse = new Point2D(e.getX(), e.getY());
     }
 
+    /**
+     * sets the last point point in which the mouse was pressed on the map
+     * @param e left mouse click
+     */
     @FXML
     private void onMousePressed(MouseEvent e) {
         lastMouse = new Point2D(e.getX(), e.getY());
     }
 
-    //loads DK map
+    /**
+     * loads the default file provided and initializes the model using the file
+     * @param e pressing the button
+     * @throws Exception is thrown if it fails to load the file
+     */
     @FXML
     private void onPress(ActionEvent e)throws Exception {
         File firstBootup = new File("data/Bornholm.zip.obj");
@@ -207,7 +234,11 @@ public class Controller {
         View.exitMenu();
     }
 
-    //loads custom map from .zip or .osm
+    /**
+     * lets the user chose a file to load, and then loads set file the same way as onPress()
+     * @param e pressing the button and choosing the file
+     * @throws Exception is thrown if the file fails to load
+     */
     @FXML
     private void onCustomPress(ActionEvent e) throws Exception {
         String dir= "";
@@ -232,7 +263,11 @@ public class Controller {
     }
 
 
-
+    /**
+     * Stores the address data such that it can be used to conpute the shortest path between it and the second chosen address
+     * also draws a point on the address visible to the user
+     * @param e pressing the button on the ui
+     */
     @FXML
     private void onAddressPress1(ActionEvent e){
         //mark the address with a cirkle
@@ -250,7 +285,7 @@ public class Controller {
         model.routeGraph.addEdge(canvas.nearestWay(startAddrBox),new DirectedEdge(canvas.nearestWay(startAddrBox),start.getNode()));
         try {
             if (start.getNode() != null && destination.getNode() != null) {
-                canvas.drawRoute(start.getNode(), destination.getNode());
+                canvas.drawShortestPath(start.getNode(), destination.getNode());
             }
             warning.setStyle("-fx-text-fill:#ECECEC");
             warning.setText("");
@@ -261,6 +296,12 @@ public class Controller {
         }
         canvas.repaint();
     }
+
+    /**
+     * Stores the address data such that it can be used to conpute the shortest path between it and the first chosen address
+     * also draws a point on the address visible to the user
+     * @param e pressing the button on the ui
+     */
     @FXML
     private void onAddressPress2(ActionEvent e){
         //mark the address with a cirkle
@@ -278,7 +319,7 @@ public class Controller {
 
         try {
             if(start.getNode() != null && destination.getNode() != null){
-                canvas.drawRoute(start.getNode(),destination.getNode());
+                canvas.drawShortestPath(start.getNode(),destination.getNode());
             }
             warning.setStyle("-fx-text-fill:#ECECEC");
             warning.setText("");
@@ -290,33 +331,49 @@ public class Controller {
         canvas.repaint();
     }
 
+    /**
+     * sets the drawtype to 1 when the Line mode is pressed by the user
+     * @param e pressing the line mode button
+     */
     @FXML
     private void onLine(ActionEvent e){
         canvas.setDrawType(1);
     }
+
+    /**
+     * sets the drawtype to 0 when the color mode is pressed by the user
+     * @param e pressing the color mode button
+     */
     @FXML
     private void onColor(ActionEvent e){
         canvas.setDrawType(0);
     }
+    
+    /**
+     * turns on the debugmode, reducing the size of the screen bounding box so that the kd-tree implementation is visible 
+     * @param e pressing the toggle debug-mode button
+     */
     @FXML
-    private void onBoundingBox(ActionEvent e){
+    private void onDebugMode(ActionEvent e){
         canvas.DebugMode();
     }
 
+    /**
+     * if the highlighter box is checked, this will highlight at show the roads in which the mouse is close to and is searching between to find the nearest one,
+     * just like how addresses find the nearest road node to them for dijkstra
+     * @param e moving the mouse
+     */
     @FXML
     private void onMouseMoved(MouseEvent e){
         if(highlighter.isSelected()){
             currentMouse = new Point2D(e.getX(),e.getY());
             Point2D currMouse = canvas.mouseToModel(currentMouse);
             BoundingBox mouseBox = new BoundingBox((float)(currMouse.getX()-0.0009), (float) (currMouse.getX()+0.0009), (float) (currMouse.getY()-0.0009), (float) (currMouse.getY()+0.0009));
-            //model.MapOfKdTrees.get(WayType.RESIDENTIALWAY).searchTree(mouseBox);
-            canvas.mouseBox(mouseBox);
-            canvas.repaint();
-            //System.out.println(canvas.mouseToModel(currentMouse).toString());
+            canvas.setMouseBox(mouseBox);
         }else{
             canvas.nullBox();
-            canvas.repaint();
         }
+        canvas.repaint();
 
     }
 

@@ -31,7 +31,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onColor" text="Color Mode" fx:id="color" />
                         <MenuItem mnemonicParsing="false" onAction="#onLine" text="Line Mode" fx:id="line" />
-                        <MenuItem mnemonicParsing="false" onAction="#onBoundingBox" text="Toggle boundingBox" fx:id="boundingBox" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDebugMode" text="Toggle debug-mode" fx:id="boundingBox" />
                     </items>
                 </Menu>
             </menus>
