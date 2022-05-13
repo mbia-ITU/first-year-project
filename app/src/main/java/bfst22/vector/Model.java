@@ -382,18 +382,26 @@ public class Model {
 
     }
     /**
-     * 
-     * @param observer
+     * adds an observer for the users view
+     * @param observer the runnable observer to be added to the list
      */
     public void addObserver(Runnable observer) {
         observers.add(observer);
     }
 
+    /**
+     * executes all the obeservers in the list of observers
+     */
     public void notifyObservers() {
         for (var observer : observers) {
             observer.run();
         }
     }
+
+    /**
+     * adds the startingpoint to the map on the specified vertex
+     * @param node the vertex where the startingpoint is located on
+     */
     public void addStart(OSMNode node){
         var type = WayType.STARTPOINT;
         ArrayList<Drawable> start = new ArrayList<>();
@@ -401,15 +409,26 @@ public class Model {
         mapOfKdTrees.put(type, new KdTree(start));
     }
 
+    /**
+     * returns the list containing the starting vertex
+     * @return list contaning starting vertex
+     */
     public List<Drawable> getStart(){
         return lines.get(WayType.STARTPOINT);
     }
 
+    /**
+     * clears the list contaning the starting vertex
+     */
     public void clearStart(){
         lines.get(WayType.STARTPOINT).clear();
         notifyObservers();
     }
 
+    /**
+     * adds the endpoint to the map on the specified vertex
+     * @param node the vertex where the endpoint in located
+     */
     public void addDestination(OSMNode node){
         var type = WayType.DESTINATION;
         ArrayList<Drawable> destination = new ArrayList<>();
@@ -417,11 +436,18 @@ public class Model {
         mapOfKdTrees.put(type, new KdTree(destination));
     }
 
+    /**
+     * clears the list contaning the end vertex
+     */
     public void clearDestination(){
         lines.get(WayType.DESTINATION).clear();
         notifyObservers();
     }
 
+    /**
+     * returns the list contaning the end vertex
+     * @return list contaning the end vertex
+     */
     public List<Drawable> getDestination(){
         return lines.get(WayType.DESTINATION);
     }
