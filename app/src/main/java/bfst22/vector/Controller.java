@@ -4,30 +4,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.CheckBox;
 
 
 import javax.swing.*;
-import javax.xml.crypto.NodeSetData;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
-
 /**
  * the controller of the program, which hold all the methods using ActionListeners, taking in the userinput and calling the various methods of classes
  * which are used by the buttons and inputfields in the ui
@@ -61,12 +54,6 @@ public class Controller {
     private TextField searching1;
     @FXML
     private Label warning;
-
-    /**
-     * the regex used to parse the Adresses written in the textfield by the user
-     */
-    private final static String REGEX = "^(?<street>[A-ZÆØÅÉa-zæøåé ]+)(?<house>[0-9A-Z-]*)[ ,]* ?((?<floor>[0-9])?[,. ]* ?(?<side>[a-zæøå.,]+)??)?[ ]*(?<postcode>[0-9]{4})?[ ]*(?<city>[A-ZÆØÅa-zæøå ]*?)?$";
-    private final static Pattern PATTERN = Pattern.compile(REGEX);
 
     /**
      * initialized the controller such that it can call methods in the pane and in the {@code MapCanvas} class
